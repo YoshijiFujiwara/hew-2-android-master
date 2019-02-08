@@ -20,4 +20,7 @@ public interface ApiService {
     @GET("api/friends")
     Observable<MemberData> getMemberList(@Header("Authorization") String authorization);
 
+    @GET("api/groups")
+    Observable<GroupData> getGroupList(@Header("Authorization") String authorization);
+
 }

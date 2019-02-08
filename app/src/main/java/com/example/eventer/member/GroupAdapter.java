@@ -8,19 +8,30 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MemberAdapter extends BaseAdapter {
+public class GroupAdapter extends BaseAdapter {
 
-    private String[] namelist;
+    private Data[] list;
 
     static class ViewHolder {
         TextView name;
+        TextView detail;
+    }
+    static public class Data {
+        public Data(int id, String name, String detail) {
+            this.id = id;
+            this.name = name;
+            this.detail = detail;
+        }
+        int id;
+        String name;
+        String detail;
     }
 
-    MemberAdapter(String[] names){
-        namelist = names;
+    GroupAdapter(Data[] names){
+        list = names;
     }
-    MemberAdapter(ArrayList<String> names){
-        namelist = names.toArray(new String[0]);;
+    GroupAdapter(ArrayList<Data> names){
+        list = names.toArray(new Data[0]);
     }
 
     @Override
@@ -30,22 +41,24 @@ public class MemberAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.member_cell, parent, false);
+                    .inflate(R.layout.group_cell, parent, false);
             holder = new ViewHolder();
             holder.name = convertView.findViewById(R.id.group_name);
+            holder.detail = convertView.findViewById(R.id.group_detail);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(namelist[position]);
+        holder.name.setText(list[position].name);
+        holder.detail.setText(list[position].detail);
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return namelist.length;
+        return list.length;
     }
 
     @Override
