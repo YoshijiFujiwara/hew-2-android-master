@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     LinearLayout mLoginContainer;
     AnimationDrawable mAnimationDrawable;
@@ -58,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         sign_up_btn.setOnClickListener((v) -> {
-            finish();
             // signUpActivityに遷移
             Intent signUpIntent = new Intent(getApplication(), SignUpActivity.class);
             startActivity(signUpIntent);
@@ -154,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
         LoginUser.setUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE),
                 email_et.getText().toString(), password_et.getText().toString(), token.access_token);
         // TOP画面へ
-        Intent intent = new Intent(getApplication(), MainActivity.class);
+        Intent intent = new Intent(getApplication(), StartActivity.class);
         intent.putExtra(SNACK_MESSAGE, "ログインに成功しました。");
         startActivity(intent);
     }

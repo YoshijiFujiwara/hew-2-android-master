@@ -9,6 +9,25 @@
     <string name="name_hint_text">名前</string>
     <string name="search_member_hint_text">メンバー検索</string>
     <string name="title_activity_login">Sign in</string>
+
+
+    <string name="title_now">今から飲む</string>
+    <string name="title_ing">進行中</string>
+    <string name="title_home">ホーム</string>
+    <string name="title_group">グループ</string>
+    <string name="title_default">デフォルト設定</string>
+    <string name="title_activity_default_setting">DefaultSetting</string>
+    <string name="title">タイトル</string>
+    <string name="shop_name">店名</string>
+    <string name="location_name">店位置</string>
+    <string name="time">時間</string>
+    <string name="count_member">人数</string>
+    <string name="event_name">イベント名</string>
+
+    <string name="next">Next</string>
+    <string name="default_name">デフォルト名</string>
+    <string name="username">ユーザーネーム</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
