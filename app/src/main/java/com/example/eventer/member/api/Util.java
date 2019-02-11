@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.eventer.member.LogUtil;
-import com.example.eventer.member.LoginActivity;
-import com.example.eventer.member.LoginFragment;
+import com.example.eventer.member.activities.LoginActivity;
 import com.example.eventer.member.R;
 
 import java.io.IOException;
@@ -27,8 +26,33 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Util {
     private static Retrofit retrofit = null;
+    private static ApiService service = null;
     private static OkHttpClient.Builder httpClient = null;
     private static String token = null;
+    public static String snackText = null;
+
+    public static boolean isLoading() {
+        return loading;
+    }
+
+    public static void setLoading(boolean loading, Activity activity) {
+        try{
+            View loadingView = activity.findViewById(R.id.loading_view);
+            ProgressBar loadingProgressBar = activity.findViewById(R.id.loading_progressBar);
+            if(loading){
+                loadingView.setVisibility(View.VISIBLE);
+                loadingProgressBar.setVisibility(View.VISIBLE);
+            }else{
+                loadingView.setVisibility(View.GONE);
+                loadingProgressBar.setVisibility(View.GONE);
+            }
+            Util.loading = loading;
+        }catch (Exception e){
+            Log.d("loading","不正な呼び出しです。");
+        }
+    }
+
+    private static boolean loading = false;
 
     public static void setToken(String token) {
         Util.token = "Bearer " + token;
@@ -38,8 +62,8 @@ public class Util {
         return token;
     }
 
-    private static OkHttpClient.Builder  getHttpClientWithHeader(){
-        if (httpClient == null){
+    protected static OkHttpClient.Builder getHttpClientWithHeader() {
+        if (httpClient == null) {
             httpClient = new OkHttpClient.Builder();
             httpClient.addInterceptor(new Interceptor() {
                 @Override
@@ -62,8 +86,8 @@ public class Util {
         return httpClient;
     }
 
-    public static Retrofit getRetrofit(){
-        if( Util.retrofit == null ){
+    protected static Retrofit getRetrofit() {
+        if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
@@ -75,7 +99,15 @@ public class Util {
         return retrofit;
     }
 
-    private void checkLogin(String email, String password, Activity activity){
+    public static ApiService getService() {
+        if (Util.service == null) {
+            service = getRetrofit().create(ApiService.class);
+        }
+
+        return service;
+    }
+
+    private void checkLogin(String email, String password, Activity activity) {
         ApiService service = retrofit.create(ApiService.class);
         Observable<TokenInfo> token = service.getToken(email, password);
         token.subscribeOn(Schedulers.io())

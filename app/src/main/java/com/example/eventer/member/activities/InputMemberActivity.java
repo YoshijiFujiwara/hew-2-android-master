@@ -1,11 +1,12 @@
-package com.example.eventer.member;
+package com.example.eventer.member.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
 
+import com.example.eventer.member.R;
+
 // TODO 仕組みわからん
-public class InputMemberActivity extends AppCompatActivity {
+public class InputMemberActivity extends BaseActivity {
 
     private EditText mName;
 
@@ -21,7 +22,7 @@ public class InputMemberActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        mName = findViewById(R.id.group_name);
+        mName = findViewById(R.id.member_name);
     }
 
     @Override

@@ -1,27 +1,30 @@
-package com.example.eventer.member;
+package com.example.eventer.member.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
+import android.view.MotionEvent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.eventer.member.fragments.GroupFragment;
+import com.example.eventer.member.LogUtil;
+import com.example.eventer.member.fragments.MemberFragment;
+import com.example.eventer.member.R;
 import com.example.eventer.member.api.Util;
 
-public class MemberActivity extends AppCompatActivity
+public class MemberActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,22 @@ public class MemberActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        try{
+            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof MemberFragment){
+                MemberFragment fragment = (MemberFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                fragment.removeFocus();
+            }
+            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment){
+                GroupFragment fragment = (GroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                fragment.removeFocus();
+            }
+        }catch (Exception e){
+            Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
+        }
+        return super.dispatchTouchEvent(ev);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

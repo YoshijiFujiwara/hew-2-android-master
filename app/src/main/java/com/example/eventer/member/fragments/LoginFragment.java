@@ -1,4 +1,4 @@
-package com.example.eventer.member;
+package com.example.eventer.member.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.eventer.member.LogUtil;
+import com.example.eventer.member.R;
+import com.example.eventer.member.activities.MemberActivity;
 import com.example.eventer.member.api.ApiService;
 import com.example.eventer.member.api.TokenInfo;
 import com.example.eventer.member.api.Util;
@@ -24,18 +27,17 @@ import com.example.eventer.member.api.Util;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Retrofit;
 
-import static com.example.eventer.member.LoginActivity.KEY_EMAIL;
-import static com.example.eventer.member.LoginActivity.KEY_PASSWORD;
-import static com.example.eventer.member.LoginActivity.PREF_FILE_NAME;
+import static com.example.eventer.member.activities.BaseActivity.PREF_FILE_NAME;
+import static com.example.eventer.member.activities.BaseActivity.SNACK_MESSAGE;
+import static com.example.eventer.member.activities.LoginActivity.KEY_EMAIL;
+import static com.example.eventer.member.activities.LoginActivity.KEY_PASSWORD;
 
 public class LoginFragment extends Fragment {
 
     private EditText mEmail;
     private EditText mPassword;
     private Button mLogin;
-    Retrofit retrofit;
 
     private static final String MESSAGE = "message";
 
@@ -59,10 +61,9 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
-        retrofit = Util.getRetrofit();
         mEmail = activity.findViewById(R.id.email);
         mPassword = activity.findViewById(R.id.password);
         mLogin = activity.findViewById(R.id.button_login);
@@ -72,8 +73,10 @@ public class LoginFragment extends Fragment {
         // 値の取得
         String email = sharedPref.getString(KEY_EMAIL, "");
         String password = sharedPref.getString(KEY_PASSWORD, "");
-        if(!email.equals("") && !password.equals("")){
-            checkLogin(mEmail.getText().toString(),mPassword.getText().toString());
+        if (!email.equals("") && !password.equals("")) {
+            checkLogin(email, password);
+        } else {
+            Util.setLoading(false, activity);
         }
 
         FloatingActionButton fab = activity.findViewById(R.id.fab_register);
@@ -85,17 +88,15 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        mLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkLogin(mEmail.getText().toString(),mPassword.getText().toString());
-            }
+        mLogin.setOnClickListener((v) -> {
+            checkLogin(mEmail.getText().toString(), mPassword.getText().toString());
         });
     }
 
-    private void checkLogin(String email,String password){
-        ApiService service = retrofit.create(ApiService.class);
+    private void checkLogin(String email, String password) {
+        ApiService service = Util.getService();
         Observable<TokenInfo> token = service.getToken(email, password);
+        Util.setLoading(true, getActivity());
         token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -103,6 +104,7 @@ public class LoginFragment extends Fragment {
                         list -> finishLogin(list),  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー" + LogUtil.getLog() + throwable.toString());
+                            Util.setLoading(false, getActivity());
                             // ログイン情報初期化
                             Util.setToken("");
                             SharedPreferences sharedPref = getActivity().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
@@ -118,6 +120,7 @@ public class LoginFragment extends Fragment {
                         }
                 );
     }
+
     private void finishLogin(TokenInfo token) {
         // トークンを更新
         Util.setToken(token.access_token);
@@ -129,6 +132,7 @@ public class LoginFragment extends Fragment {
         editor.apply();
         // TOP画面へ
         Intent intent = new Intent(getActivity().getApplication(), MemberActivity.class);
+        intent.putExtra(SNACK_MESSAGE, "ログインに成功しました。");
         startActivity(intent);
     }
 }

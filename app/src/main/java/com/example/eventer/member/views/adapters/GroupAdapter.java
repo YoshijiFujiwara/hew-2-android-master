@@ -1,10 +1,12 @@
-package com.example.eventer.member;
+package com.example.eventer.member.views.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.eventer.member.R;
 
 import java.util.ArrayList;
 
@@ -22,15 +24,28 @@ public class GroupAdapter extends BaseAdapter {
             this.name = name;
             this.detail = detail;
         }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDetail() {
+            return detail;
+        }
+
         int id;
         String name;
         String detail;
     }
 
-    GroupAdapter(Data[] names){
+    public GroupAdapter(Data[] names){
         list = names;
     }
-    GroupAdapter(ArrayList<Data> names){
+    public GroupAdapter(ArrayList<Data> names){
         list = names.toArray(new Data[0]);
     }
 
@@ -43,7 +58,7 @@ public class GroupAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.group_cell, parent, false);
             holder = new ViewHolder();
-            holder.name = convertView.findViewById(R.id.group_name);
+            holder.name = convertView.findViewById(R.id.member_name);
             holder.detail = convertView.findViewById(R.id.group_detail);
             convertView.setTag(holder);
         } else {
