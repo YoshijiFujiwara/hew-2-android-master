@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.eventer.member.views.SquareGridView
+    <com.hew.second.gathering.views.SquareGridView
         android:id="@+id/cardView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -96,5 +96,5 @@
 
         </android.support.constraint.ConstraintLayout>
 
-    </com.example.eventer.member.views.SquareGridView>
+    </com.hew.second.gathering.views.SquareGridView>
 </LinearLayout>

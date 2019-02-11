@@ -18,4 +18,15 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="BudgetTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/BudgetTabText</item>
+        <item name="tabSelectedTextColor">@color/colorWhite</item>
+        <item name="tabIndicatorColor">@color/colorWhite</item>
+    </style>
+
+    <style name="BudgetTabText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textColor">@color/colorWhite_70</item>
+    </style>
+
+
 </resources>

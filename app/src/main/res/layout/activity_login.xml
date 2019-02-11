@@ -1,23 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/login_container"
+    android:padding="40dp"
+    android:background="@drawable/animation_colors"
     tools:context=".activities.LoginActivity">
 
-    <include
-        layout="@layout/loading"
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo" />
 
-    <FrameLayout
-        android:id="@+id/container"
+    <EditText
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:layout_height="50dp"
+        android:hint="メールアドレス"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:backgroundTint="#fff"
+        android:drawableLeft="@drawable/ic_email"
+        android:inputType="textEmailAddress"
+        android:id="@+id/user_email"
+        />
 
-    </FrameLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="パスワード"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:backgroundTint="#fff"
+        android:drawableLeft="@drawable/ic_lock"
+        android:inputType="textPassword"
+        android:id="@+id/user_password"
+        />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:id="@+id/login_btn"
+        android:text="ログイン"
+        android:textColor="#ffffff"
+        android:background="#79a209df"
+        android:textAllCaps="false"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="アカウントを持っていませんか？こちらから登録できます"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:id="@+id/sign_up_btn"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="パスワードを忘れた"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:id="@+id/forgot_pass_btn"
+        />
+
+</LinearLayout>

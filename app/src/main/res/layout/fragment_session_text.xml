@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="6dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="20dp">
+
+    <!-- まずはこのImageViewを基準に考える。 -->
+    <ImageView
+        android:id="@+id/session_image"
+        android:src="@mipmap/ic_launcher"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        />
+    <!-- ImageViewの右側に配置。widthにmatch_parentを指定しても大丈夫。 -->
+    <TextView
+        android:textColor="#000"
+        android:text="イベント名"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:id="@+id/session_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/session_image"/>
+
+    <!-- ImageViewの右側に配置。かつ上記のTextViewの下に配置する。 -->
+    <TextView
+        android:text="2019/47/45"
+        android:paddingTop="5dp"
+        android:id="@+id/session_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/session_name"
+        android:layout_toLeftOf="@id/session_image"/>
+    <TextView
+        android:text="●人"
+        android:paddingTop="5dp"
+        android:id="@+id/events_people"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/session_time"
+        android:layout_toLeftOf="@id/session_image"/>
+</RelativeLayout>

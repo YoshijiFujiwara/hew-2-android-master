@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/login_container"
+    android:padding="40dp"
+    android:background="@drawable/animation_colors"
+    tools:context=".activities.LoginActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="メールアドレス"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:backgroundTint="#fff"
+        android:drawableLeft="@drawable/ic_email"
+        android:inputType="textEmailAddress"
+        android:id="@+id/user_email"
+        android:drawablePadding="10dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="ユーザーネーム"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:backgroundTint="#fff"
+        android:drawableLeft="@drawable/ic_tag_faces"
+        android:inputType="textPersonName"
+        android:id="@+id/user_name"
+        android:drawablePadding="10dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="パスワード"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:backgroundTint="#fff"
+        android:drawableLeft="@drawable/ic_lock"
+        android:inputType="textPassword"
+        android:id="@+id/user_password"
+        android:drawablePadding="10dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="パスワード(確認用)"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:backgroundTint="#fff"
+        android:drawableLeft="@drawable/ic_lock"
+        android:inputType="textPassword"
+        android:id="@+id/user_password_confirm"
+        android:drawablePadding="10dp"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:id="@+id/sign_up_btn"
+        android:text="登録"
+        android:textColor="#ffffff"
+        android:background="#79a209df"
+        android:textAllCaps="false"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="すでにアカウントをお持ちですか？ログインする"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:id="@+id/go_to_login_btn" />
+
+</LinearLayout>
