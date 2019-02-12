@@ -1,5 +1,8 @@
 package com.hew.second.gathering.api;
 
+/**
+ * ユーザーの基本情報
+ */
 public class User {
     public int id;
     public String unique_id;
