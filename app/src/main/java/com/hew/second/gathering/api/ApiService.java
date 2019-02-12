@@ -26,10 +26,10 @@ public interface ApiService {
     Observable<GroupList> getGroupList(@Header("Authorization") String authorization);
 
     @GET("api/groups/{group}")
-    Observable<Group> getGroupDetail(@Header("Authorization") String authorization, @Path("group") int groupId);
+    Observable<GroupDetail> getGroupDetail(@Header("Authorization") String authorization, @Path("group") int groupId);
 
     @PUT("api/groups/{group}")
-    Observable<Group> updateGroupName(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, String> body);
+    Observable<GroupDetail> updateGroupName(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, String> body);
 
 
     @GET("api/sessions")

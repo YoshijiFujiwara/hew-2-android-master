@@ -108,7 +108,7 @@ public class EditGroupFragment extends Fragment {
                 .subscribe(
                         list -> {
                             Util.setLoading(false, getActivity());
-                            updateList(list);
+                            updateList(list.data);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
