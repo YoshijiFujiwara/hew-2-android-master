@@ -30,7 +30,7 @@ import com.hew.second.gathering.api.Util;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+//testcommit
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
