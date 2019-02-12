@@ -19,6 +19,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
+//    得たポジション(i)によって切り替える
     @Override
     public Fragment getItem(int i) {
         switch (i) {
@@ -33,13 +34,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    //  要素数取得
+    //  最大値をセット
     @Override
     public int getCount() {
         return lstTitle.size();
     }
 
-    //  要素番号取得
+    //  tablayoutにlsTitleに追加したTitle情報を渡します
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {

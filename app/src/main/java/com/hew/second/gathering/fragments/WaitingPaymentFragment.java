@@ -7,36 +7,46 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.hew.second.gathering.R;
 
+import java.util.ArrayList;
+
 public class WaitingPaymentFragment extends Fragment {
+
+    ListView listview ;
+
+    public WaitingPaymentFragment() {
+    }
+
     public static WaitingPaymentFragment newInstance() {
         return new WaitingPaymentFragment();
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_waiting_payment,container,false);
+
+        View view = inflater.inflate(R.layout.fragment_waiting_payment,container,false);
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//
-//        ListView mlistView =(ListView) view.findViewById(R.id.waitingforpay_id);
-//
-//        // データを準備
-//        ArrayList<String> items = new ArrayList<>();
-//        for(int i = 0; i < 30; i++) { }
-//
-//        // Adapter - ArrayAdapter
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                this.getContext(),
-//                R.layout.fragment_session_text,
-//                items
-//        );
-//
-//        // ListViewに表示;
-//        mlistView.setAdapter(adapter);
+        super.onViewCreated(view, savedInstanceState);
+
+        final ArrayList<String> items = new ArrayList<>();
+        items.add("データ1");
+        items.add("データ2");
+        items.add("データ3");
+
+        // ListViewをセット
+        final ArrayAdapter adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, items);
+        ListView listView = (ListView) view.findViewById(R.id.listView_waitingPay);
+        listView.setAdapter(adapter);
+
 
     }
 }

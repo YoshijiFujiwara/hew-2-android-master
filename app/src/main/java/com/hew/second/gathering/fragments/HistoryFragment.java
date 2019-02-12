@@ -9,11 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
-
+//
 public class HistoryFragment extends Fragment {
+
+    public HistoryFragment() {
+    }
+
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_history,container,false);
