@@ -7,9 +7,9 @@ import java.util.List;
  */
 public class Group {
     public int id;
-    public Member manager;
+    public Friend manager;
     public String name;
-    public List<Member> users;
+    public List<Friend> users;
     public Date created_at;
     public Date updated_at;
 }

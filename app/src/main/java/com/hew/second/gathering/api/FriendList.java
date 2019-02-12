@@ -5,6 +5,6 @@ import java.util.List;
 /**
  * ユーザー一覧
  */
-public class MemberList {
-    public List<Member> data;
+public class FriendList {
+    public List<Friend> data;
 }
