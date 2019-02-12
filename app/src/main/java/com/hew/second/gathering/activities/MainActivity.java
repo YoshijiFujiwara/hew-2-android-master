@@ -15,6 +15,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.fragments.BudgetFragment;
@@ -47,6 +49,7 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
         if(savedInstanceState == null) {
             // FragmentManagerのインスタンス生成
