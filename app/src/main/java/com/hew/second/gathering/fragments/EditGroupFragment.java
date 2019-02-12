@@ -16,6 +16,7 @@ import android.widget.GridView;
 
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.api.Group;
+import com.hew.second.gathering.api.User;
 import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
@@ -127,7 +128,7 @@ public class EditGroupFragment extends Fragment {
         groupName.setText(gdi.name);
         ArrayList<MemberAdapter.Data> ar = new ArrayList<>();
 
-        for (Friend m : gdi.users) {
+        for (User m : gdi.users) {
             ar.add(new MemberAdapter.Data(m.id, m.unique_id, m.username));
         }
         GroupMemberAdapter adapter = new GroupMemberAdapter(ar);
