@@ -31,7 +31,6 @@ public interface ApiService {
     @PUT("api/groups/{group}")
     Observable<GroupDetail> updateGroupName(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, String> body);
 
-
     @GET("api/sessions")
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 
@@ -39,11 +38,11 @@ public interface ApiService {
     Observable<SessionList> createSession(@Header("Authorization") String authorization);
 
     @GET("api/sessions/{session}")
-    Observable<SessionList> getSessionDetail(@Header("Authorization") String authorization);
+    Observable<SessionList> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     @PUT("api/sessions/{session}")
-    Observable<SessionList> updateSession(@Header("Authorization") String authorization);
+    Observable<SessionList> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
 
     @DELETE("api/sessions/{session}")
-    Observable<SessionList> deleteSession(@Header("Authorization") String authorization);
+    Observable<SessionList> deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
 }
