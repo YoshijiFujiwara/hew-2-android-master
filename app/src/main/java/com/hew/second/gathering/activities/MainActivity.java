@@ -2,36 +2,35 @@ package com.hew.second.gathering.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
+import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
 import com.hew.second.gathering.fragments.EventFragment;
-import com.hew.second.gathering.fragments.SessionFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
-import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.fragments.MemberFragment;
-import com.hew.second.gathering.R;
-import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.fragments.SessionFragment;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+//test commit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
