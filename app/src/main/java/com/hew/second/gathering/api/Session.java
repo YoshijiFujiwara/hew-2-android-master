@@ -7,8 +7,8 @@ import java.util.List;
  */
 public class Session {
     public int id;
-    public Member manager;
-    public List<SessionMember> users;
+    public Friend manager;
+    public List<SessionUser> users;
     public int shop_id; // ぐるなび側から持ってきたidかなにかを入れる予定
     public int budget; // 予算
     public int actual; // 実際にかかった金額

@@ -20,7 +20,7 @@ import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.InputMemberActivity;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.Member;
+import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
@@ -130,12 +130,12 @@ public class MemberFragment extends Fragment{
                 );
     }
 
-    private void updateList(List<Member> data) {
+    private void updateList(List<Friend> data) {
         // ListView生成
         ListView listView = getActivity().findViewById(R.id.member_list);
         ArrayList<MemberAdapter.Data> ar = new ArrayList<>();
 
-        for (Member m : data) {
+        for (Friend m : data) {
             ar.add(new MemberAdapter.Data(m.id, m.unique_id, m.username));
         }
         MemberAdapter adapter = new MemberAdapter(ar);

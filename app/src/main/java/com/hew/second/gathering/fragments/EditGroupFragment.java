@@ -21,7 +21,7 @@ import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.Member;
+import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
@@ -127,7 +127,7 @@ public class EditGroupFragment extends Fragment {
         groupName.setText(gdi.name);
         ArrayList<MemberAdapter.Data> ar = new ArrayList<>();
 
-        for (Member m : gdi.users) {
+        for (Friend m : gdi.users) {
             ar.add(new MemberAdapter.Data(m.id, m.unique_id, m.username));
         }
         GroupMemberAdapter adapter = new GroupMemberAdapter(ar);
