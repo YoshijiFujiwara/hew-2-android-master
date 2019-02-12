@@ -15,14 +15,14 @@ import android.widget.EditText;
 import android.widget.GridView;
 
 import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.GroupDetail;
-import com.hew.second.gathering.api.MemberInfo;
-import com.hew.second.gathering.api.TokenInfo;
+import com.hew.second.gathering.api.Member;
+import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class EditGroupFragment extends Fragment {
         Intent beforeIntent = activity.getIntent();
         groupId = beforeIntent.getIntExtra("GROUP_ID", -1);//設定したkeyで取り出す
         ApiService service = Util.getService();
-        Observable<TokenInfo> token = service.getRefreshToken(LoginUser.getToken());
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         Util.setLoading(true, activity);
         token.subscribeOn(Schedulers.io())
                 .flatMap(result -> {
@@ -107,7 +107,7 @@ public class EditGroupFragment extends Fragment {
                 .subscribe(
                         list -> {
                             Util.setLoading(false, getActivity());
-                            updateList(list.data);
+                            updateList(list);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -120,14 +120,14 @@ public class EditGroupFragment extends Fragment {
                 );
     }
 
-    private void updateList(GroupDetail.GroupDetailInfo gdi) {
+    private void updateList(Group gdi) {
         // ListView生成
         GridView gridView = getActivity().findViewById(R.id.gridView_group);
         EditText groupName = getActivity().findViewById(R.id.group_name);
         groupName.setText(gdi.name);
         ArrayList<MemberAdapter.Data> ar = new ArrayList<>();
 
-        for (MemberInfo m : gdi.users) {
+        for (Member m : gdi.users) {
             ar.add(new MemberAdapter.Data(m.id, m.unique_id, m.username));
         }
         GroupMemberAdapter adapter = new GroupMemberAdapter(ar);
@@ -141,7 +141,7 @@ public class EditGroupFragment extends Fragment {
         EditText groupName = getActivity().findViewById(R.id.group_name);
         HashMap<String, String> body = new HashMap<>();
         body.put("name", groupName.getText().toString());
-        Observable<TokenInfo> token = service.getRefreshToken(LoginUser.getToken());
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         token.subscribeOn(Schedulers.io())
                 .flatMap(result -> {
                     LoginUser.setToken(result.access_token);

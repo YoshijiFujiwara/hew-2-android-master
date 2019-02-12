@@ -1,12 +1,7 @@
 package com.hew.second.gathering;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
-
-import com.hew.second.gathering.activities.LoginActivity;
-import com.hew.second.gathering.api.MemberInfo;
 
 public class LoginUser {
 
