@@ -7,48 +7,26 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.Friend;
 
 import java.util.ArrayList;
 
 public class MemberAdapter extends BaseAdapter {
 
-    protected MemberAdapter.Data[] list;
+    protected Friend[] list;
 
     static public class ViewHolder {
         TextView userName;
         TextView uniqueName;
     }
-    static public class Data {
-        public Data(int id, String uniqueName ,String userName) {
-            this.id = id;
-            this.uniqueName = uniqueName;
-            this.userName = userName;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getUniqueName() {
-            return uniqueName;
-        }
-
-        public String getUserName() {
-            return userName;
-        }
-
-        int id;
-        String uniqueName;
-        String userName;
-    }
     protected MemberAdapter(){
-        list = new MemberAdapter.Data[0];
+        list = new Friend[0];
     }
-    public MemberAdapter(MemberAdapter.Data[] names){
+    public MemberAdapter(Friend[] names){
         list = names;
     }
-    public MemberAdapter(ArrayList<MemberAdapter.Data> names){
-        list = names.toArray(new MemberAdapter.Data[0]);
+    public MemberAdapter(ArrayList<Friend> names){
+        list = names.toArray(new Friend[0]);
     }
 
     @Override
@@ -67,8 +45,8 @@ public class MemberAdapter extends BaseAdapter {
             holder = (GroupMemberAdapter.ViewHolder) convertView.getTag();
         }
 
-        holder.userName.setText(list[position].userName);
-        holder.uniqueName.setText(list[position].uniqueName);
+        holder.userName.setText(list[position].username);
+        holder.uniqueName.setText(list[position].unique_id);
 
         return convertView;
     }

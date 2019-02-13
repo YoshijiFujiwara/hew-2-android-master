@@ -2,9 +2,11 @@ package com.hew.second.gathering.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,17 +16,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.GridView;
 
-import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.api.Group;
+import com.hew.second.gathering.api.GroupUser;
+import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
+import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.JWT;
-import com.hew.second.gathering.api.User;
 import com.hew.second.gathering.api.Util;
-import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
-import com.hew.second.gathering.views.adapters.MemberAdapter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,6 +40,8 @@ import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 public class EditGroupFragment extends Fragment {
     private static final String MESSAGE = "message";
     int groupId = -1;
+    GroupMemberAdapter adapter = null;
+
 
     public static EditGroupFragment newInstance() {
         return new EditGroupFragment();
@@ -54,7 +56,7 @@ public class EditGroupFragment extends Fragment {
         return fragment;
     }
 
-    public void removeFocus(){
+    public void removeFocus() {
         InputMethodManager inputMethodMgr = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
         inputMethodMgr.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -92,8 +94,40 @@ public class EditGroupFragment extends Fragment {
             }
         });
 
+        GridView gridView = getActivity().findViewById(R.id.gridView_group);
+        gridView.setOnItemClickListener((parent, view, position, id) -> {
+            switch (view.getId()) {
+                case R.id.delete_group_member:
+                    ApiService service = Util.getService();
+                    Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+                    Util.setLoading(true, getActivity());
+                    token.subscribeOn(Schedulers.io())
+                            .flatMapCompletable(result -> {
+                                LoginUser.setToken(result.access_token);
+                                return service.deleteGroupUser(LoginUser.getToken(), groupId, adapter.getList()[position].id);
+                            })
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .unsubscribeOn(Schedulers.io())
+                            .subscribe(
+                                    () -> {
+                                        Util.setLoading(false, getActivity());
+                                        final Snackbar snackbar = Snackbar.make(getView(), "メンバーを削除しました", Snackbar.LENGTH_SHORT);
+                                        snackbar.getView().setBackgroundColor(Color.BLACK);
+                                        snackbar.setActionTextColor(Color.WHITE);
+                                        snackbar.show();
+                                    }, // 終了時
+                                    (throwable) -> {
+                                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                        Util.setLoading(false, getActivity());
+                                    }
+                            );
+                    break;
+            }
+        });
+
         Intent beforeIntent = activity.getIntent();
         groupId = beforeIntent.getIntExtra("GROUP_ID", -1);//設定したkeyで取り出す
+
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         Util.setLoading(true, activity);
@@ -125,12 +159,12 @@ public class EditGroupFragment extends Fragment {
         GridView gridView = getActivity().findViewById(R.id.gridView_group);
         EditText groupName = getActivity().findViewById(R.id.group_name);
         groupName.setText(gdi.name);
-        ArrayList<MemberAdapter.Data> ar = new ArrayList<>();
+        ArrayList<GroupUser> ar = new ArrayList<>();
 
-        for (User m : gdi.users) {
-            ar.add(new MemberAdapter.Data(m.id, m.unique_id, m.username));
+        for (GroupUser m : gdi.users) {
+            ar.add(m);
         }
-        GroupMemberAdapter adapter = new GroupMemberAdapter(ar);
+        adapter = new GroupMemberAdapter(ar);
 
         // ListViewにadapterをセット
         gridView.setAdapter(adapter);

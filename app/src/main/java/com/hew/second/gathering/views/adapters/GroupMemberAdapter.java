@@ -3,17 +3,25 @@ package com.hew.second.gathering.views.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.TextView;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.GroupUser;
+import com.hew.second.gathering.api.User;
 
 import java.util.ArrayList;
 
 public class GroupMemberAdapter extends MemberAdapter {
-    public GroupMemberAdapter(MemberAdapter.Data[] names){
+    private GroupUser list[];
+    static class ViewHolder extends MemberAdapter.ViewHolder {
+        TextView deleteButton;
+    }
+    public GroupMemberAdapter(GroupUser[] names){
         list = names;
     }
-    public GroupMemberAdapter(ArrayList<MemberAdapter.Data> names){
-        list = names.toArray(new MemberAdapter.Data[0]);
+    public GroupMemberAdapter(ArrayList<GroupUser> names){
+        list = names.toArray(new GroupUser[0]);
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -24,17 +32,25 @@ public class GroupMemberAdapter extends MemberAdapter {
             holder = new GroupMemberAdapter.ViewHolder();
             holder.userName = convertView.findViewById(R.id.group_member_name);
             holder.uniqueName = convertView.findViewById(R.id.group_member_unique_name);
+            holder.deleteButton = convertView.findViewById(R.id.delete_group_member);
             convertView.setTag(holder);
         } else {
             holder = (GroupMemberAdapter.ViewHolder) convertView.getTag();
         }
-        holder.userName.setText(list[position].userName);
-        holder.uniqueName.setText(list[position].uniqueName);
+        holder.userName.setText(list[position].username);
+        holder.uniqueName.setText(list[position].unique_id);
+        holder.deleteButton.setOnClickListener((view) -> {
+                ((GridView) parent).performItemClick(view, position, R.id.delete_group_member);
+        });
         return convertView;
     }
     @Override
     public int getCount() {
         return list.length;
+    }
+
+    public User[] getList(){
+        return list;
     }
 
     @Override
