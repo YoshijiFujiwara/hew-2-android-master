@@ -19,6 +19,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.hew.second.gathering.LoginUser;
+
+import com.hew.second.gathering.api.MemberInfo;
+
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
@@ -49,6 +52,13 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //ユーザー情報表示
+        View header=navigationView.getHeaderView(0);
+        TextView user_name = (TextView)header.findViewById(R.id.user_name);
+        TextView user_email = (TextView)header.findViewById(R.id.user_email);
+//        user_name.setText(LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+        user_email.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
 
 
         if(savedInstanceState == null) {
