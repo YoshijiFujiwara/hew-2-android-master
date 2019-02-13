@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -13,16 +14,16 @@ import retrofit2.http.Query;
 
 public interface ApiService {
     @POST("api/auth/login")
-    Observable<TokenInfo> getToken(@Query("email") String email, @Query("password") String password);
+    Observable<JWT> getToken(@Query("email") String email, @Query("password") String password);
 
     @POST("api/auth/refresh")
-    Observable<TokenInfo> getRefreshToken(@Header("Authorization") String authorization);
+    Observable<JWT> getRefreshToken(@Header("Authorization") String authorization);
 
     @GET("api/friends")
-    Observable<MemberData> getMemberList(@Header("Authorization") String authorization);
+    Observable<FriendList> getMemberList(@Header("Authorization") String authorization);
 
     @GET("api/groups")
-    Observable<GroupData> getGroupList(@Header("Authorization") String authorization);
+    Observable<GroupList> getGroupList(@Header("Authorization") String authorization);
 
     @GET("api/groups/{group}")
     Observable<GroupDetail> getGroupDetail(@Header("Authorization") String authorization, @Path("group") int groupId);
@@ -33,4 +34,18 @@ public interface ApiService {
     @POST("api/auth/me")
     Observable<> getToken(@Query("email") String email, @Query("username") String username, @Query("password") String password);
 
+    @GET("api/sessions")
+    Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
+
+    @POST("api/sessions")
+    Observable<SessionList> createSession(@Header("Authorization") String authorization);
+
+    @GET("api/sessions/{session}")
+    Observable<SessionList> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+    @PUT("api/sessions/{session}")
+    Observable<SessionList> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
+
+    @DELETE("api/sessions/{session}")
+    Observable<SessionList> deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
 }

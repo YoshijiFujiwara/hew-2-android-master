@@ -21,8 +21,8 @@ import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.EditGroupActivity;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.GroupInfo;
-import com.hew.second.gathering.api.TokenInfo;
+import com.hew.second.gathering.api.Group;
+import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
 import java.util.ArrayList;
@@ -103,7 +103,7 @@ public class GroupFragment extends Fragment {
         });
 
         ApiService service = Util.getService();
-        Observable<TokenInfo> token = service.getRefreshToken(LoginUser.getToken());
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         Util.setLoading(true,activity);
         token.subscribeOn(Schedulers.io())
                 .flatMap(result -> {
@@ -127,12 +127,12 @@ public class GroupFragment extends Fragment {
                 );
     }
 
-    private void updateList(List<GroupInfo> data) {
+    private void updateList(List<Group> data) {
         // ListView生成
         GridView gridView = getActivity().findViewById(R.id.gridView_group);
         ar.clear();
 
-        for (GroupInfo m : data) {
+        for (Group m : data) {
             ar.add(new GroupAdapter.Data(m.id,m.name,m.users.size()+"名"));
         }
         GroupAdapter adapter = new GroupAdapter(ar);

@@ -25,6 +25,14 @@ android {
         disable 'GoogleAppIndexingWarning'
         baseline file("lint-baseline.xml") // your choice of filename/path here
     }
+    sourceSets {
+        main {
+            res.srcDirs += 'src/main/res'
+            file('src/main/layouts')
+                    .listFiles()
+                    .each { res.srcDirs += it.path }
+        }
+    }
 }
 
 dependencies {
