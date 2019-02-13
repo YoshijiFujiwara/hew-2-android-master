@@ -37,6 +37,9 @@ public interface ApiService {
     @DELETE("api/groups/{group}/users/{user}")
     Completable deleteGroupUser(@Header("Authorization") String authorization, @Path("group") int groupId, @Path("user") int userId);
 
+    @DELETE("api/groups/{group}")
+    Completable deleteGroup(@Header("Authorization") String authorization, @Path("group") int groupId);
+
     @GET("api/sessions")
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 
@@ -51,4 +54,7 @@ public interface ApiService {
 
     @DELETE("api/sessions/{session}")
     Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+    @POST("api/search/forward_by_username")
+    Observable<FriendList> searchAddableFriendList(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 }

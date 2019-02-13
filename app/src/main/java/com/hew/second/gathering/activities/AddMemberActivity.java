@@ -6,14 +6,14 @@ import android.widget.EditText;
 import com.hew.second.gathering.R;
 
 // TODO 仕組みわからん
-public class InputMemberActivity extends BaseActivity {
+public class AddMemberActivity extends BaseActivity {
 
     private EditText mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_member);
+        setContentView(R.layout.activity_add_member);
         setTitle( "友達追加" );
 
         // Backボタンを有効にする

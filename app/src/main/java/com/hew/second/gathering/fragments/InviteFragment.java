@@ -8,12 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hew.second.gathering.views.adapters.BudgetFragmentPagerAdapter;
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.views.adapters.InviteFragmentPagerAdapter;
 
-public class BudgetFragment extends Fragment {
-    public static BudgetFragment newInstance() {
-        return new BudgetFragment();
+public class InviteFragment extends Fragment {
+
+    public static InviteFragment newInstance() {
+        return new InviteFragment();
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,13 +25,13 @@ public class BudgetFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_budget, container, false);
-        BudgetFragmentPagerAdapter adapter = new BudgetFragmentPagerAdapter(getFragmentManager());
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        viewPager.setOffscreenPageLimit(2);
+        View view = inflater.inflate(R.layout.fragment_invite, container, false);
+        InviteFragmentPagerAdapter adapter = new InviteFragmentPagerAdapter(getFragmentManager());
+        ViewPager viewPager = view.findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;

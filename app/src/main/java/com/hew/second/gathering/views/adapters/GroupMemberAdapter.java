@@ -3,25 +3,27 @@ package com.hew.second.gathering.views.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.GroupUser;
-import com.hew.second.gathering.api.User;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class GroupMemberAdapter extends MemberAdapter {
-    private GroupUser list[];
+
+public class GroupMemberAdapter extends BaseAdapter {
+    private List<GroupUser> list;
     static class ViewHolder extends MemberAdapter.ViewHolder {
         TextView deleteButton;
     }
     public GroupMemberAdapter(GroupUser[] names){
-        list = names;
+        list = Arrays.asList(names);
     }
     public GroupMemberAdapter(ArrayList<GroupUser> names){
-        list = names.toArray(new GroupUser[0]);
+        list = names;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -37,8 +39,8 @@ public class GroupMemberAdapter extends MemberAdapter {
         } else {
             holder = (GroupMemberAdapter.ViewHolder) convertView.getTag();
         }
-        holder.userName.setText(list[position].username);
-        holder.uniqueName.setText(list[position].unique_id);
+        holder.userName.setText(list.get(position).username);
+        holder.uniqueName.setText(list.get(position).unique_id);
         holder.deleteButton.setOnClickListener((view) -> {
                 ((GridView) parent).performItemClick(view, position, R.id.delete_group_member);
         });
@@ -46,10 +48,10 @@ public class GroupMemberAdapter extends MemberAdapter {
     }
     @Override
     public int getCount() {
-        return list.length;
+        return list.size();
     }
 
-    public User[] getList(){
+    public List<GroupUser> getList(){
         return list;
     }
 
