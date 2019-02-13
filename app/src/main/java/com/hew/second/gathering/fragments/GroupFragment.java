@@ -28,6 +28,7 @@ import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -70,9 +71,7 @@ public class GroupFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO
-                //Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
-                //startActivity(intent);
+                createGroup();
             }
         });
 
@@ -151,6 +150,37 @@ public class GroupFragment extends Fragment {
         super.onResume();
         Util.setLoading(true, getActivity());
         fetchList();
+    }
+
+    private void createGroup(){
+        Util.setLoading(true, getActivity());
+        ApiService service = Util.getService();
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+        HashMap<String, String> body = new HashMap<>();
+        // TODO:デフォルトグループ名
+        body.put("name", "グル------");
+        token.subscribeOn(Schedulers.io())
+                .flatMap(result -> {
+                    LoginUser.setToken(result.access_token);
+                    return service.createGroup(LoginUser.getToken(),body);
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Util.setLoading(false, getActivity());
+                            Intent intent = new Intent(getActivity().getApplication(), EditGroupActivity.class);
+                            intent.putExtra("GROUP_ID", list.data.id);
+                            startActivityForResult(intent, INTENT_EDIT_GROUP);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            Util.setLoading(false, getActivity());
+                            // ログインアクティビティへ遷移
+                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                            startActivity(intent);
+                        }
+                );
     }
 
     private void fetchList() {

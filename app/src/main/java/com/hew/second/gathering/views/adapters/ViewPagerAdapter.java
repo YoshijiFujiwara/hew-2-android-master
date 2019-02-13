@@ -29,7 +29,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 return HistoryFragment.newInstance();
             default:
-                return InProgressFragment.newInstance();
+                return null;
         }
     }
 

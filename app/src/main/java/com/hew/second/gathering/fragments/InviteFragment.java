@@ -26,14 +26,17 @@ public class InviteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_invite, container, false);
-        InviteFragmentPagerAdapter adapter = new InviteFragmentPagerAdapter(getFragmentManager());
-        ViewPager viewPager = view.findViewById(R.id.viewPager);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        InviteFragmentPagerAdapter adapter = new InviteFragmentPagerAdapter(getChildFragmentManager());
+        ViewPager viewPager = getView().findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
-
-        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
+        TabLayout tabLayout = getView().findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-
-        return view;
     }
 }

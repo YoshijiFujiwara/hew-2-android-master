@@ -82,6 +82,9 @@ public class EditGroupFragment extends Fragment {
         Activity activity = getActivity();
         activity.setTitle("グループ編集");
 
+        Intent beforeIntent = activity.getIntent();
+        groupId = beforeIntent.getIntExtra("GROUP_ID", -1);//設定したkeyで取り出す
+
         FloatingActionButton fab = activity.findViewById(R.id.fab_addUserToGroup);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,8 +133,6 @@ public class EditGroupFragment extends Fragment {
             }
         });
 
-        Intent beforeIntent = activity.getIntent();
-        groupId = beforeIntent.getIntExtra("GROUP_ID", -1);//設定したkeyで取り出す
     }
 
     @Override
