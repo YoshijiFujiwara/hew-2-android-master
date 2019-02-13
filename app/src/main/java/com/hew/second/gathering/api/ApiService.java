@@ -43,6 +43,9 @@ public interface ApiService {
     @DELETE("api/groups/{group}")
     Completable deleteGroup(@Header("Authorization") String authorization, @Path("group") int groupId);
 
+    @POST("api/auth/me")
+    Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
+
     @GET("api/sessions")
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="6dp"
@@ -11,38 +13,57 @@
     <!-- まずはこのImageViewを基準に考える。 -->
     <ImageView
         android:id="@+id/session_image"
-        android:src="@mipmap/ic_launcher"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        />
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="8dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <!-- ImageViewの右側に配置。widthにmatch_parentを指定しても大丈夫。 -->
     <TextView
-        android:textColor="#000"
-        android:text="イベント名"
-        android:textStyle="bold"
-        android:textSize="30dp"
         android:id="@+id/session_name"
-        android:layout_width="match_parent"
+        android:layout_width="177dp"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/session_image"/>
+        android:layout_marginStart="8dp"
+        android:layout_toLeftOf="@id/session_image"
+        android:text="イベント名"
+        android:textColor="#000"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- ImageViewの右側に配置。かつ上記のTextViewの下に配置する。 -->
     <TextView
-        android:text="2019/47/45"
-        android:paddingTop="5dp"
-        android:id="@+id/session_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/session_date"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
         android:layout_below="@id/session_name"
-        android:layout_toLeftOf="@id/session_image"/>
-    <TextView
-        android:text="●人"
+        android:layout_marginStart="8dp"
+        android:layout_toLeftOf="@id/session_image"
         android:paddingTop="5dp"
-        android:id="@+id/events_people"
-        android:layout_width="match_parent"
+        android:text="2019/47/45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/session_name" />
+
+    <TextView
+        android:id="@+id/session_people"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/session_time"
-        android:layout_toLeftOf="@id/session_image"/>
-</RelativeLayout>
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toLeftOf="@id/session_image"
+        android:paddingTop="5dp"
+        android:text="●人"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/session_date"
+        app:layout_constraintVertical_bias="0.0" />
+</android.support.constraint.ConstraintLayout>

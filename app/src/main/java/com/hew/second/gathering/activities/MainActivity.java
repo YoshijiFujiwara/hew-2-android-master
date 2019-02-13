@@ -13,12 +13,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.view.MotionEvent;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
+
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.JWT;
+import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.Util;
+
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
@@ -28,10 +35,15 @@ import com.hew.second.gathering.fragments.InviteFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
 import com.hew.second.gathering.fragments.SessionFragment;
 
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-//test commit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +60,24 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        ApiService service = Util.getService();
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+        token.subscribeOn(Schedulers.io())
+                .flatMap(result -> {
+                    LoginUser.setToken(result.access_token);
+                    return service.getProfile(LoginUser.getToken());
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            profile(list.data);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                        }
+                );
+
         if(savedInstanceState == null) {
             // FragmentManagerのインスタンス生成
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -59,6 +89,16 @@ public class MainActivity extends BaseActivity
             fragmentTransaction.commit();
         }
 
+    }
+
+    private void profile(Profile data) {
+        //ユーザー情報表示
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header=navigationView.getHeaderView(0);
+        TextView user_name = (TextView)header.findViewById(R.id.user_name);
+        TextView user_email = (TextView)header.findViewById(R.id.user_email);
+        user_name.setText(data.username);
+        user_email.setText(data.email);
     }
 
     @Override

@@ -7,13 +7,14 @@ import java.util.List;
  */
 public class Session {
     public int id;
-    public Friend manager;
-    public List<SessionUser> users;
+    public String name;
     public int shop_id; // ぐるなび側から持ってきたidかなにかを入れる予定
     public int budget; // 予算
     public int actual; // 実際にかかった金額
-    public Date start_time; // 開始時刻
-    public Date end_time; // 終了時刻
+    public String start_time; // 開始時刻
+    public String end_time; // 終了時刻
+    public User manager;
+    public List<SessionUser> users;
     public Date created_at;
     public Date updated_at;
 }
