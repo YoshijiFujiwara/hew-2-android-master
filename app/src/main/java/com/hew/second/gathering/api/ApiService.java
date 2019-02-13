@@ -48,4 +48,5 @@ public interface ApiService {
 
     @DELETE("api/sessions/{session}")
     Observable<SessionList> deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
 }

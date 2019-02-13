@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import com.hew.second.gathering.R;
 
 public class InProgressFragment extends Fragment {
+
     public static InProgressFragment newInstance() {
         return new InProgressFragment();
     }
+
     public InProgressFragment() {
     }
 

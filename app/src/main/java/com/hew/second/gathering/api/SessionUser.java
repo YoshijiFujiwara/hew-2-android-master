@@ -6,7 +6,7 @@ package com.hew.second.gathering.api;
  */
 public class SessionUser extends User {
     public String join_status; // 参加状況
-    public boolean paid; // 支払い済みか
+    public int paid; // 支払い済みか
     public int plus_minus; // 支払い金額のplus_minus
     public float ratio; // 割合
 }

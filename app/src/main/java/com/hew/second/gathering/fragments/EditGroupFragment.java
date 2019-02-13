@@ -14,17 +14,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.GridView;
 
-import com.hew.second.gathering.LoginUser;
-import com.hew.second.gathering.api.Group;
-import com.hew.second.gathering.api.User;
-import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
 import com.hew.second.gathering.LogUtil;
-import com.hew.second.gathering.views.adapters.MemberAdapter;
+import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.Friend;
+import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.JWT;
+import com.hew.second.gathering.api.User;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
+import com.hew.second.gathering.views.adapters.MemberAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
