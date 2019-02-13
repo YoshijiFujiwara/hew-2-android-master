@@ -1,15 +1,11 @@
 package com.hew.second.gathering.api;
 
-import java.util.List;
-
-/**
- * 一つ一つのグループの情報
- */
-public class Group {
+public class Attribute {
     public int id;
     public User manager;
     public String name;
-    public List<User> users;
+    public int plus_minus;
+    public float ratio;
     public Date created_at;
     public Date updated_at;
 }

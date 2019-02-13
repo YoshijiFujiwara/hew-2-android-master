@@ -16,12 +16,13 @@ import android.widget.GridView;
 
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.api.Group;
+import com.hew.second.gathering.api.User;
 import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.Member;
+import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
@@ -107,7 +108,7 @@ public class EditGroupFragment extends Fragment {
                 .subscribe(
                         list -> {
                             Util.setLoading(false, getActivity());
-                            updateList(list);
+                            updateList(list.data);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -127,7 +128,7 @@ public class EditGroupFragment extends Fragment {
         groupName.setText(gdi.name);
         ArrayList<MemberAdapter.Data> ar = new ArrayList<>();
 
-        for (Member m : gdi.users) {
+        for (User m : gdi.users) {
             ar.add(new MemberAdapter.Data(m.id, m.unique_id, m.username));
         }
         GroupMemberAdapter adapter = new GroupMemberAdapter(ar);
