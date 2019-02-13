@@ -31,6 +31,9 @@ public interface ApiService {
     @PUT("api/groups/{group}")
     Observable<GroupDetail> updateGroupName(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, String> body);
 
+    @POST("api/auth/me")
+    Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
+
     @GET("api/sessions")
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 
