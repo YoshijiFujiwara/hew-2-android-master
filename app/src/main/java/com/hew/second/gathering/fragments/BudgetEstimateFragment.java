@@ -16,6 +16,7 @@ import com.hew.second.gathering.SelectedSession;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.JWT;
+import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 
 import io.reactivex.Observable;
@@ -44,7 +45,7 @@ public class BudgetEstimateFragment extends Fragment {
                 .subscribe(
                         list -> {
                             Util.setLoading(false,getActivity());
-                            updateList(list.data);
+                            updateView(list.data);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -63,5 +64,9 @@ public class BudgetEstimateFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void updateView(SessionDetail data) {
+
     }
 }
