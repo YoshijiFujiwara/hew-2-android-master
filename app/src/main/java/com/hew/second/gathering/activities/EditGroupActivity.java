@@ -58,7 +58,7 @@ public class EditGroupActivity extends BaseActivity {
 
     @Override
     public void onBackPressed(){
-        // TODO データ保存
+        // データ保存
         Util.setLoading(true,this);
         try{
             if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditGroupFragment){
