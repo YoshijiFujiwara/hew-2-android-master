@@ -32,7 +32,7 @@ public interface ApiService {
     Observable<GroupDetail> updateGroupName(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, String> body);
 
     @POST("api/auth/me")
-    Observable<> getToken(@Query("email") String email, @Query("username") String username, @Query("password") String password);
+    Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
 
     @GET("api/sessions")
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
