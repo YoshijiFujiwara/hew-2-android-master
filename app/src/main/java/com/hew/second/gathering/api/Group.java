@@ -9,7 +9,7 @@ public class Group {
     public int id;
     public User manager;
     public String name;
-    public List<User> users;
+    public List<GroupUser> users;
     public Date created_at;
     public Date updated_at;
 }

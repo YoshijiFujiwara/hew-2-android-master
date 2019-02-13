@@ -45,6 +45,20 @@ public class LoginUser {
         LoginUser.uniqueId = uniqueId;
     }
 
+//    public static String getUsername() {
+//        return username;
+//    }
+//
+//    public static void setUsername(String username) {
+//        LoginUser.username = username;
+//    }
+//    public static String getUsername(@Nullable SharedPreferences sharedPref) {
+//        if(sharedPref == null)
+//            return LoginUser.username;
+//        LoginUser.username = sharedPref.getString(KEY_USERNAME, "");
+//        return LoginUser.username;
+//}
+
     public static String getEmail(@Nullable SharedPreferences sharedPref) {
         if(sharedPref == null)
             return LoginUser.email;
@@ -70,4 +84,5 @@ public class LoginUser {
         editor.clear();
         editor.apply();
     }
+
 }

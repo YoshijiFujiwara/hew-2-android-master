@@ -133,10 +133,10 @@ public class MemberFragment extends Fragment{
     private void updateList(List<Friend> data) {
         // ListView生成
         ListView listView = getActivity().findViewById(R.id.member_list);
-        ArrayList<MemberAdapter.Data> ar = new ArrayList<>();
+        ArrayList<Friend> ar = new ArrayList<>();
 
         for (Friend m : data) {
-            ar.add(new MemberAdapter.Data(m.id, m.unique_id, m.username));
+            ar.add(m);
         }
         MemberAdapter adapter = new MemberAdapter(ar);
         // ListViewにadapterをセット

@@ -2,7 +2,10 @@ package com.hew.second.gathering.api;
 
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -31,6 +34,12 @@ public interface ApiService {
     @PUT("api/groups/{group}")
     Observable<GroupDetail> updateGroupName(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, String> body);
 
+    @DELETE("api/groups/{group}/users/{user}")
+    Completable deleteGroupUser(@Header("Authorization") String authorization, @Path("group") int groupId, @Path("user") int userId);
+
+    @POST("api/auth/me")
+    Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
+
     @GET("api/sessions")
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 
@@ -44,5 +53,5 @@ public interface ApiService {
     Observable<SessionList> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
 
     @DELETE("api/sessions/{session}")
-    Observable<SessionList> deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
+    Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
 }
