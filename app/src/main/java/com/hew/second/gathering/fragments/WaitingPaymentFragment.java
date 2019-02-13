@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.hew.second.gathering.LogUtil;
@@ -16,9 +15,12 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.JWT;
+import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.views.adapters.SessionAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -47,15 +49,15 @@ public class WaitingPaymentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final ArrayList<String> items = new ArrayList<>();
-        items.add("データ1");
-        items.add("データ2");
-        items.add("データ3");
-
-        // ListViewをセット
-        final ArrayAdapter adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, items);
-        ListView listView = (ListView) view.findViewById(R.id.listView_waitingPay);
-        listView.setAdapter(adapter);
+//        final ArrayList<String> items = new ArrayList<>();
+//        items.add("データ1");
+//        items.add("データ2");
+//        items.add("データ3");
+//
+//        // ListViewをセット
+//        final ArrayAdapter adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, items);
+//        ListView listView = (ListView) view.findViewById(R.id.listView_waitingPay);
+//        listView.setAdapter(adapter);
 
         updateSessionList();
     }
@@ -76,7 +78,8 @@ public class WaitingPaymentFragment extends Fragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            list.data.get(0);
+
+                            updataSeesionList(list.data);
 
                         },  // 成功時
                         throwable -> {
@@ -85,14 +88,20 @@ public class WaitingPaymentFragment extends Fragment {
 
                         }
                 );
-
-
-
-
-
-
     }
 
+    public void updataSeesionList(List<Session> data) {
+        ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
+
+        ArrayList<Session> sessionArrayList = new ArrayList<>();
+
+        for (Session sl : data) {
+            sessionArrayList.add(sl);
+        }
+        SessionAdapter adapter = new SessionAdapter(sessionArrayList);
+        listView.setAdapter(adapter);
+
+    }
 
 
 }
