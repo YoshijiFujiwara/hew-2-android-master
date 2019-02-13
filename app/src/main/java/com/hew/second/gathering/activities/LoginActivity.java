@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,14 +18,12 @@ import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.TokenInfo;
+import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 
 public class LoginActivity extends BaseActivity {
 
@@ -127,7 +124,7 @@ public class LoginActivity extends BaseActivity {
         }
 
         ApiService service = Util.getService();
-        Observable<TokenInfo> token = service.getToken(email, password);
+        Observable<JWT> token = service.getToken(email, password);
         Util.setLoading(true, this);
         token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -148,7 +145,7 @@ public class LoginActivity extends BaseActivity {
                 );
     }
 
-    private void finishLogin(TokenInfo token) {
+    private void finishLogin(JWT token) {
         // ログイン情報を保存
         LoginUser.setUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE),
                 email_et.getText().toString(), password_et.getText().toString(), token.access_token);
