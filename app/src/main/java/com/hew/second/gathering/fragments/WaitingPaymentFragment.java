@@ -25,7 +25,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
+//支払い待ち
 public class WaitingPaymentFragment extends Fragment {
 
     ListView listview ;
