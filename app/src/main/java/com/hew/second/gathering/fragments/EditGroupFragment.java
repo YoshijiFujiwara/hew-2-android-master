@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 
 import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.activities.AddGroupMemberActivity;
 import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.GroupUser;
 import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
@@ -76,13 +77,15 @@ public class EditGroupFragment extends Fragment {
         Activity activity = getActivity();
         activity.setTitle("グループ編集");
 
+        Intent beforeIntent = activity.getIntent();
+        groupId = beforeIntent.getIntExtra("GROUP_ID", -1);//設定したkeyで取り出す
+
         FloatingActionButton fab = activity.findViewById(R.id.fab_addUserToGroup);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO 追加ユーザー一覧
-                //Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(activity.getApplication(), AddGroupMemberActivity.class);
+                startActivity(intent);
             }
         });
         EditText groupName = getActivity().findViewById(R.id.group_name);
@@ -104,14 +107,14 @@ public class EditGroupFragment extends Fragment {
                     token.subscribeOn(Schedulers.io())
                             .flatMapCompletable(result -> {
                                 LoginUser.setToken(result.access_token);
-                                return service.deleteGroupUser(LoginUser.getToken(), groupId, adapter.getList()[position].id);
+                                return service.deleteGroupUser(LoginUser.getToken(), groupId, adapter.getList().get(position).id);
                             })
                             .observeOn(AndroidSchedulers.mainThread())
                             .unsubscribeOn(Schedulers.io())
                             .subscribe(
                                     () -> {
-                                        Util.setLoading(false, getActivity());
-                                        final Snackbar snackbar = Snackbar.make(getView(), "メンバーを削除しました", Snackbar.LENGTH_SHORT);
+                                        fetchList();
+                                        final Snackbar snackbar = Snackbar.make(getView(), "メンバーを削除しました", Snackbar.LENGTH_LONG);
                                         snackbar.getView().setBackgroundColor(Color.BLACK);
                                         snackbar.setActionTextColor(Color.WHITE);
                                         snackbar.show();
@@ -125,12 +128,18 @@ public class EditGroupFragment extends Fragment {
             }
         });
 
-        Intent beforeIntent = activity.getIntent();
-        groupId = beforeIntent.getIntExtra("GROUP_ID", -1);//設定したkeyで取り出す
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        Util.setLoading(true, getActivity());
+        fetchList();
+    }
+
+    private void fetchList(){
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        Util.setLoading(true, activity);
         token.subscribeOn(Schedulers.io())
                 .flatMap(result -> {
                     LoginUser.setToken(result.access_token);

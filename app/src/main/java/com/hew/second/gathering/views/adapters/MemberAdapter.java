@@ -10,23 +10,25 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.Friend;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MemberAdapter extends BaseAdapter {
 
-    protected Friend[] list;
+    protected List<Friend> list;
 
     static public class ViewHolder {
         TextView userName;
         TextView uniqueName;
     }
     protected MemberAdapter(){
-        list = new Friend[0];
+        list = null;
     }
     public MemberAdapter(Friend[] names){
-        list = names;
+        list = Arrays.asList(names);
     }
     public MemberAdapter(ArrayList<Friend> names){
-        list = names.toArray(new Friend[0]);
+        list =names;
     }
 
     @Override
@@ -45,15 +47,15 @@ public class MemberAdapter extends BaseAdapter {
             holder = (GroupMemberAdapter.ViewHolder) convertView.getTag();
         }
 
-        holder.userName.setText(list[position].username);
-        holder.uniqueName.setText(list[position].unique_id);
+        holder.userName.setText(list.get(position).username);
+        holder.uniqueName.setText(list.get(position).unique_id);
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return list.length;
+        return list.size();
     }
 
     @Override
@@ -61,6 +63,14 @@ public class MemberAdapter extends BaseAdapter {
         return position;
     }
 
+    public List<Friend> getList() { return list; }
+
+    public void clear(){
+        list.clear();
+    }
+    public void addAll(List<Friend> friends){
+        list.addAll(friends);
+    }
     @Override
     public long getItemId(int position) {
         return position;

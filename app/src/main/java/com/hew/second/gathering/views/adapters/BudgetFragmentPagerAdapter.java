@@ -7,10 +7,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.hew.second.gathering.fragments.BudgetActualFragment;
 import com.hew.second.gathering.fragments.BudgetEstimateFragment;
 
-public class BudgetFragmantPagerAdapter extends FragmentPagerAdapter {
+public class BudgetFragmentPagerAdapter extends FragmentPagerAdapter {
     protected CharSequence[] tabTitles = {"予算計算", "実費と支払い"};
 
-    public BudgetFragmantPagerAdapter(FragmentManager fm) {
+    public BudgetFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 

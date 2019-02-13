@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -69,7 +70,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         if (mAnimationDrawable != null && !mAnimationDrawable.isRunning()) {
             mAnimationDrawable.start();
         }
@@ -78,7 +78,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         if (mAnimationDrawable != null && mAnimationDrawable.isRunning()) {
             mAnimationDrawable.stop();
         }
@@ -88,7 +87,7 @@ public class LoginActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         // ログイン情報があるならすぐに遷移
-        if(!LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)).equals("")){
+        if (!LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)).equals("")) {
             email_et.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
             password_et.setText(LoginUser.getPassword(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
             checkLogin(LoginUser.getEmail(null), LoginUser.getPassword(null));
@@ -97,10 +96,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (!Util.isLoading()) {
-            super.dispatchTouchEvent(ev);
-        }
-        return Util.isLoading();
+        InputMethodManager inputMethodMgr = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodMgr.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -130,7 +128,10 @@ public class LoginActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
-                        list -> finishLogin(list),  // 成功時
+                        list -> {
+                            Util.setLoading(false, this);
+                            finishLogin(list);
+                        },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー" + LogUtil.getLog() + throwable.toString());
                             Util.setLoading(false, this);
