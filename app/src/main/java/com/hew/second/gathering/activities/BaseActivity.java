@@ -10,6 +10,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public static final String SNACK_MESSAGE = "MESSAGE";
     public static final int INTENT_EDIT_GROUP = 1;
+    public static final int INTENT_ADD_GROUP_MEMBER = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
