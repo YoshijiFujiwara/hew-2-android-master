@@ -52,41 +52,55 @@ API用でプロパティのみのクラスを作成する場合は apiフォル�
 
 ### 作業前
 
-  git pull origin develop
-  git checkout feature/<自分のブランチ名>
-  git merge develop
+```shell
+git pull origin develop
+git checkout feature/<自分のブランチ名>
+git merge develop
+```
 
 ### ブランチ
 
-<自分のブランチ名>は適当につけてください。かっこはいらない。
+<自分のブランチ名>は適当につけてください。かっこはいらない。  
 
-  git branch feature/<自分のブランチ名>
-  git checkout feature/<自分のブランチ名>
+```shell
+git branch feature/<自分のブランチ名>
+git checkout feature/<自分のブランチ名>
+```  
   
-作業後 １〜２時間に一回はしましょう
+作業後：１〜２時間に一回はしましょう  
 
-  git add .
-  git commit -m "コメント"
-  ()git push
-  git push -u origin feature/<自分のブランチ名>
+```shell
+git add .
+git commit -m "コメント"
+(ブランチ作成後初回)git push -u origin feature/<自分のブランチ名>
+(２回目以降)git push
+```
   
-### マージ 作業がひと段落したらorその日の作業終わりに
+### マージ
 
-  git add .
-  git commit -m 'developをマージする前にとりあえずコミット'
-  git checkout develop
-  git pull
-  git checkout feature/<自分のブランチ名>
-  git merge develop
+作業がひと段落したらorその日の作業終わりに  
+
+```shell
+git add .
+git commit -m "developをマージする前にとりあえずコミット"
+git checkout develop
+git pull
+git checkout feature/<自分のブランチ名>
+git merge develop
+```
 
 ### コンフリクトした場合
 
-競合箇所を修正
-feature/*ブランチで
-  git add .
-  git commit -m "コメント"
-  git push
-github上からプルリクエストを作ってdevelopとマージ
+競合箇所を修正  
+feature/<自分のブランチ名>ブランチで  
+
+```shell
+git add .
+git commit -m "コメント"
+git push
+```
+
+github上からプルリクエストを作ってdevelopとマージ  
 
 ## バックエンドメモ
 
