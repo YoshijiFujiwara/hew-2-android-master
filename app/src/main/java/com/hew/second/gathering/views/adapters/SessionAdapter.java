@@ -32,7 +32,7 @@ public class SessionAdapter extends BaseAdapter {
         SessionAdapter.ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.fragment_session_text,parent,false);
+                    .inflate(R.layout.fragment_session_cell,parent,false);
             holder = new SessionAdapter.ViewHolder();
             holder.sessionName = convertView.findViewById(R.id.session_name);
             holder.sessionDate = convertView.findViewById(R.id.session_date);
