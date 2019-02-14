@@ -48,6 +48,46 @@ AndroidStudioで普通に作れば大丈夫だと思います。
 ApiService内のURLは最終的にリファレンスに乗ってる分を全て書くことになるので使う分はどんどん追加していってください。  
 API用でプロパティのみのクラスを作成する場合は apiフォルダ内に作成してください。  
 
+## gitコマンド
+
+### 作業前
+
+  git pull origin develop
+  git checkout feature/<自分のブランチ名>
+  git merge develop
+
+### ブランチ
+
+<自分のブランチ名>は適当につけてください。かっこはいらない。
+
+  git branch feature/<自分のブランチ名>
+  git checkout feature/<自分のブランチ名>
+  
+作業後 １〜２時間に一回はしましょう
+
+  git add .
+  git commit -m "コメント"
+  ()git push
+  git push -u origin feature/<自分のブランチ名>
+  
+### マージ 作業がひと段落したらorその日の作業終わりに
+
+  git add .
+  git commit -m 'developをマージする前にとりあえずコミット'
+  git checkout develop
+  git pull
+  git checkout feature/<自分のブランチ名>
+  git merge develop
+
+### コンフリクトした場合
+
+競合箇所を修正
+feature/*ブランチで
+  git add .
+  git commit -m "コメント"
+  git push
+github上からプルリクエストを作ってdevelopとマージ
+
 ## バックエンドメモ
 
 ### テストユーザー
