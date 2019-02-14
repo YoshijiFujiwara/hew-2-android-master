@@ -50,13 +50,13 @@ public interface ApiService {
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 
     @POST("api/sessions")
-    Observable<SessionList> createSession(@Header("Authorization") String authorization);
+    Observable<SessionDetail> createSession(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 
     @GET("api/sessions/{session}")
-    Observable<SessionList> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
+    Observable<SessionDetail> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     @PUT("api/sessions/{session}")
-    Observable<SessionList> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
+    Observable<SessionDetail> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
 
     @DELETE("api/sessions/{session}")
     Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);

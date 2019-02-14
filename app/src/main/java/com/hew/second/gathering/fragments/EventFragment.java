@@ -2,6 +2,7 @@ package com.hew.second.gathering.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,9 @@ import java.util.ArrayList;
 public class EventFragment extends Fragment {
 
 
-    public static EventFragment newInstance() { return new EventFragment(); }
+    public static EventFragment newInstance() {
+        return new EventFragment();
+    }
 
     private static class ViewHolder {
         ImageView shop_image;
@@ -30,12 +33,20 @@ public class EventFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event, container, false);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab_newSession);
+        fab.setOnClickListener((v) -> {
+            createSession();
+        });
     }
 
     @Override
@@ -53,4 +64,8 @@ public class EventFragment extends Fragment {
 
     }
 
+    private void createSession(){
+
+
+    }
 }
