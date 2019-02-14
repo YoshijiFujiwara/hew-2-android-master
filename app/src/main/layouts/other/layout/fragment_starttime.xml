@@ -30,16 +30,18 @@
             android:layout_alignParentLeft="true"
             android:layout_marginStart="0dp"
             android:layout_marginLeft="0dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            app:srcCompat="@drawable/ic_location" />
 
         <TextView
             android:id="@+id/textView5"
             android:layout_width="78dp"
             android:layout_height="31dp"
             android:layout_alignBottom="@+id/imageView"
+            android:layout_alignParentTop="true"
             android:layout_marginStart="7dp"
             android:layout_marginLeft="7dp"
-            android:layout_marginBottom="9dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="1dp"
             android:layout_toEndOf="@+id/imageView"
             android:layout_toRightOf="@+id/imageView"
             android:text="TEST1" />
@@ -50,7 +52,7 @@
             android:layout_height="32dp"
             android:layout_below="@+id/imageView"
             android:layout_marginTop="3dp"
-            app:srcCompat="@android:drawable/sym_def_app_icon" />
+            app:srcCompat="@drawable/ic_time" />
 
         <TextView
             android:id="@+id/textView6"
@@ -80,7 +82,7 @@
             android:layout_marginStart="176dp"
             android:layout_marginLeft="176dp"
             android:layout_marginBottom="4dp"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal" />
+            app:srcCompat="@drawable/ic_people" />
 
         <TextView
             android:id="@+id/textView7"
