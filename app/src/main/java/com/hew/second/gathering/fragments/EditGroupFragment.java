@@ -35,6 +35,8 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
 import static android.app.Activity.RESULT_OK;
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_ADD_GROUP_MEMBER;
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_GROUP;
 import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 
 
@@ -85,7 +87,8 @@ public class EditGroupFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity.getApplication(), AddGroupMemberActivity.class);
-                startActivity(intent);
+                intent.putExtra("GROUP_ID", groupId);
+                startActivityForResult(intent, INTENT_ADD_GROUP_MEMBER);
             }
         });
         EditText groupName = getActivity().findViewById(R.id.group_name);
