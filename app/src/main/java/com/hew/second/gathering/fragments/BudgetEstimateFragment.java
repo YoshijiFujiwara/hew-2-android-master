@@ -43,8 +43,6 @@ public class BudgetEstimateFragment extends BudgetFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -54,7 +52,6 @@ public class BudgetEstimateFragment extends BudgetFragment {
         Activity activity = getActivity();
         View view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
 
-        SystemClock.sleep(50); //todo ちょっとずらしてやればできるけど、最悪なコード
         // sharedPreferenceに格納されているsessionIdから、session情報を取得する
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
@@ -82,6 +79,7 @@ public class BudgetEstimateFragment extends BudgetFragment {
                             BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, infoParams);
                             budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
                             budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
+
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
