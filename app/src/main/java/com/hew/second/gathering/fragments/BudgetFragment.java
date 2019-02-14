@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-<<<<<<< HEAD
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.SelectedSession;
@@ -23,10 +22,7 @@ import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
 import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
-import com.hew.second.gathering.views.adapters.BudgetFragmantPagerAdapter;
-=======
 import com.hew.second.gathering.views.adapters.BudgetFragmentPagerAdapter;
->>>>>>> develop
 import com.hew.second.gathering.R;
 
 import java.util.ArrayList;
