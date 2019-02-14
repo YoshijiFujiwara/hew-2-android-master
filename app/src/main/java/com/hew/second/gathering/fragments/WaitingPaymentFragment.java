@@ -49,16 +49,6 @@ public class WaitingPaymentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        final ArrayList<String> items = new ArrayList<>();
-//        items.add("データ1");
-//        items.add("データ2");
-//        items.add("データ3");
-//
-//        // ListViewをセット
-//        final ArrayAdapter adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, items);
-//        ListView listView = (ListView) view.findViewById(R.id.listView_waitingPay);
-//        listView.setAdapter(adapter);
-
         updateSessionList();
     }
 
