@@ -31,11 +31,17 @@ public interface ApiService {
     @GET("api/groups/{group}")
     Observable<GroupDetail> getGroupDetail(@Header("Authorization") String authorization, @Path("group") int groupId);
 
+    @POST("api/groups")
+    Observable<GroupDetail> createGroup(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
     @PUT("api/groups/{group}")
     Observable<GroupDetail> updateGroupName(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, String> body);
 
     @DELETE("api/groups/{group}/users/{user}")
     Completable deleteGroupUser(@Header("Authorization") String authorization, @Path("group") int groupId, @Path("user") int userId);
+
+    @DELETE("api/groups/{group}")
+    Completable deleteGroup(@Header("Authorization") String authorization, @Path("group") int groupId);
 
     @POST("api/auth/me")
     Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
@@ -54,4 +60,7 @@ public interface ApiService {
 
     @DELETE("api/sessions/{session}")
     Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+    @POST("api/search/forward_by_username")
+    Observable<FriendList> searchAddableFriendList(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 }

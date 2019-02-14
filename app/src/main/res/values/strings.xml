@@ -46,4 +46,6 @@
     <string name="title_activity_edit_group">EditGroupActivity</string>
     <string name="cross">×</string>
     <string name="title_activity_gurunavi_maps">Map</string>
+    <string name="invite_end">招待を打ち切る</string>
+    <string name="invite_send">招待を送信する</string>
 </resources>

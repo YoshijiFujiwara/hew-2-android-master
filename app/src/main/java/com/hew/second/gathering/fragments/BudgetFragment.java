@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+<<<<<<< HEAD
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.SelectedSession;
@@ -23,6 +24,9 @@ import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
 import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
 import com.hew.second.gathering.views.adapters.BudgetFragmantPagerAdapter;
+=======
+import com.hew.second.gathering.views.adapters.BudgetFragmentPagerAdapter;
+>>>>>>> develop
 import com.hew.second.gathering.R;
 
 import java.util.ArrayList;
@@ -55,68 +59,12 @@ public class BudgetFragment extends Fragment {
 
         Activity activity = getActivity();
         View view = inflater.inflate(R.layout.fragment_budget, container, false);
-//        View estimateView = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
-//        View actualView = inflater.inflate(R.layout.fragment_budget_actual, container, false);
-//
-//        // sharedPreferenceに格納されているsessionIdから、session情報を取得する
-//        ApiService service = Util.getService();
-//        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-//        token.subscribeOn(Schedulers.io())
-//                .flatMap(result -> {
-//                    LoginUser.setToken(result.access_token);
-//                    return service.getSessionDetail(LoginUser.getToken(), SelectedSession.getSharedSessionId(activity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(
-//                        list -> {
-//                            // session情報をセットする
-//                            Log.d("api", "apiestimate：" + list.data.name.toString());
-//
-//                            // estimateフラグメントのリストビューの作成
-//                            ArrayList<String> nameArray = new ArrayList<>();
-//                            ArrayList<String> infoArray = new ArrayList<>();
-//                            // session情報から,usernameのリストを生成
-//                            for (int i = 0; i < list.data.users.size(); i++) {
-//                                nameArray.add(list.data.users.get(i).username);
-//                                infoArray.add("情報"); // todo あとで計算する
-//                            }
-//                            String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-//                            String[] infoParams = infoArray.toArray(new String[infoArray.size()]);
-//                            BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, infoParams);
-//                            ListView budget_estimate_lv = (ListView) estimateView.findViewById(R.id.budget_estimate_list);
-//                            budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
-//
-////
-////                            // actualフラグメントのリストビューの生成
-////                            ArrayList<String> actualNameArray = new ArrayList<>();
-////                            ArrayList<Integer> costNameArray = new ArrayList<>();
-////                            // session情報から,usernameのリストを生成
-////                            for (int i = 0; i < list.data.users.size(); i++) {
-////                                actualNameArray.add(list.data.users.get(i).username);
-////                                costNameArray.add(1000); // todo あとで計算する
-////                            }
-////                            String[] actualNameParams = actualNameArray.toArray(new String[actualNameArray.size()]);
-////                            Integer[] actualCostParams = costNameArray.toArray(new Integer[costNameArray.size()]);
-////                            BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(activity, actualNameParams, actualCostParams);
-////                            ListView budget_actual_lv = (ListView) actualView.findViewById(R.id.budget_actual_list);
-////                            budget_actual_lv.setAdapter(budgetActualListAdapter);
-//
-//
-//                        },  // 成功時
-//                        throwable -> {
-//                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                        }
-//                );
-//
-
-
-        BudgetFragmantPagerAdapter adapter = new BudgetFragmantPagerAdapter(getFragmentManager());
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        BudgetFragmentPagerAdapter adapter = new BudgetFragmentPagerAdapter(getChildFragmentManager());
+        ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;

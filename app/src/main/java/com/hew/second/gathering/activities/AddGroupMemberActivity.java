@@ -1,93 +1,54 @@
-package com.hew.second.gathering.fragments;
+package com.hew.second.gathering.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.MotionEvent;
 import android.widget.ListView;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
-import com.hew.second.gathering.activities.LoginActivity;
-import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.activities.AddMemberActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.fragments.GroupFragment;
+import com.hew.second.gathering.fragments.MemberFragment;
+import com.hew.second.gathering.views.adapters.MemberAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class MemberFragment extends Fragment {
-    private static final String MESSAGE = "message";
+public class AddGroupMemberActivity extends BaseActivity {
+
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private MemberAdapter adapter = null;
-
-    public static MemberFragment newInstance(String message) {
-        MemberFragment fragment = new MemberFragment();
-
-        Bundle args = new Bundle();
-        args.putString(MESSAGE, message);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
-    public static MemberFragment newInstance() {
-        MemberFragment fragment = new MemberFragment();
-
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private ArrayList<Friend> ar = new ArrayList<>();
+    private ListView list = null;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_member, container, false);
-        return view;
-    }
-
-
-    public void removeFocus() {
-        SearchView searchView = getActivity().findViewById(R.id.searchView);
-        searchView.clearFocus();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
-        activity.setTitle("メンバー一覧");
-
-        FloatingActionButton fab = activity.findViewById(R.id.fab);
-        fab.setOnClickListener((v) -> {
-            Intent intent = new Intent(activity.getApplication(), AddMemberActivity.class);
-            startActivity(intent);
-        });
-        mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_group_member);
+        mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
         // 色設定
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccentDark);
         // Listenerをセット
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
-        SearchView searchView = activity.findViewById(R.id.searchView);
+        ListView listView = findViewById(R.id.member_list);
+        SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnClickListener((v) -> {
             searchView.setIconified(false);
         });
@@ -102,8 +63,18 @@ public class MemberFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                // テキスト変更
-                return false;
+                final List<Friend> filteredItems = new ArrayList<Friend>();
+                // フィルター処理
+                for (Friend item : ar) {
+                    if (item.unique_id.contains(s) || item.username.contains(s)) { // テキストがqueryを含めば検索にHITさせる
+                        filteredItems.add(item);
+                    }
+                }
+                // adapterの更新処理
+                adapter.clear();
+                adapter.addAll(filteredItems);
+                adapter.notifyDataSetChanged();
+                return true;
             }
         });
         // フォーカスを失った時
@@ -117,33 +88,42 @@ public class MemberFragment extends Fragment {
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        SearchView searchView = findViewById(R.id.searchView);
+        searchView.clearFocus();
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, getActivity());
+        Util.setLoading(true, this);
         fetchList();
     }
 
     private void fetchList() {
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+        HashMap<String, String> body = new HashMap<>();
+        body.put("username", "test");
         token.subscribeOn(Schedulers.io())
                 .flatMap(result -> {
                     LoginUser.setToken(result.access_token);
-                    return service.getMemberList(LoginUser.getToken());
+                    return service.searchAddableFriendList(LoginUser.getToken(),body);
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
+                            Util.setLoading(false, this);
                             mSwipeRefreshLayout.setRefreshing(false);
                             updateList(list.data);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
+                            Util.setLoading(false, this);
                             // ログインアクティビティへ遷移
-                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                            Intent intent = new Intent(getApplication(), LoginActivity.class);
                             startActivity(intent);
                         }
                 );
@@ -151,9 +131,8 @@ public class MemberFragment extends Fragment {
 
     private void updateList(List<Friend> data) {
         // ListView生成
-        ListView listView = getActivity().findViewById(R.id.member_list);
-        ArrayList<Friend> ar = new ArrayList<>();
-
+        ListView listView = findViewById(R.id.member_list);
+        ar = new ArrayList<>();
         for (Friend m : data) {
             ar.add(m);
         }
