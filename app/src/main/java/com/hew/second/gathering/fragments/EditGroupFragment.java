@@ -88,7 +88,7 @@ public class EditGroupFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(activity.getApplication(), AddGroupMemberActivity.class);
                 intent.putExtra("GROUP_ID", groupId);
-                startActivityForResult(intent, INTENT_ADD_GROUP_MEMBER);
+                startActivity(intent);
             }
         });
         EditText groupName = getActivity().findViewById(R.id.group_name);

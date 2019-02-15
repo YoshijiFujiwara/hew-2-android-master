@@ -10,11 +10,6 @@
     android:background="@drawable/animation_colors"
     tools:context=".activities.LoginActivity">
 
-    <include
-        layout="@layout/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="100dp"
@@ -77,5 +72,10 @@
         android:textSize="16sp"
         android:id="@+id/forgot_pass_btn"
         />
+
+    <include
+        layout="@layout/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
