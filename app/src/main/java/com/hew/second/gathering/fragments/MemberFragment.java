@@ -129,7 +129,7 @@ public class MemberFragment extends Fragment {
         token.subscribeOn(Schedulers.io())
                 .flatMap(result -> {
                     LoginUser.setToken(result.access_token);
-                    return service.getMemberList(LoginUser.getToken());
+                    return service.getFriendList(LoginUser.getToken());
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

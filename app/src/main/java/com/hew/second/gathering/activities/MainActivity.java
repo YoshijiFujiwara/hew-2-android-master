@@ -24,6 +24,7 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Profile;
+import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
 
 import com.hew.second.gathering.fragments.BudgetFragment;
@@ -62,33 +63,29 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getProfile(LoginUser.getToken());
-                })
+        Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
+        profile.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
                             profile(list.data);
+                            if(savedInstanceState == null) {
+                                // FragmentManagerのインスタンス生成
+                                FragmentManager fragmentManager = getSupportFragmentManager();
+                                // FragmentTransactionのインスタンスを取得
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                // インスタンスに対して張り付け方を指定する
+                                fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+                                // 張り付けを実行
+                                fragmentTransaction.commit();
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                         }
                 );
 
-        if(savedInstanceState == null) {
-            // FragmentManagerのインスタンス生成
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            // FragmentTransactionのインスタンスを取得
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            // インスタンスに対して張り付け方を指定する
-            fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
-            // 張り付けを実行
-            fragmentTransaction.commit();
-        }
 
     }
 

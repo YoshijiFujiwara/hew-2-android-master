@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.StartActivity">
 
-    <include
-        layout="@layout/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <ImageButton
         android:id="@+id/now_button"
         android:layout_width="0dp"
@@ -85,4 +77,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_logo"
         tools:ignore="VectorDrawableCompat" />
+
+    <include
+        layout="@layout/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 </android.support.constraint.ConstraintLayout>

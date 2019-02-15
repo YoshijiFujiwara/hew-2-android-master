@@ -23,7 +23,7 @@ public interface ApiService {
     Observable<JWT> getRefreshToken(@Header("Authorization") String authorization);
 
     @GET("api/friends")
-    Observable<FriendList> getMemberList(@Header("Authorization") String authorization);
+    Observable<FriendList> getFriendList(@Header("Authorization") String authorization);
 
     @GET("api/groups")
     Observable<GroupList> getGroupList(@Header("Authorization") String authorization);
@@ -42,6 +42,9 @@ public interface ApiService {
 
     @DELETE("api/groups/{group}")
     Completable deleteGroup(@Header("Authorization") String authorization, @Path("group") int groupId);
+
+    @POST("api/groups/{group}/users")
+    Completable addUserToGroup(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, Integer> body);
 
     @POST("api/auth/me")
     Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
@@ -70,6 +73,9 @@ public interface ApiService {
     @PUT("api/default_settings/{default_setting}")
     Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting, @Body HashMap<String, String> body);
 
-    @POST("api/search/forward_by_username")
-    Observable<FriendList> searchAddableFriendList(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+    @GET("api/search/can_add_friend_users")
+    Observable<FriendList> getAddableFriendList(@Header("Authorization") String authorization);
+
+    @GET("api/groups/{group}/users/can_add")
+    Observable<FriendList> getAddableToGroupFriendList(@Header("Authorization") String authorization, @Path("group") int groupId);
 }
