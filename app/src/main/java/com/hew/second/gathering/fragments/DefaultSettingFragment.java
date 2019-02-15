@@ -81,7 +81,7 @@ public class DefaultSettingFragment extends Fragment {
         // 色設定
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccentDark);
         // Listenerをセット
-//        mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
+        mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         GridView gridView = activity.findViewById(R.id.gridView_default);
 
@@ -147,12 +147,12 @@ public class DefaultSettingFragment extends Fragment {
 //            }});
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Util.setLoading(true, getActivity());
-//        fetchList();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Util.setLoading(true, getActivity());
+        fetchList();
+    }
 
 //    private void createGroup(){
 //        Util.setLoading(true, getActivity());
@@ -185,31 +185,31 @@ public class DefaultSettingFragment extends Fragment {
 //                );
 //    }
 
-//    private void fetchList() {
-//        ApiService service = Util.getService();
-//        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-//        token.subscribeOn(Schedulers.io())
-//                .flatMap(result -> {
-//                    LoginUser.setToken(result.access_token);
-//                    return service.getDefaultSettingList(LoginUser.getToken());
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(
-//                        list -> {
-//                            Util.setLoading(false, getActivity());
-//                            mSwipeRefreshLayout.setRefreshing(false);
-//                            updateList(list.data);
-//                        },  // 成功時
-//                        throwable -> {
-//                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                            Util.setLoading(false, getActivity());
-//                            // ログインアクティビティへ遷移
-//                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-//                            startActivity(intent);
-//                        }
-//                );
-//    }
+    private void fetchList() {
+        ApiService service = Util.getService();
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+        token.subscribeOn(Schedulers.io())
+                .flatMap(result -> {
+                    LoginUser.setToken(result.access_token);
+                    return service.getDefaultSettingList(LoginUser.getToken());
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Util.setLoading(false, getActivity());
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            updateList(list.data);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            Util.setLoading(false, getActivity());
+                            // ログインアクティビティへ遷移
+                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                            startActivity(intent);
+                        }
+                );
+    }
 
     private void updateList(List<DefaultSetting> data) {
         // ListView生成
