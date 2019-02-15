@@ -33,8 +33,24 @@ public interface ApiService {
      */
     @GET("api/friends")
     Observable<FriendList> getFriendList(@Header("Authorization") String authorization);
+
     @POST("api/friends")
-    Observable<Friend> requestAddFriend(@Header("Authorization") String authorization ,@Body HashMap<String, String> body);
+    Observable<Friend> requestAddFriend(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
+    @GET("api/friends/waiting")
+    Observable<FriendList> getApplyingFriendList(@Header("Authorization") String authorization);
+
+    @GET("api/friends/requested")
+    Observable<FriendList> getPendedFriendList(@Header("Authorization") String authorization);
+
+    @POST("api/friends/permit")
+    Completable permitFriendRequest(@Header("Authorization") String authorization, @Body HashMap<String, Integer> body);
+
+    @POST("api/friends/reject")
+    Completable rejectFriendRequest(@Header("Authorization") String authorization, @Body HashMap<String, Integer> body);
+
+    @DELETE("api/friends/{friend}")
+    Completable deleteFriend(@Header("Authorization") String authorization, @Path("friend") int userId);
 
     /*
      * グループ系API
