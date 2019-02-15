@@ -14,11 +14,12 @@ import java.util.ArrayList;
 public class SessionAdapter extends BaseAdapter {
 
     private Session list[];
+    private int usersList;
 
     public static class ViewHolder {
         TextView sessionName;
         TextView sessionDate;
-        TextView sessionPople;
+        TextView sessionPeople;
     }
     public SessionAdapter(Session[] data) {
         list = data;
@@ -36,6 +37,7 @@ public class SessionAdapter extends BaseAdapter {
             holder = new SessionAdapter.ViewHolder();
             holder.sessionName = convertView.findViewById(R.id.session_name);
             holder.sessionDate = convertView.findViewById(R.id.session_date);
+            holder.sessionPeople = convertView.findViewById(R.id.session_people);
             convertView.setTag(holder);
         } else {
 
@@ -44,6 +46,7 @@ public class SessionAdapter extends BaseAdapter {
         }
         holder.sessionName.setText(list[position].name);
         holder.sessionDate.setText(list[position].start_time);
+        holder.sessionPeople.setText(String.valueOf(list[position].users.size()));
         return convertView;
     }
 

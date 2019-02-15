@@ -56,7 +56,6 @@ public class WaitingPaymentFragment extends Fragment {
 //    セッション情報取得
     public void updateSessionList() {
 
-
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
 
@@ -69,8 +68,8 @@ public class WaitingPaymentFragment extends Fragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-
-                            updataList(list.data);
+//                          表示
+                            updateList(list.data);
 
                         },  // 成功時
                         throwable -> {
@@ -81,7 +80,8 @@ public class WaitingPaymentFragment extends Fragment {
                 );
     }
 
-    public void updataList(List<Session> data) {
+    public void updateList(List<Session> data) {
+
         ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
 
         ArrayList<Session> sessionArrayList = new ArrayList<>();
@@ -89,6 +89,7 @@ public class WaitingPaymentFragment extends Fragment {
         for (Session sl : data) {
             sessionArrayList.add(sl);
         }
+
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
         listView.setAdapter(adapter);
 
