@@ -49,4 +49,14 @@ public interface ApiService {
     @DELETE("api/sessions/{session}")
     Observable<SessionList> deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
+    @GET("api/default_setting")
+    Observable<DefaultSettingList> getDefaultSettingList(@Header("Authorization") String authorization);
+
+    @GET("api/default_setting/{default_setting}")
+    Observable<DefaultSettingDetail> getDefaultSettingDetail(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting);
+
+    @PUT("api/default_settings/{default_setting}")
+    Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting, @Body HashMap<String, String> body);
+
+
 }

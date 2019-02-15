@@ -7,23 +7,22 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.DefaultSetting;
 
 import java.util.ArrayList;
 
-public class GroupAdapter extends BaseAdapter {
+public class DefaultSettingAdapter extends BaseAdapter {
 
     private Data[] list;
 
     static class ViewHolder {
         TextView name;
-        TextView detail;
     }
     static public class Data {
-        public Data(int id, String name, String detail) {
+        public Data(int id, String name) {
             this.id = id;
             this.name = name;
-            this.detail = detail;
-        }
+           }
 
         public int getId() {
             return id;
@@ -33,19 +32,14 @@ public class GroupAdapter extends BaseAdapter {
             return name;
         }
 
-        public String getDetail() {
-            return detail;
-        }
-
         int id;
         String name;
-        String detail;
     }
 
-    public GroupAdapter(Data[] names){
+    public DefaultSettingAdapter(Data[] names){
         list = names;
     }
-    public GroupAdapter(ArrayList<Data> names){
+    public DefaultSettingAdapter(ArrayList<Data> names){
         list = names.toArray(new Data[0]);
     }
 
@@ -56,17 +50,15 @@ public class GroupAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.group_cell, parent, false);
+                    .inflate(R.layout.default_cell, parent, false);
             holder = new ViewHolder();
-            holder.name = convertView.findViewById(R.id.member_name);
-            holder.detail = convertView.findViewById(R.id.group_detail);
+            holder.name = convertView.findViewById(R.id.default_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.name.setText(list[position].name);
-        holder.detail.setText(list[position].detail);
 
         return convertView;
     }
