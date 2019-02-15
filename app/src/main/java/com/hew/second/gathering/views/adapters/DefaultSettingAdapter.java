@@ -4,12 +4,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.DefaultSetting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DefaultSettingAdapter extends BaseAdapter {
 
@@ -22,7 +25,7 @@ public class DefaultSettingAdapter extends BaseAdapter {
         public Data(int id, String name) {
             this.id = id;
             this.name = name;
-           }
+        }
 
         public int getId() {
             return id;
