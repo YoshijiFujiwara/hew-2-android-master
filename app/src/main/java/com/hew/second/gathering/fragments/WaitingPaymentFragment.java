@@ -70,7 +70,7 @@ public class WaitingPaymentFragment extends Fragment {
                 .subscribe(
                         list -> {
 
-                            updataSeesionList(list.data);
+                            updataList(list.data);
 
                         },  // 成功時
                         throwable -> {
@@ -81,7 +81,7 @@ public class WaitingPaymentFragment extends Fragment {
                 );
     }
 
-    public void updataSeesionList(List<Session> data) {
+    public void updataList(List<Session> data) {
         ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
 
         ArrayList<Session> sessionArrayList = new ArrayList<>();

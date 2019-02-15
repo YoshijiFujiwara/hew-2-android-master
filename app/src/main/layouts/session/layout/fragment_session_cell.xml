@@ -39,7 +39,7 @@
             android:layout_marginRight="0dp"
             android:layout_marginBottom="8dp"
             android:layout_toLeftOf="@id/session_image"
-            android:background="@drawable/relativelayout_cornaer"
+            android:background="@drawable/button_corner"
             android:paddingTop="5dp"
             android:text="●人"
             app:layout_constraintBottom_toBottomOf="parent"
