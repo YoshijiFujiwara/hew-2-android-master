@@ -157,8 +157,7 @@ public class GroupFragment extends Fragment {
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         HashMap<String, String> body = new HashMap<>();
-        // TODO:デフォルトグループ名
-        body.put("name", "グル------");
+        body.put("name", "グループ");
         token.subscribeOn(Schedulers.io())
                 .flatMap(result -> {
                     LoginUser.setToken(result.access_token);
