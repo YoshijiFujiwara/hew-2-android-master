@@ -22,22 +22,21 @@ import com.hew.second.gathering.LoginUser;
 
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
 
+import com.hew.second.gathering.fragments.ApplyingFragment;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
-import com.hew.second.gathering.fragments.EventFinishFragment;
 //import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.EventFragment;
+import com.hew.second.gathering.fragments.FriendFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
+import com.hew.second.gathering.fragments.PendingFragment;
 import com.hew.second.gathering.fragments.SessionFragment;
-
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -102,8 +101,16 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         try{
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof MemberFragment){
-                MemberFragment fragment = (MemberFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof FriendFragment){
+                FriendFragment fragment = (FriendFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                fragment.removeFocus();
+            }
+            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof ApplyingFragment){
+                ApplyingFragment fragment = (ApplyingFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                fragment.removeFocus();
+            }
+            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof PendingFragment){
+                PendingFragment fragment = (PendingFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
             if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment){
