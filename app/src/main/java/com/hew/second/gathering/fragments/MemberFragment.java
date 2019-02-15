@@ -16,10 +16,10 @@ import android.widget.ListView;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.activities.AddMemberActivity;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.activities.AddMemberActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.JWT;
@@ -36,6 +36,8 @@ public class MemberFragment extends Fragment {
     private static final String MESSAGE = "message";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private MemberAdapter adapter = null;
+    private ArrayList<Friend> ar = new ArrayList<>();
+    private ListView listView = null;
 
     public static MemberFragment newInstance(String message) {
         MemberFragment fragment = new MemberFragment();
@@ -94,16 +96,29 @@ public class MemberFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                // 送信
-                // focusout
                 searchView.clearFocus();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                // テキスト変更
-                return false;
+                List<Friend> filteredItems;
+                // フィルター処理
+                if (s.isEmpty()) {
+                    filteredItems = new ArrayList<>(ar);
+                } else {
+                    filteredItems = new ArrayList<>();
+                    for (Friend item : ar) {
+                        if (item.unique_id.toLowerCase().contains(s.toLowerCase()) || item.username.toLowerCase().contains(s.toLowerCase())) { // テキストがqueryを含めば検索にHITさせる
+                            filteredItems.add(item);
+                        }
+                    }
+                }
+                // adapterの更新処理
+                adapter.clear();
+                adapter.addAll(filteredItems);
+                adapter.notifyDataSetChanged();
+                return true;
             }
         });
         // フォーカスを失った時
@@ -151,13 +166,10 @@ public class MemberFragment extends Fragment {
 
     private void updateList(List<Friend> data) {
         // ListView生成
-        ListView listView = getActivity().findViewById(R.id.member_list);
-        ArrayList<Friend> ar = new ArrayList<>();
-
-        for (Friend m : data) {
-            ar.add(m);
-        }
-        adapter = new MemberAdapter(ar);
+        listView = getActivity().findViewById(R.id.member_list);
+        ArrayList<Friend> list = new ArrayList<>(data);
+        ar = new ArrayList<>(data);
+        adapter = new MemberAdapter(list);
         // ListViewにadapterをセット
         listView.setAdapter(adapter);
     }
