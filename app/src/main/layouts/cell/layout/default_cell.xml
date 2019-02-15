@@ -8,7 +8,7 @@
     <com.hew.second.gathering.views.SquareGridView
         android:id="@+id/cardView4"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="235dp"
         android:layout_margin="8dp"
         app:cardBackgroundColor="@color/colorBackground"
         app:cardCornerRadius="16dp"
@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="0dp"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitXY"
                     app:srcCompat="@drawable/ic_default" />
             </android.support.v7.widget.CardView>
 
@@ -50,10 +50,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginTop="80dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:singleLine="true"

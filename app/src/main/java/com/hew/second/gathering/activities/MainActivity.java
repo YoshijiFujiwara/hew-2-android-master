@@ -29,6 +29,7 @@ import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
+//import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
