@@ -32,6 +32,12 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +49,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class GurunaviMapsActivity extends BaseActivity implements OnMapReadyCallback,
@@ -67,6 +76,8 @@ public class GurunaviMapsActivity extends BaseActivity implements OnMapReadyCall
     private Boolean requestingLocationUpdates;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
+    private List<Marker> markerList;
+
     private int priority = 0;
 
     @Override
@@ -74,6 +85,7 @@ public class GurunaviMapsActivity extends BaseActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gurunavi_maps);
 
+        markerList = new ArrayList<>();
 
         // LocationRequest を生成して精度、インターバルを設定
         locationRequest = LocationRequest.create();
@@ -97,6 +109,10 @@ public class GurunaviMapsActivity extends BaseActivity implements OnMapReadyCall
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+
+        FloatingActionButton fab = findViewById(R.id.fab_Location);
+        fab.setOnClickListener((l) ->startLocationUpdates() );
 
     }
 
@@ -149,8 +165,11 @@ public class GurunaviMapsActivity extends BaseActivity implements OnMapReadyCall
             // Add a marker and move the camera
             LatLng newLocation = new LatLng(lat, lng);
             mMap.addMarker(new MarkerOptions().position(newLocation).title("My Location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
-
+            //mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+            CameraPosition cameraPos = new CameraPosition.Builder()
+                    .target(newLocation).zoom(15.0f)
+                    .bearing(0).tilt(60).build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
         }
     }
 
@@ -188,7 +207,31 @@ public class GurunaviMapsActivity extends BaseActivity implements OnMapReadyCall
             // default の LocationSource から自前のsourceに変更する
             mMap.setLocationSource(this);
             mMap.setMyLocationEnabled(true);
-            mMap.setOnMyLocationButtonClickListener(this);
+            mMap.setOnCameraIdleListener(()->{
+                /*
+                Projection proj = mMap.getProjection();
+                VisibleRegion vRegion = proj.getVisibleRegion();
+                // 北東 = top/right, 南西 = bottom/left
+                double topLatitude = vRegion.latLngBounds.northeast.latitude;
+                double bottomLatitude = vRegion.latLngBounds.southwest.latitude;
+                double leftLongitude = vRegion.latLngBounds.southwest.longitude;
+                double rightLongitude = vRegion.latLngBounds.northeast.longitude;
+                Toast.makeText(this, "地図表示範囲\n緯度:" + bottomLatitude + "～" + topLatitude +
+                        "\n経度:" + leftLongitude + "～" + rightLongitude , Toast.LENGTH_LONG).show();
+                        */
+                CameraPosition cameraPos = mMap.getCameraPosition();
+                Toast.makeText(this, "中心位置\n緯度:" + cameraPos.target.latitude + "\n経度:" + cameraPos.target.longitude, Toast.LENGTH_LONG).show();
+
+                // マーカー設定
+                MarkerOptions options = new MarkerOptions();
+                BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+                options.icon(icon);
+                options.position(cameraPos.target);
+                for (Marker m : markerList){
+                    m.remove();
+                }
+                markerList.add(mMap.addMarker(options));
+            });
         }
         else{
             Log.d("debug", "permission error");
@@ -378,8 +421,6 @@ public class GurunaviMapsActivity extends BaseActivity implements OnMapReadyCall
         if (!requestingLocationUpdates) {
             Log.d("debug", "stopLocationUpdates: " +
                     "updates never requested, no-op.");
-
-
             return;
         }
 
