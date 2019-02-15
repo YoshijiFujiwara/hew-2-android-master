@@ -81,7 +81,7 @@ public class DefaultSettingFragment extends Fragment {
         // 色設定
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccentDark);
         // Listenerをセット
-//        mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
+        mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         GridView gridView = activity.findViewById(R.id.gridView_default);
 
@@ -147,12 +147,12 @@ public class DefaultSettingFragment extends Fragment {
 //            }});
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Util.setLoading(true, getActivity());
-//        fetchList();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Util.setLoading(true, getActivity());
+        fetchList();
+    }
 
 //    private void createGroup(){
 //        Util.setLoading(true, getActivity());
