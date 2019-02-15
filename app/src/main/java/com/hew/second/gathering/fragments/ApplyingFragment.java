@@ -61,12 +61,6 @@ public class ApplyingFragment extends Fragment {
         return view;
     }
 
-
-    public void removeFocus() {
-        SearchView searchView = getActivity().findViewById(R.id.searchView_applying);
-        searchView.clearFocus();
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

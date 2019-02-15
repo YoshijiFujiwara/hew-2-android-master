@@ -68,12 +68,6 @@ public class FriendFragment extends Fragment {
         return view;
     }
 
-
-    public void removeFocus() {
-        SearchView searchView = getActivity().findViewById(R.id.searchView);
-        searchView.clearFocus();
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

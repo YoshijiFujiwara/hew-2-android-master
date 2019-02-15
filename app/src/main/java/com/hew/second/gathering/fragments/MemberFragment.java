@@ -80,4 +80,13 @@ public class MemberFragment extends Fragment {
         return view;
     }
 
+    public void removeFocus() {
+        SearchView searchView = getActivity().findViewById(R.id.searchView);
+        searchView.clearFocus();
+        searchView = getActivity().findViewById(R.id.searchView_applying);
+        searchView.clearFocus();
+        searchView = getActivity().findViewById(R.id.searchView_pending);
+        searchView.clearFocus();
+    }
+
 }

@@ -67,13 +67,7 @@ public class PendingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pending, container, false);
         return view;
     }
-
-
-    public void removeFocus() {
-        SearchView searchView = getActivity().findViewById(R.id.searchView_pending);
-        searchView.clearFocus();
-    }
-
+    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

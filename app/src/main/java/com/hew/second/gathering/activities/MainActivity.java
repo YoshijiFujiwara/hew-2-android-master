@@ -101,16 +101,8 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         try{
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof FriendFragment){
-                FriendFragment fragment = (FriendFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-                fragment.removeFocus();
-            }
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof ApplyingFragment){
-                ApplyingFragment fragment = (ApplyingFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-                fragment.removeFocus();
-            }
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof PendingFragment){
-                PendingFragment fragment = (PendingFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof MemberFragment){
+                MemberFragment fragment = (MemberFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
             if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment){
