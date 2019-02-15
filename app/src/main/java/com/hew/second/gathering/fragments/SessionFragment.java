@@ -34,7 +34,7 @@ public class SessionFragment extends Fragment {
 
         tabLayout = getActivity().findViewById(R.id.session_tablayout_id);
         viewPager = getActivity().findViewById(R.id.session_viewpager_id);
-        adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         adapter.AddFragment("進行中");
         adapter.AddFragment("支払い待ち");

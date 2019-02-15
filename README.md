@@ -48,6 +48,77 @@ AndroidStudioで普通に作れば大丈夫だと思います。
 ApiService内のURLは最終的にリファレンスに乗ってる分を全て書くことになるので使う分はどんどん追加していってください。  
 API用でプロパティのみのクラスを作成する場合は apiフォルダ内に作成してください。  
 
+## gitコマンド
+
+### 作業前
+
+```shell
+git pull origin develop
+git checkout feature/<自分のブランチ名>
+git merge develop
+```
+
+### ブランチ
+
+<自分のブランチ名>は適当につけてください。かっこはいらない。  
+
+```shell
+git branch feature/<自分のブランチ名>
+git checkout feature/<自分のブランチ名>
+```  
+  
+作業後：１〜２時間に一回はしましょう  
+
+```shell
+git add .
+git commit -m "コメント"
+(ブランチ作成後初回)git push -u origin feature/<自分のブランチ名>
+(２回目以降)git push
+```
+  
+### マージ
+
+作業がひと段落したらorその日の作業終わりに  
+
+```shell
+git add .
+git commit -m "developをマージする前にとりあえずコミット"
+git checkout develop
+git pull
+git checkout feature/<自分のブランチ名>
+git merge develop
+```
+
+### コンフリクトした場合
+
+競合箇所を修正  
+
+```shell
+git status
+```
+
+で競合しているファイルが確認できるので、対象ファイルを開いて以下のような部分を見つける。
+
+```
+<<<<<<< HEAD
+自分の環境の変更点
+=======
+マージを試みた他の環境での変更点
+>>>>>>> [commit id]
+```
+
+変更点を確認して、両方残す・どちらかだけ残す・再編集してより良い形に書き換えるなどして競合を解消する。  
+  
+その後、feature/<自分のブランチ名>ブランチで  
+
+```shell
+git add .
+git commit -m "コメント"
+git push
+```
+
+github上からプルリクエストを作ってdevelopとマージ  
+
 ## バックエンドメモ
 
 ### テストユーザー

@@ -2,7 +2,10 @@ package com.hew.second.gathering.api;
 
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -28,8 +31,17 @@ public interface ApiService {
     @GET("api/groups/{group}")
     Observable<GroupDetail> getGroupDetail(@Header("Authorization") String authorization, @Path("group") int groupId);
 
+    @POST("api/groups")
+    Observable<GroupDetail> createGroup(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
     @PUT("api/groups/{group}")
     Observable<GroupDetail> updateGroupName(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, String> body);
+
+    @DELETE("api/groups/{group}/users/{user}")
+    Completable deleteGroupUser(@Header("Authorization") String authorization, @Path("group") int groupId, @Path("user") int userId);
+
+    @DELETE("api/groups/{group}")
+    Completable deleteGroup(@Header("Authorization") String authorization, @Path("group") int groupId);
 
     @POST("api/auth/me")
     Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
@@ -41,13 +53,13 @@ public interface ApiService {
     Observable<SessionList> createSession(@Header("Authorization") String authorization);
 
     @GET("api/sessions/{session}")
-    Observable<SessionList> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
+    Observable<SessionDetail> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     @PUT("api/sessions/{session}")
-    Observable<SessionList> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
+    Observable<SessionDetail> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
 
     @DELETE("api/sessions/{session}")
-    Observable<SessionList> deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
+    Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     @GET("api/default_setting")
     Observable<DefaultSettingList> getDefaultSettingList(@Header("Authorization") String authorization);
@@ -58,5 +70,6 @@ public interface ApiService {
     @PUT("api/default_settings/{default_setting}")
     Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting, @Body HashMap<String, String> body);
 
-
+    @POST("api/search/forward_by_username")
+    Observable<FriendList> searchAddableFriendList(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 }

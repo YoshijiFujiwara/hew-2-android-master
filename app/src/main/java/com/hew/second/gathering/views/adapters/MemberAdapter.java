@@ -7,48 +7,28 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.Friend;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MemberAdapter extends BaseAdapter {
 
-    protected MemberAdapter.Data[] list;
+    protected List<Friend> list;
 
     static public class ViewHolder {
         TextView userName;
         TextView uniqueName;
     }
-    static public class Data {
-        public Data(int id, String uniqueName ,String userName) {
-            this.id = id;
-            this.uniqueName = uniqueName;
-            this.userName = userName;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getUniqueName() {
-            return uniqueName;
-        }
-
-        public String getUserName() {
-            return userName;
-        }
-
-        int id;
-        String uniqueName;
-        String userName;
-    }
     protected MemberAdapter(){
-        list = new MemberAdapter.Data[0];
+        list = null;
     }
-    public MemberAdapter(MemberAdapter.Data[] names){
-        list = names;
+    public MemberAdapter(Friend[] names){
+        list = Arrays.asList(names);
     }
-    public MemberAdapter(ArrayList<MemberAdapter.Data> names){
-        list = names.toArray(new MemberAdapter.Data[0]);
+    public MemberAdapter(ArrayList<Friend> names){
+        list =names;
     }
 
     @Override
@@ -67,15 +47,15 @@ public class MemberAdapter extends BaseAdapter {
             holder = (GroupMemberAdapter.ViewHolder) convertView.getTag();
         }
 
-        holder.userName.setText(list[position].userName);
-        holder.uniqueName.setText(list[position].uniqueName);
+        holder.userName.setText(list.get(position).username);
+        holder.uniqueName.setText(list.get(position).unique_id);
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return list.length;
+        return list.size();
     }
 
     @Override
@@ -83,6 +63,14 @@ public class MemberAdapter extends BaseAdapter {
         return position;
     }
 
+    public List<Friend> getList() { return list; }
+
+    public void clear(){
+        list.clear();
+    }
+    public void addAll(List<Friend> friends){
+        list.addAll(friends);
+    }
     @Override
     public long getItemId(int position) {
         return position;

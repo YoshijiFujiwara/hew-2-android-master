@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -34,10 +35,11 @@ public class Util {
         return loading;
     }
 
-    public static void setLoading(boolean loading, Activity activity) {
+    public static void setLoading(boolean loading, Activity activity, int color) {
         try{
             View loadingView = activity.findViewById(R.id.loading_view);
             ProgressBar loadingProgressBar = activity.findViewById(R.id.loading_progressBar);
+            loadingView.setBackgroundColor(color);
             if(loading){
                 loadingView.setVisibility(View.VISIBLE);
                 loadingProgressBar.setVisibility(View.VISIBLE);
@@ -49,6 +51,10 @@ public class Util {
         }catch (Exception e){
             Log.d("loading","不正な呼び出しです。");
         }
+    }
+
+    public static void setLoading(boolean loading, Activity activity) {
+        setLoading(loading, activity , Color.argb(100,100,100,100));
     }
 
     private static boolean loading = false;

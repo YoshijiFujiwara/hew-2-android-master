@@ -2,9 +2,11 @@ package com.hew.second.gathering.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,17 +16,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.GridView;
 
-import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.activities.AddGroupMemberActivity;
+import com.hew.second.gathering.api.Group;
+import com.hew.second.gathering.api.GroupUser;
+import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
+import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.JWT;
-import com.hew.second.gathering.api.User;
 import com.hew.second.gathering.api.Util;
-import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
-import com.hew.second.gathering.views.adapters.MemberAdapter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,12 +35,16 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
 import static android.app.Activity.RESULT_OK;
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_ADD_GROUP_MEMBER;
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_GROUP;
 import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 
 
 public class EditGroupFragment extends Fragment {
     private static final String MESSAGE = "message";
     int groupId = -1;
+    GroupMemberAdapter adapter = null;
+
 
     public static EditGroupFragment newInstance() {
         return new EditGroupFragment();
@@ -54,7 +59,7 @@ public class EditGroupFragment extends Fragment {
         return fragment;
     }
 
-    public void removeFocus(){
+    public void removeFocus() {
         InputMethodManager inputMethodMgr = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
         inputMethodMgr.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -74,13 +79,16 @@ public class EditGroupFragment extends Fragment {
         Activity activity = getActivity();
         activity.setTitle("グループ編集");
 
+        Intent beforeIntent = activity.getIntent();
+        groupId = beforeIntent.getIntExtra("GROUP_ID", -1);//設定したkeyで取り出す
+
         FloatingActionButton fab = activity.findViewById(R.id.fab_addUserToGroup);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO 追加ユーザー一覧
-                //Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(activity.getApplication(), AddGroupMemberActivity.class);
+                intent.putExtra("GROUP_ID", groupId);
+                startActivityForResult(intent, INTENT_ADD_GROUP_MEMBER);
             }
         });
         EditText groupName = getActivity().findViewById(R.id.group_name);
@@ -92,11 +100,49 @@ public class EditGroupFragment extends Fragment {
             }
         });
 
-        Intent beforeIntent = activity.getIntent();
-        groupId = beforeIntent.getIntExtra("GROUP_ID", -1);//設定したkeyで取り出す
+        GridView gridView = getActivity().findViewById(R.id.gridView_group);
+        gridView.setOnItemClickListener((parent, view, position, id) -> {
+            switch (view.getId()) {
+                case R.id.delete_group_member:
+                    ApiService service = Util.getService();
+                    Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+                    Util.setLoading(true, getActivity());
+                    token.subscribeOn(Schedulers.io())
+                            .flatMapCompletable(result -> {
+                                LoginUser.setToken(result.access_token);
+                                return service.deleteGroupUser(LoginUser.getToken(), groupId, adapter.getList().get(position).id);
+                            })
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .unsubscribeOn(Schedulers.io())
+                            .subscribe(
+                                    () -> {
+                                        fetchList();
+                                        final Snackbar snackbar = Snackbar.make(getView(), "メンバーを削除しました", Snackbar.LENGTH_LONG);
+                                        snackbar.getView().setBackgroundColor(Color.BLACK);
+                                        snackbar.setActionTextColor(Color.WHITE);
+                                        snackbar.show();
+                                    }, // 終了時
+                                    (throwable) -> {
+                                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                        Util.setLoading(false, getActivity());
+                                    }
+                            );
+                    break;
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Util.setLoading(true, getActivity());
+        fetchList();
+    }
+
+    private void fetchList(){
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        Util.setLoading(true, activity);
         token.subscribeOn(Schedulers.io())
                 .flatMap(result -> {
                     LoginUser.setToken(result.access_token);
@@ -125,12 +171,12 @@ public class EditGroupFragment extends Fragment {
         GridView gridView = getActivity().findViewById(R.id.gridView_group);
         EditText groupName = getActivity().findViewById(R.id.group_name);
         groupName.setText(gdi.name);
-        ArrayList<MemberAdapter.Data> ar = new ArrayList<>();
+        ArrayList<GroupUser> ar = new ArrayList<>();
 
-        for (User m : gdi.users) {
-            ar.add(new MemberAdapter.Data(m.id, m.unique_id, m.username));
+        for (GroupUser m : gdi.users) {
+            ar.add(m);
         }
-        GroupMemberAdapter adapter = new GroupMemberAdapter(ar);
+        adapter = new GroupMemberAdapter(ar);
 
         // ListViewにadapterをセット
         gridView.setAdapter(adapter);

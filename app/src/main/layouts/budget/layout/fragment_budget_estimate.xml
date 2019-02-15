@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,75 +8,43 @@
     android:clipToPadding="false">
 
     <LinearLayout
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:id="@+id/budget_estimate_upper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/budget_estimate_upper"
-        android:elevation="5dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:background="@color/colorBrown"
-        >
+        android:elevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:hint="予算額"
+            android:id="@+id/budget_actual"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
             android:layout_marginTop="40dp"
             android:layout_marginRight="40dp"
-            android:layout_marginLeft="40dp"
             android:layout_marginBottom="30dp"
-            android:inputType="number"
-            />
+            android:hint="予算額"
+            android:inputType="number" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/budget_estimate_upper"
+        android:layout_marginTop="32dp"
         android:background="@color/colorWhite"
         android:elevation="1dp"
-        >
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper"
+        tools:layout_editor_absoluteX="0dp">
+
+        <ListView
+            android:id="@+id/budget_estimate_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:stretchColumns="1"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp">
-
-            <TableRow
-                android:minHeight="40dp"
-                android:gravity="center">
-                <TextView
-                    android:layout_column="1"
-                    android:text="田中太郎"
-                    android:padding="3dip" />
-                <TextView
-                    android:text="上司"
-                    android:gravity="right"
-                    android:padding="3dip" />
-            </TableRow>
-
-            <TableRow
-                android:minHeight="1dp"
-                android:background="@color/colorGray" />
-
-            <TableRow
-                android:minHeight="40dp"
-                android:gravity="center">
-                <TextView
-                    android:layout_column="1"
-                    android:text="山田花子"
-                    android:padding="3dip" />
-                <TextView
-                    android:text="女性"
-                    android:gravity="right"
-                    android:padding="3dip" />
-            </TableRow>
-
-            <TableRow
-                android:minHeight="1dp"
-                android:background="@color/colorGray" />
-        </TableLayout>
+            android:layout_height="match_parent" />
     </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
