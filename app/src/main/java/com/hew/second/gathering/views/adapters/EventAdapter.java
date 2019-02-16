@@ -65,11 +65,11 @@ public class EventAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+
         holder.name.setText(list.get(position).name);
-        holder.shop_id.setText(list.get(position).shop_id);
+        holder.shop_id.setText(String.valueOf(list.get(position).shop_id));
         holder.start_time.setText(list.get(position).start_time);
         holder.users.setText(list.get(position).users);
-
 //        holder.button.setOnClickListener((view) -> {
 //            ((GridView) parent).performItemClick(view, position, R.id.delete_group);
 //        });

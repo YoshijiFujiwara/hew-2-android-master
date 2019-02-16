@@ -118,13 +118,13 @@ public class EventFragment extends Fragment {
     private void updateList(List<Session> data) {
         // ListView生成
         ListView listView = getActivity().findViewById(R.id.listView_event);
-//        ar.clear();
-//        for (Session m : data) {
-//            ar.add(new EventAdapter.Data(m.id, m.name, m.shop_id, m.start_time,m.users.size() + "名"));
-//        }
-//        adapter = new EventAdapter(ar);
-//        // ListViewにadapterをセット
-//        listView.setAdapter(adapter);
+        ar.clear();
+        for (Session m : data) {
+            ar.add(new EventAdapter.Data(m.id, m.name, m.shop_id, m.start_time,m.users.size() + "名"));
+        }
+        adapter = new EventAdapter(ar);
+        // ListViewにadapterをセット
+        listView.setAdapter(adapter);
     }
 
 }
