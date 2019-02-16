@@ -16,15 +16,45 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    /*
+     * 認証系API
+     */
     @POST("api/auth/login")
     Observable<JWT> getToken(@Query("email") String email, @Query("password") String password);
 
     @POST("api/auth/refresh")
     Observable<JWT> getRefreshToken(@Header("Authorization") String authorization);
 
-    @GET("api/friends")
-    Observable<FriendList> getMemberList(@Header("Authorization") String authorization);
+    @POST("api/auth/me")
+    Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
 
+    /*
+     * 友達系API
+     */
+    @GET("api/friends")
+    Observable<FriendList> getFriendList(@Header("Authorization") String authorization);
+
+    @POST("api/friends")
+    Observable<Friend> requestAddFriend(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
+    @GET("api/friends/waiting")
+    Observable<FriendList> getApplyingFriendList(@Header("Authorization") String authorization);
+
+    @GET("api/friends/requested")
+    Observable<FriendList> getPendedFriendList(@Header("Authorization") String authorization);
+
+    @POST("api/friends/permit")
+    Completable permitFriendRequest(@Header("Authorization") String authorization, @Body HashMap<String, Integer> body);
+
+    @POST("api/friends/reject")
+    Completable rejectFriendRequest(@Header("Authorization") String authorization, @Body HashMap<String, Integer> body);
+
+    @DELETE("api/friends/{friend}")
+    Completable deleteFriend(@Header("Authorization") String authorization, @Path("friend") int userId);
+
+    /*
+     * グループ系API
+     */
     @GET("api/groups")
     Observable<GroupList> getGroupList(@Header("Authorization") String authorization);
 
@@ -43,9 +73,12 @@ public interface ApiService {
     @DELETE("api/groups/{group}")
     Completable deleteGroup(@Header("Authorization") String authorization, @Path("group") int groupId);
 
-    @POST("api/auth/me")
-    Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
+    @POST("api/groups/{group}/users")
+    Completable addUserToGroup(@Header("Authorization") String authorization, @Path("group") int groupId, @Body HashMap<String, Integer> body);
 
+    /*
+     * セッション系API
+     */
     @GET("api/sessions")
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 
@@ -61,6 +94,9 @@ public interface ApiService {
     @DELETE("api/sessions/{session}")
     Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
+    /*
+     * デフォルト設定系API
+     */
     @GET("api/default_settings")
     Observable<DefaultSettingList> getDefaultSettingList(@Header("Authorization") String authorization);
 
@@ -70,6 +106,12 @@ public interface ApiService {
     @PUT("api/default_settings/{default_setting}")
     Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting, @Body HashMap<String, String> body);
 
-    @POST("api/search/forward_by_username")
-    Observable<FriendList> searchAddableFriendList(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+    /*
+     * ユーザー検索系API
+     */
+    @GET("api/search/can_add_friend_users")
+    Observable<FriendList> getAddableFriendList(@Header("Authorization") String authorization);
+
+    @GET("api/groups/{group}/users/can_add")
+    Observable<FriendList> getAddableToGroupFriendList(@Header("Authorization") String authorization, @Path("group") int groupId);
 }
