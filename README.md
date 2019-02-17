@@ -125,7 +125,7 @@ github上からプルリクエストを作ってdevelopとマージ
 ### テストユーザー
 
 testuser@example.com  
-secret  
+o34k30skm3h4b 
 
 ### APIURL
 
