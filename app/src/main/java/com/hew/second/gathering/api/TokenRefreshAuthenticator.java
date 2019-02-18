@@ -25,7 +25,7 @@ public class TokenRefreshAuthenticator implements Authenticator {
     public Request authenticate(Route route, Response response) throws IOException {
 
         // Authorizationヘッダーがない（ログイン時）は一回で終了
-        if (response.request().header("Authorization") != null) {
+        if (response.request().header("Authorization") == null) {
             return null; // Give up, we've already failed to authenticate.
         }
 

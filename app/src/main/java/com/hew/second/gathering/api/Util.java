@@ -36,6 +36,7 @@ public class Util {
     }
 
     public static void setLoading(boolean loading, Activity activity, int color) {
+        /*
         try{
             View loadingView = activity.findViewById(R.id.loading_view);
             ProgressBar loadingProgressBar = activity.findViewById(R.id.loading_progressBar);
@@ -51,6 +52,7 @@ public class Util {
         }catch (Exception e){
             Log.d("loading","不正な呼び出しです。");
         }
+        */
     }
 
     public static void setLoading(boolean loading, Activity activity) {
