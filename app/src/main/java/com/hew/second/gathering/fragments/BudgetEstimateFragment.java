@@ -52,6 +52,10 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
         Activity activity = getActivity();
         View view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
+//        Bundle bundle = getArguments();
+//        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
+//        Log.v("message", "budgetEstimateSerialize");
+//        Log.v("message", session.name);
 
 //        // sharedPreferenceに格納されているsessionIdから、session情報を取得する
 //        ApiService service = Util.getService();
@@ -93,26 +97,27 @@ public class BudgetEstimateFragment extends BudgetFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, getActivity());
-
-        // 親フラグメントでBundleに保存したセッションオブジェクトを取得する
-        Bundle bundle = getArguments();
-        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
-        Log.v("message", session.name);
-
-        // リストビューにセットする
-        ArrayList<String> nameArray = new ArrayList<>();
-        ArrayList<String> infoArray = new ArrayList<>();
-        // session情報から,usernameのリストを生成
-        for (int i = 0; i < session.users.size(); i++) {
-            nameArray.add(session.users.get(i).username);
-            infoArray.add("情報"); // todo あとで計算する
-        }
-        String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-        String[] infoParams = infoArray.toArray(new String[infoArray.size()]);
-        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(getActivity(), nameParams, infoParams);
-        budget_estimate_lv = (ListView) getActivity().findViewById(R.id.budget_estimate_list);
-        budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
+//        Util.setLoading(true, getActivity());
+//
+////        // 親フラグメントでBundleに保存したセッションオブジェクトを取得する
+//        Bundle bundle = getArguments();
+//        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
+//        Log.v("message", "budgetEstimateSerialize");
+//        Log.v("message", session.name);
+//
+//        // リストビューにセットする
+//        ArrayList<String> nameArray = new ArrayList<>();
+//        ArrayList<String> infoArray = new ArrayList<>();
+//        // session情報から,usernameのリストを生成
+//        for (int i = 0; i < session.users.size(); i++) {
+//            nameArray.add(session.users.get(i).username);
+//            infoArray.add("情報"); // todo あとで計算する
+//        }
+//        String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
+//        String[] infoParams = infoArray.toArray(new String[infoArray.size()]);
+//        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(getActivity(), nameParams, infoParams);
+//        budget_estimate_lv = (ListView) getActivity().findViewById(R.id.budget_estimate_list);
+//        budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
     }
 
     @Override

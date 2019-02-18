@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -72,9 +74,8 @@ public class BudgetFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // todo sessionidを1にセット
-        SelectedSession.setSessionId(getActivity().getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), 1);
-        Log.v("sessionid", "" + SelectedSession.getSharedSessionId(getActivity().getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+
+//        Log.v("sessionid", "" + SelectedSession.getSharedSessionId(getActivity().getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
 
         Activity activity = getActivity();
         View view = inflater.inflate(R.layout.fragment_budget, container, false);
@@ -99,12 +100,16 @@ public class BudgetFragment extends Fragment {
         super.onResume();
         // 多分ロータがくるくる回る
         Util.setLoading(true, getActivity());
-//        fetchList();
+        Log.v("message", "BudgetFragmentOnResume");
+        fetchList();
     }
 
     // sharedPreferenceに入っているセッションのIDから、
     // 予算画面に必要な情報を取得する
     private void fetchList() {
+        // todo sessionidを1にセット
+        SelectedSession.setSessionId(getActivity().getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), 1);
+
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         token.subscribeOn(Schedulers.io())
@@ -131,36 +136,41 @@ public class BudgetFragment extends Fragment {
     }
 
     // セッション情報を子フラグメントたちへ渡す
-    private void distributeSessionInfo(Session data) {
-        // ブサイクやけど２回に分ける
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+    private boolean distributeSessionInfo(Session data) {
+        Log.v("message", "distributeSessionInfoAAAAAAAAAAAAAaa");
+        Log.v("message", data.name);
 
-        // 予算の中の予算の方のフラグメント
-        BudgetEstimateFragment budgetEstimateFragment = new BudgetEstimateFragment();
-
-        Bundle bundle = new Bundle();
-        // 渡すオブジェクトをセット
-        bundle.putSerializable(SESSION_DETAIL, (Serializable) data);
-        budgetEstimateFragment.setArguments(bundle);
-        ft.replace(android.R.id.content, budgetEstimateFragment);
-        ft.addToBackStack(null);
-        ft.commit();
-
-
-
-        FragmentTransaction ft2 = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
-        // 予算の中の予算の方のフラグメント
-        BudgetActualFragment budgetActualFragment = new BudgetActualFragment();
-
-        Bundle bundle2 = new Bundle();
-        // 渡すオブジェクトをセット
-        bundle2.putSerializable(SESSION_DETAIL, (Serializable) data);
-        budgetEstimateFragment.setArguments(bundle);
-        ft.replace(android.R.id.content, budgetEstimateFragment);
-        ft.addToBackStack(null);
-        ft.commit();
+//        // ブサイクやけど２回に分ける
+//        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//
+//        // 予算の中の予算の方のフラグメント
+//        BudgetEstimateFragment budgetEstimateFragment = new BudgetEstimateFragment();
+//
+//        Bundle bundle = new Bundle();
+//        // 渡すオブジェクトをセット
+//        bundle.putSerializable(SESSION_DETAIL, data);
+//        budgetEstimateFragment.setArguments(bundle);
+//        ft.replace(android.R.id.content, budgetEstimateFragment);
+//        ft.addToBackStack(null);
+//        ft.commit();
+////
+////
+////
+////        FragmentTransaction ft2 = getActivity().getSupportFragmentManager().beginTransaction();
+////        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+////
+////        // 予算の中の予算の方のフラグメント
+////        BudgetActualFragment budgetActualFragment = new BudgetActualFragment();
+////
+////        Bundle bundle2 = new Bundle();
+////        // 渡すオブジェクトをセット
+////        bundle2.putSerializable(SESSION_DETAIL, (Serializable) data);
+////        budgetEstimateFragment.setArguments(bundle);
+////        ft.replace(android.R.id.content, budgetEstimateFragment);
+////        ft.addToBackStack(null);
+////        ft.commit();
+//
+        return true;
     }
 }

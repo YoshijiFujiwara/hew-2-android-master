@@ -95,22 +95,21 @@ public class BudgetActualFragment extends BudgetFragment {
         super.onResume();
         Util.setLoading(true, getActivity());
 
-        // 親フラグメントでBundleに保存したセッションオブジェクトを取得する
-        Bundle bundle = getArguments();
-        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
-        Log.v("message", session.name);
-
-        ArrayList<String> nameArray = new ArrayList<>();
-        ArrayList<Integer> costArray = new ArrayList<>();
-        // session情報から,usernameのリストを生成
-        for (int i = 0; i < session.users.size(); i++) {
-            nameArray.add(session.users.get(i).username);
-            costArray.add(1000); // todo あとで計算する
-        }
-        String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-        Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
-        BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(getActivity(), nameParams, costParams);
-        budget_actual_lv = (ListView) getActivity().findViewById(R.id.budget_actual_list);
-        budget_actual_lv.setAdapter(budgetActualListAdapter);
+//        // 親フラグメントでBundleに保存したセッションオブジェクトを取得する
+//        Bundle bundle = getArguments();
+//        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
+//
+//        ArrayList<String> nameArray = new ArrayList<>();
+//        ArrayList<Integer> costArray = new ArrayList<>();
+//        // session情報から,usernameのリストを生成
+//        for (int i = 0; i < session.users.size(); i++) {
+//            nameArray.add(session.users.get(i).username);
+//            costArray.add(1000); // todo あとで計算する
+//        }
+//        String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
+//        Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
+//        BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(getActivity(), nameParams, costParams);
+//        budget_actual_lv = (ListView) getActivity().findViewById(R.id.budget_actual_list);
+//        budget_actual_lv.setAdapter(budgetActualListAdapter);
     }
 }
