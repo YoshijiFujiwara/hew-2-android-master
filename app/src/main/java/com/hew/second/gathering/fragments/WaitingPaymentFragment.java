@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.hew.second.gathering.LogUtil;
@@ -26,6 +25,9 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.hew.second.gathering.R.layout;
+
 //支払い待ち
 public class WaitingPaymentFragment extends Fragment {
 
@@ -35,6 +37,8 @@ public class WaitingPaymentFragment extends Fragment {
     public WaitingPaymentFragment() {
     }
 
+
+
     public static WaitingPaymentFragment newInstance() {
         return new WaitingPaymentFragment();
     }
@@ -42,7 +46,7 @@ public class WaitingPaymentFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_waiting_payment,container,false);
+        View view = inflater.inflate(layout.fragment_waiting_payment,container,false);
 
         return view;
     }
@@ -50,8 +54,6 @@ public class WaitingPaymentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
 
     }
 
@@ -88,17 +90,15 @@ public class WaitingPaymentFragment extends Fragment {
 
 
         ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
-        ImageView imageView = getActivity().findViewById(R.id.session_image);
+
         ArrayList<Session> sessionArrayList = new ArrayList<>();
 
+
         for (Session sl : data) {
-            for (int j = 0;j <sl.users.size();j++ ) {
-                if (sl.users.get(j).paid == 1) {
-                    imageView.setImageResource(R.drawable.ic_warning);
-                }
-            }
+
             sessionArrayList.add(sl);
         }
+
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
         listView.setAdapter(adapter);
 

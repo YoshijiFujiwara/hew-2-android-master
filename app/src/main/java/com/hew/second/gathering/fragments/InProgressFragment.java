@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.hew.second.gathering.LogUtil;
@@ -71,15 +70,10 @@ public class InProgressFragment extends Fragment {
     public void updateList(List<Session> data) {
 
         ListView listView = getActivity().findViewById(R.id.listView_in_progress);
-        ImageView imageView = getActivity().findViewById(R.id.session_image);
         ArrayList<Session> sessionArrayList = new ArrayList<>();
 
         for (Session sl : data) {
-//            for (int j = 0;j <sl.users.size();j++ ) {
-//                if (sl.users.get(j).paid == 1) {
-////                    imageView.setImageResource(R.drawable.ic_warning);
-//                }
-//            }
+
             sessionArrayList.add(sl);
         }
 

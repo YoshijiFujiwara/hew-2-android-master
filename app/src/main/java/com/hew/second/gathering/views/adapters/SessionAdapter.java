@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
@@ -21,6 +22,9 @@ public class SessionAdapter extends BaseAdapter {
         TextView sessionName;
         TextView sessionDate;
         TextView sessionPeople;
+        ImageView sessionImage;
+        String startDate;
+        String emdDate;
     }
     public SessionAdapter(Session[] data) {
         list = data;
@@ -39,6 +43,7 @@ public class SessionAdapter extends BaseAdapter {
             holder.sessionName = convertView.findViewById(R.id.session_name);
             holder.sessionDate = convertView.findViewById(R.id.session_date);
             holder.sessionPeople = convertView.findViewById(R.id.session_people);
+            holder.sessionImage = convertView.findViewById(R.id.session_image_her);
 
             convertView.setTag(holder);
         } else {
@@ -48,8 +53,15 @@ public class SessionAdapter extends BaseAdapter {
         }
         holder.sessionName.setText(list[position].name);
         holder.sessionDate.setText(list[position].start_time);
-        holder.sessionPeople.setText(String.valueOf(list[position].users.size()));
+        holder.sessionPeople.setText(String.valueOf(list[position].users.size()) + "人");
         ArrayList<SessionUser> sessionUserList = (ArrayList<SessionUser>) list[position].users;
+
+        for (int i = 0; i < list[position].users.size(); i++) {
+            if (list[position].users.get(i).paid != 1) {
+                holder.sessionImage.setImageDrawable(null);
+            }
+
+        }
 
         return convertView;
     }
