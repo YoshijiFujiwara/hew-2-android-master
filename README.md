@@ -142,3 +142,7 @@ o34k30skm3h4b
 ### APIリファレンス
 
 <https://laravelv2-dot-eventer-1543384121468.appspot.com/docs/index.html>
+
+### 管理者画面
+
+<https://admin-panel-58mz1q77h.now.sh/>
