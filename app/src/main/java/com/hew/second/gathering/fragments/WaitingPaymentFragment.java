@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.hew.second.gathering.LogUtil;
@@ -29,6 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 public class WaitingPaymentFragment extends Fragment {
 
     ListView listview ;
+    int i = 0;
 
     public WaitingPaymentFragment() {
     }
@@ -56,11 +58,11 @@ public class WaitingPaymentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateSessionList();
+        fetchSessionList();
     }
 
     //    セッション情報取得
-    public void updateSessionList() {
+    public void fetchSessionList() {
 
         ApiService service = Util.getService();
         Observable<SessionList> sessionList;
@@ -84,13 +86,19 @@ public class WaitingPaymentFragment extends Fragment {
 
     public void updateList(List<Session> data) {
 
+
         ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
+        ImageView imageView = getActivity().findViewById(R.id.session_image);
         ArrayList<Session> sessionArrayList = new ArrayList<>();
 
         for (Session sl : data) {
+            for (int j = 0;j <sl.users.size();j++ ) {
+                if (sl.users.get(j).paid == 1) {
+                    imageView.setImageResource(R.drawable.ic_warning);
+                }
+            }
             sessionArrayList.add(sl);
         }
-
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
         listView.setAdapter(adapter);
 

@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
@@ -22,7 +21,6 @@ public class SessionAdapter extends BaseAdapter {
         TextView sessionName;
         TextView sessionDate;
         TextView sessionPeople;
-        ImageView paidCheck;
     }
     public SessionAdapter(Session[] data) {
         list = data;
@@ -41,7 +39,6 @@ public class SessionAdapter extends BaseAdapter {
             holder.sessionName = convertView.findViewById(R.id.session_name);
             holder.sessionDate = convertView.findViewById(R.id.session_date);
             holder.sessionPeople = convertView.findViewById(R.id.session_people);
-            holder.paidCheck = convertView.findViewById(R.id.session_image);
 
             convertView.setTag(holder);
         } else {
@@ -53,9 +50,6 @@ public class SessionAdapter extends BaseAdapter {
         holder.sessionDate.setText(list[position].start_time);
         holder.sessionPeople.setText(String.valueOf(list[position].users.size()));
         ArrayList<SessionUser> sessionUserList = (ArrayList<SessionUser>) list[position].users;
-            if (list[position].users.get(position).paid != 1) {
-                holder.paidCheck.setVisibility(View.INVISIBLE);
-            }
 
         return convertView;
     }
