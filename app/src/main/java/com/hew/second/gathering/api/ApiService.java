@@ -70,6 +70,12 @@ public interface ApiService {
     @PUT("api/default_settings/{default_setting}")
     Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting, @Body HashMap<String, String> body);
 
+    @POST("api/default_settings")
+    Observable<DefaultSettingDetail> createDefaultSetting(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
+    @DELETE("api/default_settings/{default_setting}")
+    Completable deleteDefaultSetting(@Header("Authorization") String authorization, @Path("default_setting") int defaultSettingId);
+
     @POST("api/search/forward_by_username")
     Observable<FriendList> searchAddableFriendList(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 }

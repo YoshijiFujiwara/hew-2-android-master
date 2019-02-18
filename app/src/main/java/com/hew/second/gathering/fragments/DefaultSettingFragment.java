@@ -17,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.activities.EditDefaultSettingActivity;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.views.adapters.DefaultSettingAdapter;
 import com.hew.second.gathering.views.adapters.GroupAdapter;
@@ -30,6 +32,7 @@ import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,7 +41,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
-//import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_GROUP;
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_DEFAULT;
+
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_DEFAULT;
 
 public class DefaultSettingFragment extends Fragment {
     ArrayList<DefaultSettingAdapter.Data> ar = new ArrayList<DefaultSettingAdapter.Data>();
@@ -73,9 +78,41 @@ public class DefaultSettingFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                createDefault();
+                createDefault();
             }
         });
+
+        private void createDefault(){
+            Util.setLoading(true, getActivity());
+            ApiService service = Util.getService();
+            Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+            HashMap<String, String> body = new HashMap<>();
+            // TODO:デフォルトグループ名
+            body.put("name", "グル------");
+            token.subscribeOn(Schedulers.io())
+                    .flatMap(result -> {
+                        LoginUser.setToken(result.access_token);
+                        return service.createDefaultSetting(LoginUser.getToken(),body);
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .unsubscribeOn(Schedulers.io())
+                    .subscribe(
+                            list -> {
+                                Util.setLoading(false, getActivity());
+                                Intent intent = new Intent(getActivity().getApplication(), EditDefaultSettingActivity.class);
+                                intent.putExtra("DEFAULT_ID", list.data.id);
+                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
+                            },  // 成功時
+                            throwable -> {
+                                Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                Util.setLoading(false, getActivity());
+                                // ログインアクティビティへ遷移
+                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                    );
+        }
+
 
         mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout);
         // 色設定
@@ -154,36 +191,37 @@ public class DefaultSettingFragment extends Fragment {
         fetchList();
     }
 
-//    private void createGroup(){
-//        Util.setLoading(true, getActivity());
-//        ApiService service = Util.getService();
-//        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-//        HashMap<String, String> body = new HashMap<>();
-//        // TODO:デフォルトグループ名
-//        body.put("name", "グル------");
-//        token.subscribeOn(Schedulers.io())
-//                .flatMap(result -> {
-//                    LoginUser.setToken(result.access_token);
-//                    return service.createGroup(LoginUser.getToken(),body);
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(
-//                        list -> {
-//                            Util.setLoading(false, getActivity());
-//                            Intent intent = new Intent(getActivity().getApplication(), EditGroupActivity.class);
-//                            intent.putExtra("GROUP_ID", list.data.id);
+    private void createDefault(){
+        Util.setLoading(true, getActivity());
+        ApiService service = Util.getService();
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+        HashMap<String, String> body = new HashMap<>();
+//        // TODO:デフォルト設定名
+        body.put("name", "グル------");
+        token.subscribeOn(Schedulers.io())
+                .flatMap(result -> {
+                    LoginUser.setToken(result.access_token);
+                    return service.createDefaultSetting(LoginUser.getToken(),body);
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Util.setLoading(false, getActivity());
+                            Intent intent = new Intent(getActivity().getApplication(), EditDefaultSettingActivity.class);
+                            startActivity(intent);
+//                            intent.putExtra("DEFAULTSETTING_ID", list.data.id);
 //                            startActivityForResult(intent, INTENT_EDIT_GROUP);
-//                        },  // 成功時
-//                        throwable -> {
-//                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                            Util.setLoading(false, getActivity());
-//                            // ログインアクティビティへ遷移
-//                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-//                            startActivity(intent);
-//                        }
-//                );
-//    }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            Util.setLoading(false, getActivity());
+                            // ログインアクティビティへ遷移
+                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                            startActivity(intent);
+                        }
+                );
+    }
 
     private void fetchList() {
         ApiService service = Util.getService();
