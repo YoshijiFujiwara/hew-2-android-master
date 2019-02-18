@@ -21,6 +21,8 @@ import com.hew.second.gathering.activities.EditDefaultSettingActivity;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.DefaultSetting;
+import com.hew.second.gathering.api.DefaultSettingDetail;
+import com.hew.second.gathering.api.GroupDetail;
 import com.hew.second.gathering.views.adapters.DefaultSettingAdapter;
 import com.hew.second.gathering.views.adapters.GroupAdapter;
 import com.hew.second.gathering.LogUtil;
@@ -38,6 +40,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
@@ -49,6 +52,7 @@ public class DefaultSettingFragment extends Fragment {
     ArrayList<DefaultSettingAdapter.Data> ar = new ArrayList<DefaultSettingAdapter.Data>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     DefaultSettingAdapter adapter = null;
+    private CompositeDisposable cd = new CompositeDisposable();
 
     public static DefaultSettingFragment newInstance() {
         return new DefaultSettingFragment();
@@ -69,6 +73,12 @@ public class DefaultSettingFragment extends Fragment {
     }
 
     @Override
+    public void onDestroy(){
+        cd.clear();
+        super.onDestroy();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
@@ -81,38 +91,6 @@ public class DefaultSettingFragment extends Fragment {
                 createDefault();
             }
         });
-
-        private void createDefault(){
-            Util.setLoading(true, getActivity());
-            ApiService service = Util.getService();
-            Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-            HashMap<String, String> body = new HashMap<>();
-            // TODO:デフォルトグループ名
-            body.put("name", "グル------");
-            token.subscribeOn(Schedulers.io())
-                    .flatMap(result -> {
-                        LoginUser.setToken(result.access_token);
-                        return service.createDefaultSetting(LoginUser.getToken(),body);
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .unsubscribeOn(Schedulers.io())
-                    .subscribe(
-                            list -> {
-                                Util.setLoading(false, getActivity());
-                                Intent intent = new Intent(getActivity().getApplication(), EditDefaultSettingActivity.class);
-                                intent.putExtra("DEFAULT_ID", list.data.id);
-                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
-                            },  // 成功時
-                            throwable -> {
-                                Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                Util.setLoading(false, getActivity());
-                                // ログインアクティビティへ遷移
-                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                                startActivity(intent);
-                            }
-                    );
-        }
-
 
         mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout);
         // 色設定
@@ -142,6 +120,7 @@ public class DefaultSettingFragment extends Fragment {
             }
         });
 
+        //デフォルト設定の削除
 //        gridView.setOnItemClickListener((parent, view, position, id) -> {
 //            switch (view.getId()) {
 //                case R.id.delete_group:
@@ -191,36 +170,34 @@ public class DefaultSettingFragment extends Fragment {
         fetchList();
     }
 
-    private void createDefault(){
+    private void createDefault() {
         Util.setLoading(true, getActivity());
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         HashMap<String, String> body = new HashMap<>();
-//        // TODO:デフォルト設定名
         body.put("name", "グル------");
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.createDefaultSetting(LoginUser.getToken(),body);
-                })
+        Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(),body);
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
-                            Intent intent = new Intent(getActivity().getApplication(), EditDefaultSettingActivity.class);
-                            startActivity(intent);
-//                            intent.putExtra("DEFAULTSETTING_ID", list.data.id);
-//                            startActivityForResult(intent, INTENT_EDIT_GROUP);
+                            if (getActivity() != null) {
+                                Util.setLoading(false, getActivity());
+                                Intent intent = new Intent(getActivity().getApplication(), EditDefaultSettingActivity.class);
+                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
+                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
-                            // ログインアクティビティへ遷移
-                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                            startActivity(intent);
+                            if (getActivity() != null) {
+                                Util.setLoading(false, getActivity());
+                                // ログインアクティビティへ遷移
+                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
                         }
-                );
+                ));
     }
 
     private void fetchList() {
@@ -262,3 +239,4 @@ public class DefaultSettingFragment extends Fragment {
     }
 
 }
+
