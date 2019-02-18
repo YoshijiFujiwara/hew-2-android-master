@@ -48,38 +48,38 @@ public class BudgetActualFragment extends BudgetFragment {
         Activity activity = getActivity();
         View view = inflater.inflate(R.layout.fragment_budget_actual, container, false);
 
-        // sharedPreferenceに格納されているsessionIdから、session情報を取得する
-        ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getSessionDetail(LoginUser.getToken(), SelectedSession.getSharedSessionId(activity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            // session情報をセットする
-                            Log.d("api", "api：" + list.data.name.toString());
-
-                            ArrayList<String> nameArray = new ArrayList<>();
-                            ArrayList<Integer> costArray = new ArrayList<>();
-                            // session情報から,usernameのリストを生成
-                            for (int i = 0; i < list.data.users.size(); i++) {
-                                nameArray.add(list.data.users.get(i).username);
-                                costArray.add(1000); // todo あとで計算する
-                            }
-                            String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-                            Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
-                            BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(activity, nameParams, costParams);
-                            budget_actual_lv = (ListView) view.findViewById(R.id.budget_actual_list);
-                            budget_actual_lv.setAdapter(budgetActualListAdapter);
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                        }
-                );
+//        // sharedPreferenceに格納されているsessionIdから、session情報を取得する
+//        ApiService service = Util.getService();
+//        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+//        token.subscribeOn(Schedulers.io())
+//                .flatMap(result -> {
+//                    LoginUser.setToken(result.access_token);
+//                    return service.getSessionDetail(LoginUser.getToken(), SelectedSession.getSharedSessionId(activity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .unsubscribeOn(Schedulers.io())
+//                .subscribe(
+//                        list -> {
+//                            // session情報をセットする
+//                            Log.d("api", "api：" + list.data.name.toString());
+//
+//                            ArrayList<String> nameArray = new ArrayList<>();
+//                            ArrayList<Integer> costArray = new ArrayList<>();
+//                            // session情報から,usernameのリストを生成
+//                            for (int i = 0; i < list.data.users.size(); i++) {
+//                                nameArray.add(list.data.users.get(i).username);
+//                                costArray.add(1000); // todo あとで計算する
+//                            }
+//                            String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
+//                            Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
+//                            BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(activity, nameParams, costParams);
+//                            budget_actual_lv = (ListView) view.findViewById(R.id.budget_actual_list);
+//                            budget_actual_lv.setAdapter(budgetActualListAdapter);
+//                        },  // 成功時
+//                        throwable -> {
+//                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+//                        }
+//                );
 
 
         return view;

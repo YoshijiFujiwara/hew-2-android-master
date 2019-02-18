@@ -78,13 +78,13 @@ public class BudgetFragment extends Fragment {
 
         Activity activity = getActivity();
         View view = inflater.inflate(R.layout.fragment_budget, container, false);
-//        BudgetFragmentPagerAdapter adapter = new BudgetFragmentPagerAdapter(getChildFragmentManager());
-//        ViewPager viewPager = view.findViewById(R.id.viewPager);
-//        viewPager.setOffscreenPageLimit(2);
-//        viewPager.setAdapter(adapter);
-//
-//        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
-//        tabLayout.setupWithViewPager(viewPager);
+        BudgetFragmentPagerAdapter adapter = new BudgetFragmentPagerAdapter(getChildFragmentManager());
+        ViewPager viewPager = view.findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
 
         return view;
     }
