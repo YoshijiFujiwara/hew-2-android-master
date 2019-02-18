@@ -13,34 +13,30 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.view.MotionEvent;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
-
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
-
-import com.hew.second.gathering.fragments.ApplyingFragment;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
-//import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.EventFragment;
-import com.hew.second.gathering.fragments.FriendFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
-import com.hew.second.gathering.fragments.PendingFragment;
 import com.hew.second.gathering.fragments.SessionFragment;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+//import com.hew.second.gathering.fragments.EventFragment;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -177,7 +173,7 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.commit();
             }
 
-        } else if (id == R.id.nav_session) {
+        }else if (id == R.id.nav_session) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if(fragmentManager != null){
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
