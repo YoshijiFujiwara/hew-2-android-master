@@ -88,7 +88,7 @@ public class Util {
             retrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl("https://laravel-dot-eventer-1543384121468.appspot.com/")
+                    .baseUrl("https://laravelv2-dot-eventer-1543384121468.appspot.com/")
                     .client(Util.getHttpClientWithHeader().build())
                     .build();
         }
