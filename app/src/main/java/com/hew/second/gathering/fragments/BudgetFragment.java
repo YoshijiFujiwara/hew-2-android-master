@@ -38,8 +38,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class BudgetFragment extends Fragment {
-    private static final String BUDGET_MESSAGE = "budget_message";
-    private static final String SESSION_DETAIL = "session_detail";
+    protected static final String BUDGET_MESSAGE = "budget_message";
+    protected static final String SESSION_DETAIL = "session_detail";
 
     int estimateBudget, actualBudget; // 予算額と実際にかかった金額
     Session session; // session情報

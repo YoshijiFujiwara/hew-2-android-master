@@ -19,6 +19,7 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.SelectedSession;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.JWT;
+import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
@@ -87,6 +88,31 @@ public class BudgetEstimateFragment extends BudgetFragment {
 //                );
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Util.setLoading(true, getActivity());
+
+        // 親フラグメントでBundleに保存したセッションオブジェクトを取得する
+        Bundle bundle = getArguments();
+        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
+        Log.v("message", session.name);
+
+        // リストビューにセットする
+        ArrayList<String> nameArray = new ArrayList<>();
+        ArrayList<String> infoArray = new ArrayList<>();
+        // session情報から,usernameのリストを生成
+        for (int i = 0; i < session.users.size(); i++) {
+            nameArray.add(session.users.get(i).username);
+            infoArray.add("情報"); // todo あとで計算する
+        }
+        String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
+        String[] infoParams = infoArray.toArray(new String[infoArray.size()]);
+        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(getActivity(), nameParams, infoParams);
+        budget_estimate_lv = (ListView) getActivity().findViewById(R.id.budget_estimate_list);
+        budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
     }
 
     @Override
