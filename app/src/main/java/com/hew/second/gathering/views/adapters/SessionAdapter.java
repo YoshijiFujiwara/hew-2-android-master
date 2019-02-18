@@ -57,11 +57,13 @@ public class SessionAdapter extends BaseAdapter {
         ArrayList<SessionUser> sessionUserList = (ArrayList<SessionUser>) list[position].users;
 
         for (int i = 0; i < list[position].users.size(); i++) {
+
             if (list[position].users.get(i).paid != 1) {
-                holder.sessionImage.setImageDrawable(null);
+                holder.sessionImage.setImageResource(R.drawable.ic_warning);
             }
 
         }
+
 
         return convertView;
     }
