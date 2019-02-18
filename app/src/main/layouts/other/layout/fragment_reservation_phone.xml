@@ -16,7 +16,6 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-
         android:background="#FFEB99"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -31,7 +30,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginStart="0dp"
             android:layout_marginLeft="0dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            app:srcCompat="@drawable/ic_location"
+             />
 
         <TextView
             android:id="@+id/textView5"
@@ -40,7 +40,7 @@
             android:layout_alignBottom="@+id/imageView"
             android:layout_marginStart="7dp"
             android:layout_marginLeft="7dp"
-            android:layout_marginBottom="9dp"
+            android:layout_marginBottom="3dp"
             android:layout_toEndOf="@+id/imageView"
             android:layout_toRightOf="@+id/imageView"
             android:text="TEST1" />
@@ -55,7 +55,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="3dp"
-            app:srcCompat="@android:drawable/sym_def_app_icon" />
+            app:srcCompat="@drawable/ic_time" />
 
         <TextView
             android:id="@+id/textView6"
@@ -85,7 +85,7 @@
             android:layout_marginStart="176dp"
             android:layout_marginLeft="176dp"
             android:layout_marginBottom="4dp"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal" />
+            app:srcCompat="@drawable/ic_people" />
 
         <TextView
             android:id="@+id/textView7"
@@ -130,6 +130,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginBottom="15dp"
         android:text="キャンセル"
+        android:drawable="@drawable/button_corner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -139,9 +140,10 @@
         android:layout_height="299dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="63dp"
-        tools:srcCompat="@tools:sample/avatars"
+        app:srcCompat="@drawable/ic_phone"
         tools:ignore="MissingConstraints" />
 </android.support.constraint.ConstraintLayout>

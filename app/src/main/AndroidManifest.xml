@@ -27,6 +27,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".activities.AddGroupMemberActivity"></activity>
+        <activity android:name=".activities.AddMemberActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -59,7 +60,6 @@
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.AddMemberActivity" />
         <activity
             android:name=".activities.GurunaviMapsActivity"
             android:label="@string/title_activity_gurunavi_maps" />

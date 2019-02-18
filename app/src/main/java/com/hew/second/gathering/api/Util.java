@@ -61,7 +61,7 @@ public class Util {
 
     protected static OkHttpClient.Builder getHttpClientWithHeader() {
         if (httpClient == null) {
-            httpClient = new OkHttpClient.Builder();
+            httpClient = new OkHttpClient.Builder().authenticator(new TokenRefreshAuthenticator());
             httpClient.addInterceptor(new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -88,7 +88,7 @@ public class Util {
             retrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl("https://laravel-dot-eventer-1543384121468.appspot.com/")
+                    .baseUrl("https://laravelv2-dot-eventer-1543384121468.appspot.com/")
                     .client(Util.getHttpClientWithHeader().build())
                     .build();
         }
