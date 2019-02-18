@@ -61,7 +61,7 @@ public class Util {
 
     protected static OkHttpClient.Builder getHttpClientWithHeader() {
         if (httpClient == null) {
-            httpClient = new OkHttpClient.Builder().authenticator(new TokenRefreshAuthenticator());
+            httpClient = new OkHttpClient.Builder();//.authenticator(new TokenRefreshAuthenticator());
             httpClient.addInterceptor(new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {

@@ -22,6 +22,7 @@ import okhttp3.Route;
 public class TokenRefreshAuthenticator implements Authenticator {
     @Override
     public Request authenticate(Route route, Response response) throws IOException {
+
         // TODO error handling for unrecoverable situation
         Observable<JWT> token = Util.getService().getToken(LoginUser.getEmail(null), LoginUser.getPassword(null));
         LoginUser.setToken(token.blockingFirst().access_token);
