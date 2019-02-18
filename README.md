@@ -79,6 +79,7 @@ git commit -m "コメント"
 ### マージ
 
 作業がひと段落したらorその日の作業終わりに  
+動作確認をしてからマージしてください！
 
 ```shell
 git add .
@@ -124,11 +125,15 @@ github上からプルリクエストを作ってdevelopとマージ
 ### テストユーザー
 
 testuser@example.com  
-secret  
+o34k30skm3h4b 
 
 ### APIURL
 
 <https://laravel-dot-eventer-1543384121468.appspot.com/>
+
+#### 新しい方 URL差し替えてください
+
+<https://laravelv2-dot-eventer-1543384121468.appspot.com/>  
 
 ### phpmyadmin
 
@@ -136,4 +141,8 @@ secret
 
 ### APIリファレンス
 
-<https://laravel-dot-eventer-1543384121468.appspot.com/docs/index.html>
+<https://laravelv2-dot-eventer-1543384121468.appspot.com/docs/index.html>
+
+### 管理者画面
+
+<https://admin-panel-58mz1q77h.now.sh/>

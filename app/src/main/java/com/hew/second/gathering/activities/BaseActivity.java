@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
+import com.hew.second.gathering.api.Util;
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     public static final String SNACK_MESSAGE = "MESSAGE";
@@ -16,6 +18,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
+        Util.setLoading(false,this);
         String message = i.getStringExtra(SNACK_MESSAGE);
         if(message != null) {
             final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);

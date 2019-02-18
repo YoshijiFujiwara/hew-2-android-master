@@ -19,6 +19,7 @@ import android.widget.GridView;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.activities.AddGroupMemberActivity;
 import com.hew.second.gathering.api.Group;
+import com.hew.second.gathering.api.GroupDetail;
 import com.hew.second.gathering.api.GroupUser;
 import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
 import com.hew.second.gathering.LogUtil;
@@ -26,11 +27,14 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
@@ -44,6 +48,8 @@ public class EditGroupFragment extends Fragment {
     private static final String MESSAGE = "message";
     int groupId = -1;
     GroupMemberAdapter adapter = null;
+    private CompositeDisposable cd = new CompositeDisposable();
+
 
 
     public static EditGroupFragment newInstance() {
@@ -62,6 +68,12 @@ public class EditGroupFragment extends Fragment {
     public void removeFocus() {
         InputMethodManager inputMethodMgr = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
         inputMethodMgr.hideSoftInputFromWindow(getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @Override
+    public void onDestroy(){
+        cd.clear();
+        super.onDestroy();
     }
 
     @Override
@@ -88,7 +100,7 @@ public class EditGroupFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(activity.getApplication(), AddGroupMemberActivity.class);
                 intent.putExtra("GROUP_ID", groupId);
-                startActivityForResult(intent, INTENT_ADD_GROUP_MEMBER);
+                startActivity(intent);
             }
         });
         EditText groupName = getActivity().findViewById(R.id.group_name);
@@ -105,13 +117,9 @@ public class EditGroupFragment extends Fragment {
             switch (view.getId()) {
                 case R.id.delete_group_member:
                     ApiService service = Util.getService();
-                    Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+                    Completable token = service.deleteGroupUser(LoginUser.getToken(), groupId, adapter.getList().get(position).id);
                     Util.setLoading(true, getActivity());
-                    token.subscribeOn(Schedulers.io())
-                            .flatMapCompletable(result -> {
-                                LoginUser.setToken(result.access_token);
-                                return service.deleteGroupUser(LoginUser.getToken(), groupId, adapter.getList().get(position).id);
-                            })
+                    cd.add(token.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .unsubscribeOn(Schedulers.io())
                             .subscribe(
@@ -126,7 +134,7 @@ public class EditGroupFragment extends Fragment {
                                         Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                                         Util.setLoading(false, getActivity());
                                     }
-                            );
+                            ));
                     break;
             }
         });
@@ -134,36 +142,37 @@ public class EditGroupFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Util.setLoading(true, getActivity());
         fetchList();
     }
 
-    private void fetchList(){
+    private void fetchList() {
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getGroupDetail(LoginUser.getToken(), groupId);
-                })
+        Observable<GroupDetail> token = service.getGroupDetail(LoginUser.getToken(), groupId);
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
-                            updateList(list.data);
+                            if (getActivity() != null) {
+                                Util.setLoading(false, getActivity());
+                                updateList(list.data);
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
-                            Intent intent = new Intent();
-                            intent.putExtra(SNACK_MESSAGE, "グループ情報の取得に失敗しました。");
-                            getActivity().setResult(RESULT_OK, intent);
-                            getActivity().finish();
+
+                            if (getActivity() != null) {
+                                Util.setLoading(false, getActivity());
+                                Intent intent = new Intent();
+                                intent.putExtra(SNACK_MESSAGE, "グループ情報の取得に失敗しました。");
+                                getActivity().setResult(RESULT_OK, intent);
+                                getActivity().finish();
+                            }
                         }
-                );
+                ));
     }
 
     private void updateList(Group gdi) {
@@ -187,34 +196,34 @@ public class EditGroupFragment extends Fragment {
         EditText groupName = getActivity().findViewById(R.id.group_name);
         HashMap<String, String> body = new HashMap<>();
         body.put("name", groupName.getText().toString());
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.updateGroupName(LoginUser.getToken(), groupId, body);
-                })
+        Observable<GroupDetail> token = service.updateGroupName(LoginUser.getToken(), groupId, body);
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
-                            Intent intent = new Intent();
-                            intent.putExtra(SNACK_MESSAGE, "グループ名を更新しました。");
-                            getActivity().setResult(RESULT_OK, intent);
-                            getActivity().finish();
+                            if (getActivity() != null) {
+                                Util.setLoading(false, getActivity());
+                                Intent intent = new Intent();
+                                intent.putExtra(SNACK_MESSAGE, "グループ名を更新しました。");
+                                getActivity().setResult(RESULT_OK, intent);
+                                getActivity().finish();
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
-                            Intent intent = new Intent();
-                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
-                                intent.putExtra(SNACK_MESSAGE, "グループ名の変更はありません。");
-                            } else {
-                                intent.putExtra(SNACK_MESSAGE, "グループ名の更新に失敗しました。");
+                            if (getActivity() != null) {
+                                Util.setLoading(false, getActivity());
+                                Intent intent = new Intent();
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
+                                    intent.putExtra(SNACK_MESSAGE, "グループ名の変更はありません。");
+                                } else {
+                                    intent.putExtra(SNACK_MESSAGE, "グループ名の更新に失敗しました。");
+                                }
+                                getActivity().setResult(RESULT_OK, intent);
+                                getActivity().finish();
                             }
-                            getActivity().setResult(RESULT_OK, intent);
-                            getActivity().finish();
                         }
-                );
+                ));
     }
 }

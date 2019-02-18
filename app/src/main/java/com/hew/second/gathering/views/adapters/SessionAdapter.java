@@ -4,21 +4,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.SessionUser;
 
 import java.util.ArrayList;
 
 public class SessionAdapter extends BaseAdapter {
 
     private Session list[];
+    private int usersList;
 
     public static class ViewHolder {
         TextView sessionName;
         TextView sessionDate;
-        TextView sessionPople;
+        TextView sessionPeople;
+        ImageView paidCheck;
     }
     public SessionAdapter(Session[] data) {
         list = data;
@@ -36,6 +40,9 @@ public class SessionAdapter extends BaseAdapter {
             holder = new SessionAdapter.ViewHolder();
             holder.sessionName = convertView.findViewById(R.id.session_name);
             holder.sessionDate = convertView.findViewById(R.id.session_date);
+            holder.sessionPeople = convertView.findViewById(R.id.session_people);
+            holder.paidCheck = convertView.findViewById(R.id.session_image);
+
             convertView.setTag(holder);
         } else {
 
@@ -44,6 +51,12 @@ public class SessionAdapter extends BaseAdapter {
         }
         holder.sessionName.setText(list[position].name);
         holder.sessionDate.setText(list[position].start_time);
+        holder.sessionPeople.setText(String.valueOf(list[position].users.size()));
+        ArrayList<SessionUser> sessionUserList = (ArrayList<SessionUser>) list[position].users;
+            if (list[position].users.get(position).paid != 1) {
+                holder.paidCheck.setVisibility(View.INVISIBLE);
+            }
+
         return convertView;
     }
 

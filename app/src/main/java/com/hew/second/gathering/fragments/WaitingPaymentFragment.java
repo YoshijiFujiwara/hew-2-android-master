@@ -14,8 +14,8 @@ import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.SessionList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.SessionAdapter;
 
@@ -50,27 +50,28 @@ public class WaitingPaymentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         updateSessionList();
     }
 
-//    セッション情報取得
+    //    セッション情報取得
     public void updateSessionList() {
 
-
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getSessionList(LoginUser.getToken());
-                })
+        Observable<SessionList> sessionList;
+        sessionList = service.getSessionList(LoginUser.getToken());
+        sessionList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-
-                            updataSeesionList(list.data);
+//                          表示
+                            updateList(list.data);
 
                         },  // 成功時
                         throwable -> {
@@ -81,14 +82,15 @@ public class WaitingPaymentFragment extends Fragment {
                 );
     }
 
-    public void updataSeesionList(List<Session> data) {
-        ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
+    public void updateList(List<Session> data) {
 
+        ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
         ArrayList<Session> sessionArrayList = new ArrayList<>();
 
         for (Session sl : data) {
             sessionArrayList.add(sl);
         }
+
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
         listView.setAdapter(adapter);
 
