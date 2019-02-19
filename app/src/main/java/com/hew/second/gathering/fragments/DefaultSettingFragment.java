@@ -33,6 +33,8 @@ import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -120,47 +122,40 @@ public class DefaultSettingFragment extends Fragment {
             }
         });
 
-        //デフォルト設定の削除
-//        gridView.setOnItemClickListener((parent, view, position, id) -> {
-//            switch (view.getId()) {
-//                case R.id.delete_group:
-//                    ApiService service = Util.getService();
-//                    Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-//                    Util.setLoading(true, getActivity());
-//                    token.subscribeOn(Schedulers.io())
-//                            .flatMapCompletable(result -> {
-//                                LoginUser.setToken(result.access_token);
-//                                return service.deleteGroup(LoginUser.getToken(), adapter.getList().get(position).id);
-//                            })
-//                            .observeOn(AndroidSchedulers.mainThread())
-//                            .unsubscribeOn(Schedulers.io())
-//                            .subscribe(
-//                                    () -> {
-//                                        fetchList();
-//                                        final Snackbar snackbar = Snackbar.make(getView(), "グループを削除しました", Snackbar.LENGTH_LONG);
-//                                        snackbar.getView().setBackgroundColor(Color.BLACK);
-//                                        snackbar.setActionTextColor(Color.WHITE);
-//                                        snackbar.show();
-//                                    }, // 終了時
-//                                    (throwable) -> {
-//                                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                                        Util.setLoading(false, getActivity());
-//                                        if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409){
-//                                            //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
-//                                            final Snackbar snackbar = Snackbar.make(getView(),  "このグループを使用しているデフォルト設定があるので、削除できません",  Snackbar.LENGTH_LONG);
-//                                            snackbar.getView().setBackgroundColor(Color.BLACK);
-//                                            snackbar.setActionTextColor(Color.WHITE);
-//                                            snackbar.show();
-//                                        }
-//                                    }
-//                            );
-//                    break;
-//                default:
-//                    // メンバ編集画面へグループIDを渡す
-//                    Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
-//                    intent.putExtra("GROUP_ID", ar.get(position).id);
-//                    startActivityForResult(intent, INTENT_EDIT_GROUP);
-//            }});
+        gridView.setOnItemClickListener((parent, view, position, id) -> {
+            switch (view.getId()) {
+                case R.id.delete_default:
+                    ApiService service = Util.getService();
+                    Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+                    Util.setLoading(true, getActivity());
+                    token.subscribeOn(Schedulers.io())
+                            .flatMapCompletable(result -> {
+                                LoginUser.setToken(result.access_token);
+                                return service.deleteDefaultSetting(LoginUser.getToken(), adapter.getList().get(position).id);
+                            })
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .unsubscribeOn(Schedulers.io())
+                            .subscribe(
+                                    () -> {
+                                        fetchList();
+                                        final Snackbar snackbar = Snackbar.make(getView(), "デフォルトを削除しました", Snackbar.LENGTH_LONG);
+                                        snackbar.getView().setBackgroundColor(Color.BLACK);
+                                        snackbar.setActionTextColor(Color.WHITE);
+                                        snackbar.show();
+                                    }, // 終了時
+                                    (throwable) -> {
+                                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                        Util.setLoading(false, getActivity());
+
+                                    }
+                            );
+                    break;
+                default:
+                    // メンバ編集画面へグループIDを渡す
+                    Intent intent = new Intent(activity.getApplication(), EditDefaultSettingActivity.class);
+                    intent.putExtra("DEFAULTSETTING_ID", ar.get(position).id);
+                    startActivityForResult(intent, INTENT_EDIT_DEFAULT);
+            }});
     }
 
     @Override
@@ -171,33 +166,8 @@ public class DefaultSettingFragment extends Fragment {
     }
 
     private void createDefault() {
-        Util.setLoading(true, getActivity());
-        ApiService service = Util.getService();
-        HashMap<String, String> body = new HashMap<>();
-        body.put("name", "グル------");
-        Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(),body);
-        cd.add(token.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            if (getActivity() != null) {
-                                Util.setLoading(false, getActivity());
-                                Intent intent = new Intent(getActivity().getApplication(), EditDefaultSettingActivity.class);
-                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
-                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
-                            }
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (getActivity() != null) {
-                                Util.setLoading(false, getActivity());
-                                // ログインアクティビティへ遷移
-                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                ));
+        Intent intent = new Intent(getActivity().getApplication(), EditDefaultSettingActivity.class);
+        startActivity(intent);
     }
 
     private void fetchList() {

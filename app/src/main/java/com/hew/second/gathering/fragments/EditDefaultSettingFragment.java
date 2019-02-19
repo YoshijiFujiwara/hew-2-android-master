@@ -13,13 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Spinner;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.AddGroupMemberActivity;
+import com.hew.second.gathering.activities.EditDefaultSettingActivity;
+import com.hew.second.gathering.activities.EditGroupActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.api.Group;
@@ -39,6 +43,8 @@ import retrofit2.HttpException;
 
 import static android.app.Activity.RESULT_OK;
 import static com.hew.second.gathering.activities.BaseActivity.INTENT_ADD_GROUP_MEMBER;
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_DEFAULT;
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_GROUP;
 import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 
 
@@ -86,8 +92,16 @@ public class EditDefaultSettingFragment extends Fragment {
         Activity activity = getActivity();
         activity.setTitle("デフォルト編集");
 
-        Intent beforeIntent = activity.getIntent();
-        defaultSettingId = beforeIntent.getIntExtra("DEFAULTSETTING_ID", -1);//設定したkeyで取り出す
+        Button saveButton = getActivity().findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveDefaultSettingName();
+            }
+        });
+
+        //Intent beforeIntent = activity.getIntent();
+        //defaultSettingId = beforeIntent.getIntExtra("DEFAULTSETTING_ID", -1);//設定したkeyで取り出す
 
         EditText defaultName = getActivity().findViewById(R.id.default_input);
         defaultName.setOnFocusChangeListener((v, hasFocus) -> {
@@ -112,7 +126,7 @@ public class EditDefaultSettingFragment extends Fragment {
     public void onResume(){
         super.onResume();
         Util.setLoading(true, getActivity());
-        fetchList();
+        //fetchList();
     }
 
     private void fetchList(){
@@ -145,6 +159,7 @@ public class EditDefaultSettingFragment extends Fragment {
 
         EditText defaultName = getActivity().findViewById(R.id.default_input);
         EditText startTime = getActivity().findViewById(R.id.start_time);
+//        Spinner groupSelect = getActivity().findViewById(R.id.group_spinner);
 
         defaultName.setText(gdi.name);
         startTime.setText(gdi.timer);

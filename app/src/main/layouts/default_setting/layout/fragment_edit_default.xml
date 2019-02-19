@@ -22,26 +22,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/default_input"
-            style="@android:style/Widget.AutoCompleteTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:background="@drawable/text_style"
-            android:ems="10"
-            android:hint="デフォルト名入力"
-            android:inputType="textPersonName"
-            android:padding="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3"
-            tools:text="@string/default_name" />
+    <EditText
+        android:id="@+id/default_input"
+        style="@android:style/Widget.AutoCompleteTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/text_style"
+        android:ems="10"
+        android:hint="デフォルト名入力"
+        android:inputType="text"
+        android:padding="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <TextView
             android:id="@+id/textView5"
@@ -57,8 +56,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/radioGroup"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/default_input"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintTop_toBottomOf="@+id/default_input" />
 
     <LinearLayout
         android:id="@+id/radioGroup"
@@ -69,12 +67,11 @@
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
 
         <RadioButton
             android:id="@+id/present_location"
-            android:layout_width="170dp"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_style"
@@ -87,7 +84,7 @@
 
         <RadioButton
             android:id="@+id/specific_location"
-            android:layout_width="170dp"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_style"
@@ -112,24 +109,22 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/start_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-        <EditText
-            android:id="@+id/start_time"
-            style="@android:style/Widget.AutoCompleteTextView"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/text_style"
-            android:ems="10"
-            android:hint="ex) 30"
-            android:inputType="textPersonName"
-            android:padding="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+    <EditText
+        android:id="@+id/start_time"
+        style="@android:style/Widget.AutoCompleteTextView"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/text_style"
+        android:ems="10"
+        android:hint="ex) 30"
+        android:inputType="textPersonName|time"
+        android:padding="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
         <TextView
             android:id="@+id/textView9"
@@ -142,8 +137,7 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/start_time"
             app:layout_constraintStart_toEndOf="@+id/start_time"
-            app:layout_constraintTop_toTopOf="@+id/start_time"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintTop_toTopOf="@+id/start_time" />
 
         <TextView
             android:id="@+id/textView7"
@@ -159,8 +153,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/group_spinner"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/start_time"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintTop_toBottomOf="@+id/start_time" />
 
         <Spinner
             android:id="@+id/group_spinner"

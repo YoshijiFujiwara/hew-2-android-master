@@ -67,6 +67,10 @@
             android:name=".activities.EditGroupActivity"
             android:label="@string/title_activity_edit_group"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.EditDefaultSettingActivity"
+            android:label="@string/title_activity_edit_group"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
