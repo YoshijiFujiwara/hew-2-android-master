@@ -145,4 +145,4 @@ o34k30skm3h4b
 
 ### 管理者画面
 
-<https://admin-panel-58mz1q77h.now.sh/>
+<https://hew-2-admin-panel-nuxt.now.sh/>

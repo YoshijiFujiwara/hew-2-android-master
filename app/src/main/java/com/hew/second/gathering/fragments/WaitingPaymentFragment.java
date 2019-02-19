@@ -25,13 +25,19 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.hew.second.gathering.R.layout;
+
 //支払い待ち
 public class WaitingPaymentFragment extends Fragment {
 
     ListView listview ;
+    int i = 0;
 
     public WaitingPaymentFragment() {
     }
+
+
 
     public static WaitingPaymentFragment newInstance() {
         return new WaitingPaymentFragment();
@@ -40,7 +46,7 @@ public class WaitingPaymentFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_waiting_payment,container,false);
+        View view = inflater.inflate(layout.fragment_waiting_payment,container,false);
 
         return view;
     }
@@ -49,18 +55,16 @@ public class WaitingPaymentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateSessionList();
+        fetchSessionList();
     }
 
     //    セッション情報取得
-    public void updateSessionList() {
+    public void fetchSessionList() {
 
         ApiService service = Util.getService();
         Observable<SessionList> sessionList;
@@ -84,11 +88,18 @@ public class WaitingPaymentFragment extends Fragment {
 
     public void updateList(List<Session> data) {
 
+
         ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
+
         ArrayList<Session> sessionArrayList = new ArrayList<>();
 
+//       支払ってない場合追加
         for (Session sl : data) {
-            sessionArrayList.add(sl);
+            for (int i = 0; i < sl.users.size(); i++) {
+                if (sl.users.get(i).paid != 1 ) {
+                    sessionArrayList.add(sl);
+                }
+            }
         }
 
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);

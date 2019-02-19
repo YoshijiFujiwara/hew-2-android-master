@@ -14,12 +14,19 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private final List<String> lstTitle = new ArrayList<>();
+    protected CharSequence[] tabTitle = {"進行中","支払い待ち","履歴"};
+
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-//    得たポジション(i)によって切り替える
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) { return tabTitle[position];
+    }
+
+    //    得たポジション(i)によって切り替える
     @Override
     public Fragment getItem(int i) {
         switch (i) {
@@ -37,19 +44,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     //  最大値をセット
     @Override
     public int getCount() {
-        return lstTitle.size();
-    }
-
-    //  tablayoutにlsTitleに追加したTitle情報を渡します
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return lstTitle.get(position);
-    }
-
-    //  Fragment要素を追加
-    public void AddFragment(String title) {
-        lstTitle.add(title);
+        return tabTitle.length;
     }
 }
 
