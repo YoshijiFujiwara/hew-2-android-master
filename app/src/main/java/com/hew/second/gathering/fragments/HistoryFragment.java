@@ -82,9 +82,18 @@ public class HistoryFragment extends Fragment {
         ArrayList<Session> sessionArrayList = new ArrayList<>();
 
         for (Session sl : data) {
-            sessionArrayList.add(sl);
-        }
+//            開始時刻　終了時刻セットなおかつ
+            if (sl.start_time != null && sl.end_time != null ) {
+                for (int i = 0; i < sl.users.size(); i++) {
+//                    支払っていたら
+                    if (sl.users.get(i) != null)   {
+                        sessionArrayList.add(sl);
+                    }
+                }
 
+            }
+
+        }
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
         listView.setAdapter(adapter);
 
