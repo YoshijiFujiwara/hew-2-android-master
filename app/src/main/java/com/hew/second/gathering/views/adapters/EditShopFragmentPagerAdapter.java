@@ -6,12 +6,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.hew.second.gathering.fragments.ApplyingFragment;
 import com.hew.second.gathering.fragments.FriendFragment;
+import com.hew.second.gathering.fragments.MapFragment;
 import com.hew.second.gathering.fragments.PendingFragment;
+import com.hew.second.gathering.fragments.SearchShopFragment;
 
-public class MemberFragmentPagerAdapter extends FragmentPagerAdapter {
-    protected CharSequence[] tabTitles = {"友達", "申請中","承認待ち"};
+public class EditShopFragmentPagerAdapter extends FragmentPagerAdapter {
+    protected CharSequence[] tabTitles = {"検索条件", "マップ"};
 
-    public MemberFragmentPagerAdapter(FragmentManager fm) {
+    public EditShopFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -24,13 +26,11 @@ public class MemberFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return FriendFragment.newInstance();
+                return SearchShopFragment.newInstance();
             case 1:
-                return ApplyingFragment.newInstance();
-            case 2:
-                return PendingFragment.newInstance();
+                return MapFragment.newInstance();
             default:
-                return FriendFragment.newInstance();
+                return MapFragment.newInstance();
         }
     }
 

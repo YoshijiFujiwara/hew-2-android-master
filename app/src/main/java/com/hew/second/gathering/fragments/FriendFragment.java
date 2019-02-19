@@ -38,7 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
-public class FriendFragment extends Fragment {
+public class FriendFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private MemberAdapter adapter = null;
@@ -64,14 +64,13 @@ public class FriendFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_friend, container, false);
+        view = inflater.inflate(R.layout.fragment_friend, container, false);
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
 
         FloatingActionButton fab = activity.findViewById(R.id.fab);
         fab.setOnClickListener((v) -> {
@@ -90,7 +89,7 @@ public class FriendFragment extends Fragment {
             Friend deleteFriend = adapter.getList().get(position);
             ar.remove(deleteFriend);
             updateList(ar);
-            final Snackbar snackbar = Snackbar.make(getView(), "友達から削除しました。", Snackbar.LENGTH_LONG);
+            final Snackbar snackbar = Snackbar.make(view, "友達から削除しました。", Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(Color.BLACK);
             snackbar.setActionTextColor(Color.WHITE);
             snackbar.setAction("元に戻す", (v) -> {
@@ -102,7 +101,7 @@ public class FriendFragment extends Fragment {
                     if (event != DISMISS_EVENT_MANUAL) {
                         ApiService service = Util.getService();
                         Completable friendList = service.deleteFriend(LoginUser.getToken(), deleteFriend.id);
-                        friendList.subscribeOn(Schedulers.io())
+                        cd.add(friendList.subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .unsubscribeOn(Schedulers.io())
                                 .subscribe(
@@ -110,12 +109,15 @@ public class FriendFragment extends Fragment {
                                         },  // 成功時
                                         throwable -> {
                                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                            Util.setLoading(false, getActivity());
-                                            // ログインアクティビティへ遷移
-                                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                                            startActivity(intent);
+                                            if(activity != null && !cd.isDisposed()){
+                                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                                    // ログインアクティビティへ遷移
+                                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                                    startActivity(intent);
+                                                }
+                                            }
                                         }
-                                );
+                                ));
                     }
                 }
             });
@@ -159,7 +161,7 @@ public class FriendFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, getActivity());
+        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
@@ -173,37 +175,39 @@ public class FriendFragment extends Fragment {
     private void fetchList() {
         ApiService service = Util.getService();
         Observable<FriendList> friendList = service.getFriendList(LoginUser.getToken());
-        friendList.subscribeOn(Schedulers.io())
+        cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
                             mSwipeRefreshLayout.setRefreshing(false);
-                            updateList(list.data);
+                            if(activity != null && !cd.isDisposed()) {
+                                updateList(list.data);
+                            }
                         },  // 成功時
                         throwable -> {
-                            Util.setLoading(false, getActivity());
                             mSwipeRefreshLayout.setRefreshing(false);
                             // TODO:エラー処理はこんな形で全てに実装
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (throwable instanceof NullPointerException) {
-                                final Snackbar snackbar = Snackbar.make(getView(), "データがありません。", Snackbar.LENGTH_LONG);
-                                snackbar.getView().setBackgroundColor(Color.BLACK);
-                                snackbar.setActionTextColor(Color.WHITE);
-                                snackbar.show();
-                            } else if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                // ログインアクティビティへ遷移
-                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                                startActivity(intent);
+                            if(activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof NullPointerException) {
+                                    final Snackbar snackbar = Snackbar.make(view, "データがありません。", Snackbar.LENGTH_LONG);
+                                    snackbar.getView().setBackgroundColor(Color.BLACK);
+                                    snackbar.setActionTextColor(Color.WHITE);
+                                    snackbar.show();
+                                } else if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
                             }
                         }
-                );
+                ));
     }
 
     private void updateList(List<Friend> data) {
         // ListView生成
-        listView = getActivity().findViewById(R.id.member_list);
+        listView = activity.findViewById(R.id.member_list);
         ArrayList<Friend> list = new ArrayList<>(data);
         ar = new ArrayList<>(data);
         adapter = new MemberAdapter(list);

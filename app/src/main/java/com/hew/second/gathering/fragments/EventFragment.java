@@ -2,13 +2,14 @@ package com.hew.second.gathering.fragments;
 
 
 
-import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +19,11 @@ import android.widget.ListView;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.SelectedSession;
 import com.hew.second.gathering.activities.LoginActivity;
-import com.hew.second.gathering.activities.GurunaviMapsActivity;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.SessionDetail;
+import com.hew.second.gathering.api.SessionList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.EventAdapter;
 
@@ -33,15 +33,15 @@ import java.util.HashMap;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.hew.second.gathering.api.Util.PREF_FILE_NAME;
 
 
 public class EventFragment extends Fragment {
     private static final String MESSAGE = "message";
     ArrayList<EventAdapter.Data> ar = new ArrayList<EventAdapter.Data>();
     private EventAdapter adapter = null;
+    private CompositeDisposable cd = new CompositeDisposable();
 
     public static EventFragment newInstance(String message) {
         EventFragment fragment = new EventFragment();
@@ -54,6 +54,12 @@ public class EventFragment extends Fragment {
     public static EventFragment newInstance() {
         EventFragment fragment = new EventFragment();
         return fragment;
+    }
+
+    @Override
+    public void onDestroy(){
+        cd.clear();
+        super.onDestroy();
     }
 
     @Override
@@ -87,12 +93,8 @@ public class EventFragment extends Fragment {
 
     private void fetchList() {
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getSessionList(LoginUser.getToken());
-                })
+        Observable<SessionList> token = service.getSessionList(LoginUser.getToken());
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
@@ -107,7 +109,7 @@ public class EventFragment extends Fragment {
                             Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
                             startActivity(intent);
                         }
-                );
+                ));
     }
 
     private void updateList(List<Session> data) {
@@ -124,31 +126,35 @@ public class EventFragment extends Fragment {
 
     private void createSession(){
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         HashMap<String, String> body = new HashMap<>();
         body.put("name", "セッション");
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.createSession(LoginUser.getToken(),body);
-                })
+        Observable<SessionDetail> token = service.createSession(LoginUser.getToken(),body);
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
-                            SelectedSession.setSessionId(getActivity().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE),list.data.id);
-                            Intent intent = new Intent(getActivity().getApplication(), GurunaviMapsActivity.class);
-                            startActivity(intent);
+                            if(getActivity() != null){
+                                Util.setLoading(false, getActivity());
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                if(fragmentManager != null){
+                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                    fragmentTransaction.addToBackStack(null);
+                                    fragmentTransaction.replace(R.id.container, EditShopFragment.newInstance());
+                                    fragmentTransaction.commit();
+                                }
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
-                            // ログインアクティビティへ遷移
-                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                            startActivity(intent);
+                            if(getActivity() != null) {
+                                Util.setLoading(false, getActivity());
+                                // ログインアクティビティへ遷移
+                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
                         }
-                );
+                ));
 
     }
 }

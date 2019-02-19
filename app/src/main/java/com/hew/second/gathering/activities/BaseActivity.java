@@ -8,9 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.hew.second.gathering.api.Util;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     public static final String SNACK_MESSAGE = "MESSAGE";
+    protected CompositeDisposable cd = new CompositeDisposable();
     public static final int INTENT_EDIT_GROUP = 1;
     public static final int INTENT_ADD_GROUP_MEMBER = 2;
     @Override
@@ -29,6 +32,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+    }
+
+    @Override
+    protected void onStop(){
+        cd.clear();
+        super.onStop();
     }
 
 
