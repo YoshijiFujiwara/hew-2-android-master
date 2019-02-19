@@ -83,7 +83,7 @@ public interface ApiService {
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 
     @POST("api/sessions")
-    Observable<SessionList> createSession(@Header("Authorization") String authorization);
+    Observable<SessionDetail> createSession(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 
     @GET("api/sessions/{session}")
     Observable<SessionDetail> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);

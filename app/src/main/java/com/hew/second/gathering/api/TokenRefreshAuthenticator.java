@@ -25,17 +25,17 @@ public class TokenRefreshAuthenticator implements Authenticator {
     public Request authenticate(Route route, Response response) throws IOException {
 
         // Authorizationヘッダーがない（ログイン時）は一回で終了
-        if (response.request().header("Authorization") != null) {
+        if (response.request().header("Authorization") == null) {
             return null; // Give up, we've already failed to authenticate.
         }
 
-        if(response.code() == 401 && responseCount(response) >=3){
+        if(response.code() == 401 && responseCount(response) <3)
+        {
             // 認証失敗の場合に3回再認証
             Observable<JWT> token = Util.getService().getToken(LoginUser.getEmail(null), LoginUser.getPassword(null));
             LoginUser.setToken(token.blockingFirst().access_token);
             return response.request().newBuilder().build();
         }
-
         return null;
 
     }
