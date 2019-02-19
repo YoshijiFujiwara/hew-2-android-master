@@ -15,9 +15,10 @@
         android:layout_marginTop="14dp"
         android:layout_marginBottom="8dp"
         android:text="@string/shop_search_keyword"
-        app:layout_constraintBottom_toBottomOf="@+id/searchView3"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/searchView_keyword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/searchView3" />
+        app:layout_constraintTop_toTopOf="@+id/searchView_keyword" />
 
     <TextView
         android:id="@+id/textView11"
@@ -26,17 +27,18 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="@string/shop_search_genre"
-        app:layout_constraintBottom_toBottomOf="@+id/spinner"
-        app:layout_constraintEnd_toStartOf="@+id/spinner"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner_genre"
+        app:layout_constraintEnd_toStartOf="@+id/spinner_genre"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/spinner" />
+        app:layout_constraintTop_toTopOf="@+id/spinner_genre" />
 
-    <SearchView
-        android:id="@+id/searchView3"
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchView_keyword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -44,23 +46,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinner_genre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/searchView3"
-        app:layout_constraintStart_toStartOf="@+id/searchView3"
-        app:layout_constraintTop_toBottomOf="@+id/searchView3" />
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/searchView_keyword"
+        app:layout_constraintStart_toStartOf="@+id/searchView_keyword"
+        app:layout_constraintTop_toBottomOf="@+id/searchView_keyword" />
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        android:id="@+id/sliding_layout"
+        android:id="@+id/sliding_layout_search"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:gravity="bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_genre"
         app:umanoPanelHeight="48dp"
         app:umanoShadowHeight="4dp">
 
@@ -69,7 +71,7 @@
             android:layout_height="match_parent">
 
             <CheckBox
-                android:id="@+id/checkBox"
+                android:id="@+id/checkBox_nomi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -79,54 +81,50 @@
                 app:layout_constraintTop_toBottomOf="@+id/label_search_result" />
 
             <CheckBox
-                android:id="@+id/checkBox2"
+                android:id="@+id/checkBox_tabe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
                 android:text="食べ放題"
-                app:layout_constraintStart_toEndOf="@+id/checkBox"
-                app:layout_constraintTop_toBottomOf="@+id/label_search_result" />
+                app:layout_constraintStart_toEndOf="@+id/checkBox_nomi"
+                app:layout_constraintTop_toTopOf="@+id/checkBox_nomi" />
 
             <CheckBox
-                android:id="@+id/checkBox3"
+                android:id="@+id/checkBox_course"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
                 android:text="コースあり"
-                app:layout_constraintStart_toEndOf="@+id/checkBox2"
-                app:layout_constraintTop_toBottomOf="@+id/label_search_result" />
+                app:layout_constraintStart_toEndOf="@+id/checkBox_tabe"
+                app:layout_constraintTop_toTopOf="@+id/checkBox_nomi" />
 
             <CheckBox
-                android:id="@+id/checkBox4"
+                android:id="@+id/checkBox_room"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="個室あり"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+                app:layout_constraintTop_toBottomOf="@+id/checkBox_nomi" />
 
             <CheckBox
-                android:id="@+id/checkBox5"
+                android:id="@+id/CheckBox_parking"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:text="駐車場あり"
-                app:layout_constraintStart_toEndOf="@+id/checkBox4"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
+                app:layout_constraintStart_toEndOf="@+id/checkBox_room"
+                app:layout_constraintTop_toTopOf="@+id/checkBox_room" />
 
             <CheckBox
-                android:id="@+id/checkBox6"
+                android:id="@+id/checkBox_lunch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:text="ランチあり"
-                app:layout_constraintStart_toEndOf="@+id/checkBox5"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox3" />
+                app:layout_constraintStart_toEndOf="@+id/CheckBox_parking"
+                app:layout_constraintTop_toTopOf="@+id/CheckBox_parking" />
 
             <TextView
                 android:id="@+id/label_search_result"
@@ -147,7 +145,20 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout_editor_absoluteY="400dp" />
+            tools:layout_editor_absoluteY="400dp">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:background="@color/btn_context_menu_pressed"
+                android:gravity="center"
+                android:text="＾"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
 
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>

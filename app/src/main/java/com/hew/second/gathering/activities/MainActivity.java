@@ -26,6 +26,7 @@ import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
+import com.hew.second.gathering.fragments.EditShopFragment;
 import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
@@ -59,7 +60,7 @@ public class MainActivity extends BaseActivity
 
         ApiService service = Util.getService();
         Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
-        profile.subscribeOn(Schedulers.io())
+        cd.add(profile.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
@@ -79,7 +80,7 @@ public class MainActivity extends BaseActivity
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                         }
-                );
+                ));
 
 
     }
@@ -105,6 +106,10 @@ public class MainActivity extends BaseActivity
                 GroupFragment fragment = (GroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
+            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditShopFragment){
+                EditShopFragment fragment = (EditShopFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                fragment.removeFocus();
+            }
         }catch (Exception e){
             Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
         }
@@ -112,7 +117,7 @@ public class MainActivity extends BaseActivity
     }
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

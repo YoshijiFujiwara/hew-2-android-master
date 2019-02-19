@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.views.adapters.EditShopFragmentPagerAdapter;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.views.adapters.MemberFragmentPagerAdapter;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
@@ -63,53 +65,11 @@ public class EditShopFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final String[] texts = {
-                // Globe Decade の楽曲リストより
-                "Feel Like dance",
-                "Joy to the love (globe)",
-                "SWEET PAIN",
-                "DEPARTURES (RADIO EDIT)",
-                "FREEDOM (RADIO EDIT)",
-                "Is this love",
-                "Can't Stop Fallin' in Love",
-                "FACE",
-                "FACES PLACES",
-                "Anytime smokin' cigarette",
-                "Wanderin' Destiny",
-                "Love again",
-                "wanna Be A Dreammaker",
-                "Sa Yo Na Ra",
-                "sweet heart",
-                "Perfume of love",
-                "MISS YOUR BODY",
-                "still growin' up",
-                "biting her nails",
-                "とにかく無性に…"
-        };
-
-        // itemを表示するTextViewが設定されているlist.xmlを指す
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(activity, R.layout.text_cell);
-
-        // activity_main.xmlのlistViewにListViewをセット
-        ListView listView = activity.findViewById(R.id.listView_shop_list);
-        for (String str: texts){
-            // ArrayAdapterにitemを追加する
-            arrayAdapter.add(str);
-        }
-
-        // adapterをListViewにセット
-        listView.setAdapter(arrayAdapter);
     }
 
     public void removeFocus() {
-        /*
-        SearchView searchView = getActivity().findViewById(R.id.searchView);
+        SearchView searchView = activity.findViewById(R.id.searchView_keyword);
         searchView.clearFocus();
-        searchView = getActivity().findViewById(R.id.searchView_applying);
-        searchView.clearFocus();
-        searchView = getActivity().findViewById(R.id.searchView_pending);
-        searchView.clearFocus();
-        */
     }
 
 }

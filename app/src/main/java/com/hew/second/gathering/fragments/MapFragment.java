@@ -14,12 +14,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
@@ -30,6 +33,7 @@ import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.EventAdapter;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +45,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class MapFragment extends BaseFragment  implements OnMapReadyCallback {
+public class MapFragment extends BaseFragment  implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener {
     private static final String MESSAGE = "message";
     private MapView mapView;
     private GoogleMap googleMap;
@@ -78,9 +82,25 @@ public class MapFragment extends BaseFragment  implements OnMapReadyCallback {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        SlidingUpPanelLayout sup = activity.findViewById(R.id.sliding_layout);
+        sup.setAnchorPoint(0.5f);
+
+        // activity_main.xmlのlistViewにListViewをセット
+        ListView listView = activity.findViewById(R.id.listView_shop_list);
     }
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
+        googleMap.setOnCameraIdleListener(this);
+    }
+    @Override
+    public void onCameraIdle() {
+        onGetCenter(mapView);
+    }
+
+    public void onGetCenter(View view) {
+        CameraPosition cameraPos = googleMap.getCameraPosition();
+        Toast.makeText(activity, "中心位置\n緯度:" + cameraPos.target.latitude + "\n経度:" + cameraPos.target.longitude, Toast.LENGTH_LONG).show();
     }
 }
