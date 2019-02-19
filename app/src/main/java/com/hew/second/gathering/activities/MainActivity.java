@@ -25,7 +25,6 @@ import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.BudgetFragment;
-import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
@@ -156,15 +155,17 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
                 fragmentTransaction.commit();
             }
-        } else if (id == R.id.nav_group) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
-                fragmentTransaction.commit();
-            }
-        } else if (id == R.id.nav_member) {
+        }
+// else if (id == R.id.nav_group) {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            if(fragmentManager != null){
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
+//                fragmentTransaction.commit();
+//            }
+//        }
+        else if (id == R.id.nav_member) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if(fragmentManager != null){
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -207,15 +208,16 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.commit();
             }
 
-        } else if (id == R.id.nav_default){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
-                fragmentTransaction.commit();
-            }
         }
+//        else if (id == R.id.nav_default){
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            if(fragmentManager != null){
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
+//                fragmentTransaction.commit();
+//            }
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
