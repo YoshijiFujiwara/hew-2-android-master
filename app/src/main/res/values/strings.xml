@@ -48,4 +48,8 @@
     <string name="title_activity_gurunavi_maps">Map</string>
     <string name="invite_end">招待を打ち切る</string>
     <string name="invite_send">招待を送信する</string>
+    <string name="shop_search_keyword">キーワード</string>
+    <string name="shop_search_genre">ジャンル</string>
+    <string name="label_search_result">検索結果</string>
+    <string name="label_search_advanced">詳細設定</string>
 </resources>

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
 import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,7 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
     public static BudgetEstimateFragment newInstance() {
         return new BudgetEstimateFragment();
+
     }
 
     @Override
@@ -50,79 +54,45 @@ public class BudgetEstimateFragment extends BudgetFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Activity activity = getActivity();
-        View view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
-//        Bundle bundle = getArguments();
-//        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
-//        Log.v("message", "budgetEstimateSerialize");
-//        Log.v("message", session.name);
+        FragmentActivity fragmentActivity = getActivity();
+        if (fragmentActivity != null) {
+            View view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
+            Session session = SelectedSession.getSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+            Log.v("sessionname", session.name);
 
-//        // sharedPreferenceに格納されているsessionIdから、session情報を取得する
-//        ApiService service = Util.getService();
-//        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-//        token.subscribeOn(Schedulers.io())
-//                .flatMap(result -> {
-//                    LoginUser.setToken(result.access_token);
-//                    return service.getSessionDetail(LoginUser.getToken(), SelectedSession.getSharedSessionId(activity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(
-//                        list -> {
-//                            // session情報をセットする
-//                            Log.d("api", "apiestimate：" + list.data.name.toString());
-//
-//                            ArrayList<String> nameArray = new ArrayList<>();
-//                            ArrayList<String> infoArray = new ArrayList<>();
-//                            // session情報から,usernameのリストを生成
-//                            for (int i = 0; i < list.data.users.size(); i++) {
-//                                nameArray.add(list.data.users.get(i).username);
-//                                infoArray.add("情報"); // todo あとで計算する
-//                            }
-//                            String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-//                            String[] infoParams = infoArray.toArray(new String[infoArray.size()]);
-//                            BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, infoParams);
-//                            budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
-//                            budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
-//
-//                        },  // 成功時
-//                        throwable -> {
-//                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                        }
-//                );
+            ArrayList<String> nameArray = new ArrayList<>();
+            ArrayList<String> infoArray = new ArrayList<>();
+            // session情報から,usernameのリストを生成
+            for (int i = 0; i < session.users.size(); i++) {
+                nameArray.add(session.users.get(i).username);
+                infoArray.add("情報"); // todo あとで計算する
+            }
+            String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
+            String[] infoParams = infoArray.toArray(new String[infoArray.size()]);
+            BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(fragmentActivity, nameParams, infoParams);
+            budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
+            budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
 
-        return view;
+            return view;
+        }
+        return null;
+    }
+
+    @Override
+    public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
+        super.onInflate(context, attrs, savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        Util.setLoading(true, getActivity());
-//
-////        // 親フラグメントでBundleに保存したセッションオブジェクトを取得する
-//        Bundle bundle = getArguments();
-//        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
-//        Log.v("message", "budgetEstimateSerialize");
-//        Log.v("message", session.name);
-//
-//        // リストビューにセットする
-//        ArrayList<String> nameArray = new ArrayList<>();
-//        ArrayList<String> infoArray = new ArrayList<>();
-//        // session情報から,usernameのリストを生成
-//        for (int i = 0; i < session.users.size(); i++) {
-//            nameArray.add(session.users.get(i).username);
-//            infoArray.add("情報"); // todo あとで計算する
-//        }
-//        String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-//        String[] infoParams = infoArray.toArray(new String[infoArray.size()]);
-//        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(getActivity(), nameParams, infoParams);
-//        budget_estimate_lv = (ListView) getActivity().findViewById(R.id.budget_estimate_list);
-//        budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
+
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
     }
 
     private void updateView(SessionDetail data) {

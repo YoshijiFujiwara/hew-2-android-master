@@ -36,6 +36,7 @@ public class Util {
     }
 
     public static void setLoading(boolean loading, Activity activity, int color) {
+        /*
         try{
             View loadingView = activity.findViewById(R.id.loading_view);
             ProgressBar loadingProgressBar = activity.findViewById(R.id.loading_progressBar);
@@ -51,6 +52,17 @@ public class Util {
         }catch (Exception e){
             Log.d("loading","不正な呼び出しです。");
         }
+        */
+        try {
+            ProgressBar loadingProgressBar = activity.findViewById(R.id.loading_progressBar);
+            if (loading) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+            } else {
+                loadingProgressBar.setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            Log.d("loading","呼び出しに失敗しました。");
+        }
     }
 
     public static void setLoading(boolean loading, Activity activity) {
@@ -61,7 +73,7 @@ public class Util {
 
     protected static OkHttpClient.Builder getHttpClientWithHeader() {
         if (httpClient == null) {
-            httpClient = new OkHttpClient.Builder();//.authenticator(new TokenRefreshAuthenticator());
+            httpClient = new OkHttpClient.Builder().authenticator(new TokenRefreshAuthenticator());
             httpClient.addInterceptor(new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {

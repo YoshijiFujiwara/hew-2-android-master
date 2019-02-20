@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
 
-public class InviteGroupFragment extends Fragment {
+public class InviteGroupFragment extends BaseFragment {
 
     public static InviteGroupFragment newInstance() {
         return new InviteGroupFragment();
@@ -22,7 +22,7 @@ public class InviteGroupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_invite_group, container, false);
+        view = inflater.inflate(R.layout.fragment_invite_group, container, false);
         return view;
     }
 }

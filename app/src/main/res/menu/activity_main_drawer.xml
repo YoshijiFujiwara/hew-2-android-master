@@ -9,6 +9,11 @@
             android:id="@+id/nav_top"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="TOP" />
+        <!--<item-->
+            <!--android:id="@+id/nav_session_progress"-->
+            <!--android:icon="@drawable/ic_shopping_basket"-->
+            <!--android:title="進行中のセッション"-->
+            <!--/>-->
         <item
             android:id="@+id/nav_session"
             android:icon="@drawable/ic_menu_slideshow"

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionUser;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
+import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,44 +47,29 @@ public class BudgetActualFragment extends BudgetFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Activity activity = getActivity();
-        View view = inflater.inflate(R.layout.fragment_budget_actual, container, false);
 
-//        // sharedPreferenceに格納されているsessionIdから、session情報を取得する
-//        ApiService service = Util.getService();
-//        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-//        token.subscribeOn(Schedulers.io())
-//                .flatMap(result -> {
-//                    LoginUser.setToken(result.access_token);
-//                    return service.getSessionDetail(LoginUser.getToken(), SelectedSession.getSharedSessionId(activity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(
-//                        list -> {
-//                            // session情報をセットする
-//                            Log.d("api", "api：" + list.data.name.toString());
-//
-//                            ArrayList<String> nameArray = new ArrayList<>();
-//                            ArrayList<Integer> costArray = new ArrayList<>();
-//                            // session情報から,usernameのリストを生成
-//                            for (int i = 0; i < list.data.users.size(); i++) {
-//                                nameArray.add(list.data.users.get(i).username);
-//                                costArray.add(1000); // todo あとで計算する
-//                            }
-//                            String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-//                            Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
-//                            BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(activity, nameParams, costParams);
-//                            budget_actual_lv = (ListView) view.findViewById(R.id.budget_actual_list);
-//                            budget_actual_lv.setAdapter(budgetActualListAdapter);
-//                        },  // 成功時
-//                        throwable -> {
-//                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                        }
-//                );
+        FragmentActivity fragmentActivity = getActivity();
+        if (fragmentActivity != null) {
+            View view = inflater.inflate(R.layout.fragment_budget_actual, container, false);
+            Session session = SelectedSession.getSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+            Log.v("sessoinActualNAME", session.name);
 
+            ArrayList<String> nameArray = new ArrayList<>();
+            ArrayList<Integer> costArray = new ArrayList<>();
+            // session情報から,usernameのリストを生成
+            for (int i = 0; i < session.users.size(); i++) {
+                nameArray.add(session.users.get(i).username);
+                costArray.add(1000); // todo あとで計算する
+            }
+            String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
+            Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
+            BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(fragmentActivity, nameParams, costParams);
+            budget_actual_lv = (ListView) view.findViewById(R.id.budget_actual_list);
+            budget_actual_lv.setAdapter(budgetActualListAdapter);
 
-        return view;
+            return view;
+        }
+        return null;
     }
 
     @Override
@@ -93,23 +80,9 @@ public class BudgetActualFragment extends BudgetFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, getActivity());
-
-//        // 親フラグメントでBundleに保存したセッションオブジェクトを取得する
-//        Bundle bundle = getArguments();
-//        Session session= (Session) bundle.getSerializable(SESSION_DETAIL);
-//
-//        ArrayList<String> nameArray = new ArrayList<>();
-//        ArrayList<Integer> costArray = new ArrayList<>();
-//        // session情報から,usernameのリストを生成
-//        for (int i = 0; i < session.users.size(); i++) {
-//            nameArray.add(session.users.get(i).username);
-//            costArray.add(1000); // todo あとで計算する
-//        }
-//        String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-//        Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
-//        BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(getActivity(), nameParams, costParams);
-//        budget_actual_lv = (ListView) getActivity().findViewById(R.id.budget_actual_list);
-//        budget_actual_lv.setAdapter(budgetActualListAdapter);
+        FragmentActivity fragmentActivity = getActivity();
+        if (fragmentActivity != null) {
+            Util.setLoading(true, getActivity());
+        }
     }
 }

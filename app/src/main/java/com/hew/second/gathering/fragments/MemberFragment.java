@@ -38,7 +38,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class MemberFragment extends Fragment {
+public class MemberFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private MemberAdapter adapter = null;
@@ -67,12 +67,12 @@ public class MemberFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_member, container, false);
+        view = inflater.inflate(R.layout.fragment_member, container, false);
         MemberFragmentPagerAdapter adapter = new MemberFragmentPagerAdapter(getChildFragmentManager());
         ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
-        getActivity().setTitle("メンバー一覧");
+        activity.setTitle("メンバー一覧");
 
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
@@ -81,11 +81,11 @@ public class MemberFragment extends Fragment {
     }
 
     public void removeFocus() {
-        SearchView searchView = getActivity().findViewById(R.id.searchView);
+        SearchView searchView = activity.findViewById(R.id.searchView);
         searchView.clearFocus();
-        searchView = getActivity().findViewById(R.id.searchView_applying);
+        searchView = activity.findViewById(R.id.searchView_applying);
         searchView.clearFocus();
-        searchView = getActivity().findViewById(R.id.searchView_pending);
+        searchView = activity.findViewById(R.id.searchView_pending);
         searchView.clearFocus();
     }
 
