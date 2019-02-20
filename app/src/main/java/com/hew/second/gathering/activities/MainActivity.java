@@ -28,7 +28,7 @@ import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
-import com.hew.second.gathering.fragments.EventFinishFragment;
+import com.hew.second.gathering.fragments.SessionMainFragment;
 import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
@@ -210,6 +210,15 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.commit();
             }
 
+        } else if (id == R.id.nav_session_main) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if(fragmentManager != null){
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.container, SessionMainFragment.newInstance());
+                fragmentTransaction.commit();
+            }
+
         } else if (id == R.id.nav_finish) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {
@@ -246,7 +255,7 @@ public class MainActivity extends BaseActivity
                         if (fragmentManager != null) {
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                             fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.replace(R.id.container, EventFinishFragment.newInstance());
+                            fragmentTransaction.replace(R.id.container, SessionMainFragment.newInstance());
                             fragmentTransaction.commit();
                         }
 

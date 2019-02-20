@@ -1,11 +1,12 @@
 package com.hew.second.gathering.api;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * セッションの情報
  */
-public class Session {
+public class Session implements Serializable {
     public int id;
     public String name;
     public String shop_id; // ぐるなび側から持ってきたidかなにかを入れる予定

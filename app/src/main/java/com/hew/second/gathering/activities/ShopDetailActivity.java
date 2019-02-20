@@ -26,7 +26,6 @@ import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
-import com.hew.second.gathering.fragments.EventFinishFragment;
 import com.hew.second.gathering.hotpepper.Shop;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.squareup.picasso.Picasso;
@@ -126,6 +125,7 @@ public class ShopDetailActivity extends BaseActivity {
                         (list) -> {
                             //セッションID格納
                             SelectedSession.setSessionId(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data.id);
+                            SelectedSession.setSessionDetail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
                             //遷移
                             intent.putExtra(SNACK_MESSAGE, "セッションを作成しました。");
                             setResult(RESULT_OK, intent);
@@ -155,6 +155,7 @@ public class ShopDetailActivity extends BaseActivity {
                         (list) -> {
                             //セッションID格納
                             SelectedSession.setSessionId(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data.id);
+                            SelectedSession.setSessionDetail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
                             //遷移
                             intent.putExtra(SNACK_MESSAGE, "セッションを更新しました。");
                             setResult(RESULT_OK, intent);

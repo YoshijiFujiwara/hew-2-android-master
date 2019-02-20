@@ -49,6 +49,9 @@ public interface ApiService {
     @POST("api/friends/reject")
     Completable rejectFriendRequest(@Header("Authorization") String authorization, @Body HashMap<String, Integer> body);
 
+    @GET("api/friends/{friend}")
+    Observable<FriendDetail> getFriendDetail(@Header("Authorization") String authorization, @Path("friend") int userId);
+
     @DELETE("api/friends/{friend}")
     Completable deleteFriend(@Header("Authorization") String authorization, @Path("friend") int userId);
 
@@ -106,6 +109,25 @@ public interface ApiService {
     @PUT("api/default_settings/{default_setting}")
     Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting, @Body HashMap<String, String> body);
 
+    /**
+     * 属性系API
+     */
+    @GET("api/attributes")
+    Observable<AttributeList> getAttributeList(@Header("Authorization") String authorization);
+
+    @POST("api/attributes")
+    Observable<AttributeDetail> createAttribute(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
+    @GET("api/attributes/{attribute}")
+    Observable<AttributeDetail> getAttributeDetail(@Header("Authorization") String authorization, @Path("attribute") int attributeId);
+
+    @PUT("api/attributes/{attribute}")
+    Observable<AttributeDetail> updateAttribute(@Header("Authorization") String authorization, @Path("attribute") int attributeId, @Body HashMap<String, String> body);
+
+    @DELETE("api/attributes/{attribute}")
+    Completable deleteAttribute(@Header("Authorization") String authorization, @Path("attribute") int attributeId);
+
+
     /*
      * ユーザー検索系API
      */
@@ -114,4 +136,6 @@ public interface ApiService {
 
     @GET("api/groups/{group}/users/can_add")
     Observable<FriendList> getAddableToGroupFriendList(@Header("Authorization") String authorization, @Path("group") int groupId);
+
+
 }
