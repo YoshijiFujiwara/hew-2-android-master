@@ -32,7 +32,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
 
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
-        infoTextField.setText(infoArray[position].toString());
+        infoTextField.setText(infoArray[position].toString() + "円");
 
         return rowView;
     };
