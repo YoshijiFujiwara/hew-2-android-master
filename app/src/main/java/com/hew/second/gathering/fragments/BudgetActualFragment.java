@@ -65,18 +65,40 @@ public class BudgetActualFragment extends BudgetFragment {
                 budget_actual_tv.setText(Integer.toString(session.actual), TextView.BufferType.EDITABLE);
             }
 
-            // 実額から、支払い金額を計算する
 
             ArrayList<String> nameArray = new ArrayList<>();
             ArrayList<Integer> costArray = new ArrayList<>();
-            // 幹事情報をまずセットする
-            nameArray.add(session.manager.username + "(幹事)");
-            costArray.add(0);
-            // session情報から,usernameのリストを生成
-            for (int i = 0; i < session.users.size(); i++) {
-                nameArray.add(session.users.get(i).username);
-                costArray.add(session.users.get(i).plus_minus);
+
+
+            // 実額から、支払い金額を計算する
+            if (session.budget != 0) {
+                int sum = session.budget;
+                // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
+                int managerCost = 0;
+                for (int i = 0; i < session.users.size(); i++) {
+                    sum += session.users.get(i).plus_minus;
+                }
+                managerCost = sum / (session.users.size() + 1);
+
+                // 幹事情報をまずセットする
+                nameArray.add(session.manager.username + "(幹事)");
+                costArray.add(managerCost);
+                for (int i = 0; i < session.users.size(); i++) {
+                    nameArray.add(session.users.get(i).username);
+                    costArray.add(managerCost + session.users.get(i).plus_minus);
+                }
+
+            } else {
+                // 幹事情報をまずセットする
+                nameArray.add(session.manager.username + "(幹事)");
+                costArray.add(0);
+                // session情報から,usernameのリストを生成
+                for (int i = 0; i < session.users.size(); i++) {
+                    nameArray.add(session.users.get(i).username);
+                    costArray.add(0);
+                }
             }
+
             String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
             Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
             BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(fragmentActivity, nameParams, costParams);
