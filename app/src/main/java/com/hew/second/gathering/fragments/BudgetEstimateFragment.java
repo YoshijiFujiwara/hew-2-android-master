@@ -85,8 +85,6 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
                 updateBudget(fragmentActivity, session, String.valueOf(budget_estimate_tv.getText()));
             });
-
-
             return view;
         }
         return null;

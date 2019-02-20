@@ -38,7 +38,7 @@ public class SelectedSession {
 
         Gson gson = new Gson();
         String json = sharedPref.getString(KEY_SESSION_DETAIL, "");
-        Log.v("sessionJson", json);
+        Log.v("SESSIONJSON", json);
         Session obj = gson.fromJson(json, Session.class);
         return obj;
     }
