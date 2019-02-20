@@ -24,8 +24,6 @@ import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetFragmentPagerAdapter;
 import com.hew.second.gathering.R;
 
-import java.io.Serializable;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -63,7 +61,7 @@ public class BudgetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        getSessionDetail();
+        getSessionDetailFromSP();
         FragmentActivity fragmentActivity = getActivity();
         if (fragmentActivity != null) {
             View view = inflater.inflate(R.layout.fragment_budget, container, false);
@@ -99,7 +97,7 @@ public class BudgetFragment extends Fragment {
 
     // sharedPreferenceに入っているセッションのIDから、
     // 予算画面に必要な情報を取得する
-    protected void getSessionDetail() {
+    public void getSessionDetailFromSP() {
         // todo sessionidを1にセット
         FragmentActivity fragmentActivity = getActivity();
         if (fragmentActivity != null) {
