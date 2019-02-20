@@ -70,7 +70,7 @@ public class BudgetEstimateFragment extends BudgetFragment {
             ArrayList<String> nameArray = new ArrayList<>();
             ArrayList<Integer> infoArray = new ArrayList<>();
             // 幹事情報をまずセットする
-            nameArray.add(session.manager.username);
+            nameArray.add(session.manager.username + "(幹事)");
             infoArray.add(0);
 
             // session情報から,usernameのリストを生成
