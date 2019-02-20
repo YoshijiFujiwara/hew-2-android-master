@@ -8,7 +8,7 @@
     android:clipToPadding="false">
 
     <LinearLayout
-        android:id="@+id/budget_estimate_upper"
+        android:id="@+id/budget_actual_upper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/budget_estimate"
+            android:id="@+id/budget_actual_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
