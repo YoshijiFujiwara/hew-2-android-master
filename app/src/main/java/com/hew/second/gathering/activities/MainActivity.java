@@ -26,6 +26,7 @@ import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.EventFragment;
+import com.hew.second.gathering.fragments.FragmentEventPrecessMain;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
@@ -208,6 +209,15 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.commit();
             }
 
+        }
+        else if (id == R.id.nav_session_process){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if(fragmentManager != null){
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.drawer_layout, FragmentEventPrecessMain.newInstance());
+                fragmentTransaction.commit();
+            }
         }
 //        else if (id == R.id.nav_default){
 //            FragmentManager fragmentManager = getSupportFragmentManager();
