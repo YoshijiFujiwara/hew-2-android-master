@@ -6,21 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".fragments.EditDefaultSettingFragment">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="デフォルト名"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/default_input"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="デフォルト名"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/default_input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/default_input"
@@ -30,7 +28,6 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/text_style"
         android:ems="10"
         android:hint="デフォルト名入力"
@@ -42,36 +39,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="店検索"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/radioGroup"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/default_input" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="店検索"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/RadioGroup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/default_input" />
 
-    <LinearLayout
-        android:id="@+id/radioGroup"
+    <RadioGroup
+        android:id="@+id/RadioGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5">
 
         <RadioButton
             android:id="@+id/present_location"
-            android:layout_width="180dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_style"
@@ -84,7 +81,7 @@
 
         <RadioButton
             android:id="@+id/specific_location"
-            android:layout_width="180dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_style"
@@ -92,10 +89,9 @@
             android:padding="20dp"
             android:text="特定の地点から"
             android:textSize="14sp" />
+    </RadioGroup>
 
-    </LinearLayout>
-
-        <TextView
+    <TextView
             android:id="@+id/textView6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -109,7 +105,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/start_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+            app:layout_constraintTop_toBottomOf="@+id/RadioGroup" />
 
     <EditText
         android:id="@+id/start_time"
@@ -155,34 +151,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/start_time" />
 
-        <Spinner
-            android:id="@+id/group_spinner"
-            android:layout_width="150dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
+    <Spinner
+        android:id="@+id/group_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/button_style"
-            android:shadowColor="@color/colorShadow"
-            android:text="デフォルト設定"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/button_style"
+        android:elevation="10dp"
+        android:text="デフォルト設定"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
