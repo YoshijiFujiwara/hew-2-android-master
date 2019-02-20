@@ -70,7 +70,7 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
             // 予算額から、支払い予定額を計算する
             ArrayList<String> nameArray = new ArrayList<>();
-            ArrayList<Integer> infoArray = new ArrayList<>();
+            ArrayList<Integer> costArray = new ArrayList<>();
 
             // 実額から、支払い金額を計算する
             if (session.budget != 0) {
@@ -85,25 +85,25 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
                 // 幹事情報をまずセットする
                 nameArray.add(session.manager.username + "(幹事)");
-                infoArray.add(managerCost);
+                costArray.add(managerCost);
                 for (int i = 0; i < session.users.size(); i++) {
                     nameArray.add(session.users.get(i).username);
-                    infoArray.add(managerCost + session.users.get(i).plus_minus);
+                    costArray.add(managerCost + session.users.get(i).plus_minus);
                 }
 
             } else {
                 // 幹事情報をまずセットする
                 nameArray.add(session.manager.username + "(幹事)");
-                infoArray.add(0);
+                costArray.add(0);
                 // session情報から,usernameのリストを生成
                 for (int i = 0; i < session.users.size(); i++) {
                     nameArray.add(session.users.get(i).username);
-                    infoArray.add(0);
+                    costArray.add(0);
                 }
             }
 
             String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-            Integer[] infoParams = infoArray.toArray(new Integer[infoArray.size()]);
+            Integer[] infoParams = costArray.toArray(new Integer[costArray.size()]);
             BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(fragmentActivity, nameParams, infoParams);
             budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
             budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
@@ -114,7 +114,7 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
                 // 再計算（汚い）
                 ArrayList<String> nameArray2 = new ArrayList<>();
-                ArrayList<Integer> infoArray2 = new ArrayList<>();
+                ArrayList<Integer> costArray2 = new ArrayList<>();
 
                 int sum = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
                 // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
@@ -126,14 +126,14 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
                 // 幹事情報をまずセットする
                 nameArray2.add(session.manager.username + "(幹事)");
-                infoArray2.add(managerCost);
+                costArray2.add(managerCost);
                 for (int i = 0; i < session.users.size(); i++) {
                     nameArray2.add(session.users.get(i).username);
-                    infoArray2.add(managerCost + session.users.get(i).plus_minus);
+                    costArray2.add(managerCost + session.users.get(i).plus_minus);
                 }
 
                 String[] nameParams2 = nameArray2.toArray(new String[nameArray2.size()]);
-                Integer[] infoParams2 = infoArray2.toArray(new Integer[infoArray2.size()]);
+                Integer[] infoParams2 = costArray2.toArray(new Integer[costArray2.size()]);
                 BudgetEstimateListAdapter budgetEstimateListAdapter2 = new BudgetEstimateListAdapter(fragmentActivity, nameParams2, infoParams2);
                 budget_estimate_lv.setAdapter(budgetEstimateListAdapter2);
             });
@@ -184,6 +184,7 @@ public class BudgetEstimateFragment extends BudgetFragment {
                         Log.v("sessioninfo", list.data.name);
 
                         // sharedPreferenceにsessionの詳細情報を渡す
+                        SelectedSession.setSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
                         Toast.makeText(fragmentActivity, "予算を更新しました", Toast.LENGTH_LONG).show();
 
                     },  // 成功時
@@ -193,27 +194,4 @@ public class BudgetEstimateFragment extends BudgetFragment {
                     }
             );
     }
-
-//    private void addAttributeName(FragmentActivity fragmentActivity, int friend_id) {
-//        ApiService service = Util.getService();
-//        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-//        token.subscribeOn(Schedulers.io())
-//            .flatMap(result -> {
-//                LoginUser.setToken(result.access_token);
-//                // sharedPreferenceからセッションIDを取得する
-//                return service.getFriendDetail(LoginUser.getToken(), friend_id);
-//            })
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .unsubscribeOn(Schedulers.io())
-//            .subscribe(
-//                    list -> {
-//                        Util.setLoading(false, fragmentActivity);
-//                        Log.v("friend_id", String.valueOf(list.data.attribute));
-//                        SelectedSession.infoArray.add(list.data.attribute.name);
-//                    },  // 成功時
-//                    throwable -> {
-//                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                    }
-//            );
-//    }
 }

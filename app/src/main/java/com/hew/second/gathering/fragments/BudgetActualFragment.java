@@ -187,6 +187,7 @@ public class BudgetActualFragment extends BudgetFragment {
                             Log.v("sessioninfo", list.data.name);
 
                             // sharedPreferenceにsessionの詳細情報を渡す
+                            SelectedSession.setSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
                             Toast.makeText(fragmentActivity, "実額を更新しました", Toast.LENGTH_LONG).show();
 
                         },  // 成功時
