@@ -99,7 +99,7 @@ public class BudgetFragment extends Fragment {
 
     // sharedPreferenceに入っているセッションのIDから、
     // 予算画面に必要な情報を取得する
-    private void getSessionDetail() {
+    protected void getSessionDetail() {
         // todo sessionidを1にセット
         FragmentActivity fragmentActivity = getActivity();
         if (fragmentActivity != null) {

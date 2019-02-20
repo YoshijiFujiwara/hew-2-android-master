@@ -56,6 +56,7 @@ public class BudgetActualFragment extends BudgetFragment {
         FragmentActivity fragmentActivity = getActivity();
         if (fragmentActivity != null) {
             View view = inflater.inflate(R.layout.fragment_budget_actual, container, false);
+
             Session session = SelectedSession.getSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
             Log.v("sessoinActualNAME", session.name);
 
@@ -65,14 +66,13 @@ public class BudgetActualFragment extends BudgetFragment {
                 budget_actual_tv.setText(Integer.toString(session.actual), TextView.BufferType.EDITABLE);
             }
 
-
             ArrayList<String> nameArray = new ArrayList<>();
             ArrayList<Integer> costArray = new ArrayList<>();
 
-
             // 実額から、支払い金額を計算する
-            if (session.budget != 0) {
-                int sum = session.budget;
+            if (session.actual != 0) {
+                int sum = session.actual;
+                Log.v("総支払額", String.valueOf(sum));
                 // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
                 int managerCost = 0;
                 for (int i = 0; i < session.users.size(); i++) {
@@ -107,7 +107,34 @@ public class BudgetActualFragment extends BudgetFragment {
 
             budget_actual_update_btn = view.findViewById(R.id.budget_actual_update_btn);
             budget_actual_update_btn.setOnClickListener((v) -> {
-                updateBudgetActual(fragmentActivity, session, String.valueOf(budget_actual_tv.getText()));
+                updateBudgetActual(fragmentActivity, view, session, String.valueOf(budget_actual_tv.getText()));
+                // リストビューを空にする
+                budget_actual_lv.setAdapter(new BudgetActualListAdapter(fragmentActivity, new String[0], new Integer[0]));
+
+                // 再計算（汚い）
+                ArrayList<String> nameArray2 = new ArrayList<>();
+                ArrayList<Integer> costArray2 = new ArrayList<>();
+
+                int sum = Integer.parseInt(String.valueOf(budget_actual_tv.getText()));
+                // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
+                int managerCost = 0;
+                for (int i = 0; i < session.users.size(); i++) {
+                    sum += session.users.get(i).plus_minus;
+                }
+                managerCost = sum / (session.users.size() + 1);
+
+                // 幹事情報をまずセットする
+                nameArray2.add(session.manager.username + "(幹事)");
+                costArray2.add(managerCost);
+                for (int i = 0; i < session.users.size(); i++) {
+                    nameArray2.add(session.users.get(i).username);
+                    costArray2.add(managerCost + session.users.get(i).plus_minus);
+                }
+
+                String[] nameParams2 = nameArray2.toArray(new String[nameArray2.size()]);
+                Integer[] costParams2 = costArray2.toArray(new Integer[costArray2.size()]);
+                BudgetActualListAdapter budgetActualListAdapter2 = new BudgetActualListAdapter(fragmentActivity, nameParams2, costParams2);
+                budget_actual_lv.setAdapter(budgetActualListAdapter2);
             });
 
             return view;
@@ -129,7 +156,11 @@ public class BudgetActualFragment extends BudgetFragment {
         }
     }
 
-    private void updateBudgetActual(FragmentActivity fragmentActivity, Session session, String budgetText) {
+    private void setSessionUserList(FragmentActivity fragmentActivity, View view) {
+
+    }
+
+    private void updateBudgetActual(FragmentActivity fragmentActivity, View view, Session session, String budgetActualText) {
         ApiService service = Util.getService();
         Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
         token.subscribeOn(Schedulers.io())
@@ -139,7 +170,7 @@ public class BudgetActualFragment extends BudgetFragment {
                     body.put("name", session.name);
                     body.put("shop_id", session.shop_id);
                     body.put("budget", Integer.toString(session.budget));
-                    body.put("actual", budgetText);
+                    body.put("actual", budgetActualText);
                     body.put("start_time", session.start_time);
                     body.put("end_time", session.end_time);
                     // sharedPreferenceからセッションIDを取得する
@@ -156,7 +187,6 @@ public class BudgetActualFragment extends BudgetFragment {
                             Log.v("sessioninfo", list.data.name);
 
                             // sharedPreferenceにsessionの詳細情報を渡す
-                            SelectedSession.setSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
                             Toast.makeText(fragmentActivity, "実額を更新しました", Toast.LENGTH_LONG).show();
 
                         },  // 成功時

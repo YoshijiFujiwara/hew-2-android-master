@@ -86,8 +86,8 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
-
                 updateBudget(fragmentActivity, session, String.valueOf(budget_estimate_tv.getText()));
+
             });
             return view;
         }
@@ -136,7 +136,6 @@ public class BudgetEstimateFragment extends BudgetFragment {
                         Log.v("sessioninfo", list.data.name);
 
                         // sharedPreferenceにsessionの詳細情報を渡す
-                        SelectedSession.setSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
                         Toast.makeText(fragmentActivity, "予算を更新しました", Toast.LENGTH_LONG).show();
 
                     },  // 成功時

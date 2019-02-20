@@ -24,6 +24,7 @@ public class SelectedSession {
      */
     public static void setSessionDetail(SharedPreferences sharedPref, Session session) {
         SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove(KEY_SESSION_DETAIL);
         Gson gson = new Gson();
         String sessionJson = gson.toJson(session);
         editor.putString(KEY_SESSION_DETAIL, sessionJson);
