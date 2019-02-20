@@ -65,8 +65,13 @@ public class BudgetActualFragment extends BudgetFragment {
                 budget_actual_tv.setText(Integer.toString(session.actual), TextView.BufferType.EDITABLE);
             }
 
+            // 実額から、支払い金額を計算する
+
             ArrayList<String> nameArray = new ArrayList<>();
             ArrayList<Integer> costArray = new ArrayList<>();
+            // 幹事情報をまずセットする
+            nameArray.add(session.manager.username);
+            costArray.add(0);
             // session情報から,usernameのリストを生成
             for (int i = 0; i < session.users.size(); i++) {
                 nameArray.add(session.users.get(i).username);
