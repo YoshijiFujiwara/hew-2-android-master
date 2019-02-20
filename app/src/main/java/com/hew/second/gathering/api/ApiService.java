@@ -49,6 +49,9 @@ public interface ApiService {
     @POST("api/friends/reject")
     Completable rejectFriendRequest(@Header("Authorization") String authorization, @Body HashMap<String, Integer> body);
 
+    @GET("api/friends/{friend}")
+    Observable<FriendDetail> getFriendDetail(@Header("Authorization") String authorization, @Path("friend") int userId);
+
     @DELETE("api/friends/{friend}")
     Completable deleteFriend(@Header("Authorization") String authorization, @Path("friend") int userId);
 
