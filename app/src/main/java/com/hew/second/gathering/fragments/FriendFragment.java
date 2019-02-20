@@ -187,7 +187,6 @@ public class FriendFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             mSwipeRefreshLayout.setRefreshing(false);
-                            // TODO:エラー処理はこんな形で全てに実装
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if(activity != null && !cd.isDisposed()) {
                                 if (throwable instanceof NullPointerException) {

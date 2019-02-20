@@ -14,7 +14,7 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.views.adapters.ViewPagerAdapter;
 
 
-public class SessionFragment extends Fragment {
+public class SessionFragment extends BaseFragment {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -27,7 +27,7 @@ public class SessionFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-       View view =  inflater.inflate(R.layout.fragment_session_main, container, false);
+        view =  inflater.inflate(R.layout.fragment_session_main, container, false);
 
         tabLayout = view.findViewById(R.id.session_tablayout_id);
         viewPager = view.findViewById(R.id.session_viewpager_id);

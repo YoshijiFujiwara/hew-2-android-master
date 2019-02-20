@@ -8,7 +8,7 @@ import java.util.List;
 public class Session {
     public int id;
     public String name;
-    public int shop_id; // ぐるなび側から持ってきたidかなにかを入れる予定
+    public String shop_id; // ぐるなび側から持ってきたidかなにかを入れる予定
     public int budget; // 予算
     public int actual; // 実際にかかった金額
     public String start_time; // 開始時刻

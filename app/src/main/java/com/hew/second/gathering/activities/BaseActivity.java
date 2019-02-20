@@ -16,11 +16,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected CompositeDisposable cd = new CompositeDisposable();
     public static final int INTENT_EDIT_GROUP = 1;
     public static final int INTENT_ADD_GROUP_MEMBER = 2;
+    public static final int INTENT_SHOP_DETAIL = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
-        Util.setLoading(false,this);
         String message = i.getStringExtra(SNACK_MESSAGE);
         if(message != null) {
             final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
@@ -44,12 +44,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String message = data.getStringExtra(SNACK_MESSAGE);
-        if(message != null) {
-            final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
-            snackbar.getView().setBackgroundColor(Color.BLACK);
-            snackbar.setActionTextColor(Color.WHITE);
-            snackbar.show();
+        if(data != null){
+            String message = data.getStringExtra(SNACK_MESSAGE);
+            if(message != null) {
+                final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(Color.BLACK);
+                snackbar.setActionTextColor(Color.WHITE);
+                snackbar.show();
+            }
         }
     }
 }
