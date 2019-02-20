@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import com.hew.second.gathering.R;
 
-public class EventFinishFragment extends Fragment {
+public class SessionMainFragment extends Fragment {
 
     TextView session_name_tv, session_people_tv, session_time_tv;
     Button session_finish_btn;
 
-    public static EventFinishFragment newInstance() {
-        return new EventFinishFragment();
+    public static SessionMainFragment newInstance() {
+        return new SessionMainFragment();
     }
 
     @Override
