@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
@@ -51,6 +52,11 @@ public class BudgetFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        if (getActivity() != null) {
+            // todo とりあえず、セッションIDを１に設定
+            SelectedSession.setSessionId(getActivity().getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), 1);
+            Toast.makeText(getActivity(), String.valueOf(SelectedSession.getSharedSessionId(getActivity().getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE))), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -85,7 +91,7 @@ public class BudgetFragment extends Fragment {
         // 多分ロータがくるくる回る
         FragmentActivity fragmentActivity = getActivity();
         if (fragmentActivity != null) {
-            Util.setLoading(true, getActivity());
+            Util.setLoading(true, fragmentActivity);
         }
         Log.v("message", "BudgetFragmentOnResume");
 
@@ -97,8 +103,7 @@ public class BudgetFragment extends Fragment {
         // todo sessionidを1にセット
         FragmentActivity fragmentActivity = getActivity();
         if (fragmentActivity != null) {
-            SelectedSession.setSessionId(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), 1);
-
+            Toast.makeText(fragmentActivity, "テスト", Toast.LENGTH_LONG).show();
             ApiService service = Util.getService();
             Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
             token.subscribeOn(Schedulers.io())
