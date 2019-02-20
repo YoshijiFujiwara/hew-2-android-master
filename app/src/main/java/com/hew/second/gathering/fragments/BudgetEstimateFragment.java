@@ -72,7 +72,7 @@ public class BudgetEstimateFragment extends BudgetFragment {
             // session情報から,usernameのリストを生成
             for (int i = 0; i < session.users.size(); i++) {
                 nameArray.add(session.users.get(i).username);
-                infoArray.add("情報"); // todo あとで計算する
+                infoArray.add(session.users.get(i).join_status);
             }
             String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
             String[] infoParams = infoArray.toArray(new String[infoArray.size()]);

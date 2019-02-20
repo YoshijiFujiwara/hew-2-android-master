@@ -13,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
@@ -29,6 +32,7 @@ import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
 import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -39,6 +43,7 @@ public class BudgetActualFragment extends BudgetFragment {
 
     EditText budget_actual_tv;
     ListView budget_actual_lv;
+    Button budget_actual_update_btn;
 
     public static BudgetActualFragment newInstance() {
         return new BudgetActualFragment();
@@ -54,18 +59,29 @@ public class BudgetActualFragment extends BudgetFragment {
             Session session = SelectedSession.getSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
             Log.v("sessoinActualNAME", session.name);
 
+            // 実額があれば、セットする
+            budget_actual_tv = (EditText) view.findViewById(R.id.budget_actual_tv);
+            if (session.budget != 0) {
+                budget_actual_tv.setText(Integer.toString(session.actual), TextView.BufferType.EDITABLE);
+            }
+
             ArrayList<String> nameArray = new ArrayList<>();
             ArrayList<Integer> costArray = new ArrayList<>();
             // session情報から,usernameのリストを生成
             for (int i = 0; i < session.users.size(); i++) {
                 nameArray.add(session.users.get(i).username);
-                costArray.add(1000); // todo あとで計算する
+                costArray.add(session.users.get(i).plus_minus);
             }
             String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
             Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
             BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(fragmentActivity, nameParams, costParams);
             budget_actual_lv = (ListView) view.findViewById(R.id.budget_actual_list);
             budget_actual_lv.setAdapter(budgetActualListAdapter);
+
+            budget_actual_update_btn = view.findViewById(R.id.budget_actual_update_btn);
+            budget_actual_update_btn.setOnClickListener((v) -> {
+                updateBudgetActual(fragmentActivity, session, String.valueOf(budget_actual_tv.getText()));
+            });
 
             return view;
         }
@@ -84,5 +100,43 @@ public class BudgetActualFragment extends BudgetFragment {
         if (fragmentActivity != null) {
             Util.setLoading(true, getActivity());
         }
+    }
+
+    private void updateBudgetActual(FragmentActivity fragmentActivity, Session session, String budgetText) {
+        ApiService service = Util.getService();
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+        token.subscribeOn(Schedulers.io())
+                .flatMap(result -> {
+                    LoginUser.setToken(result.access_token);
+                    HashMap<String, String> body = new HashMap<>();
+                    body.put("name", session.name);
+                    body.put("shop_id", Integer.toString(session.shop_id));
+                    body.put("budget", Integer.toString(session.budget));
+                    body.put("actual", budgetText);
+                    body.put("start_time", session.start_time);
+                    body.put("end_time", session.end_time);
+                    // sharedPreferenceからセッションIDを取得する
+                    return service.updateSession(LoginUser.getToken(),
+                            SelectedSession.getSharedSessionId(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)),
+                            body
+                    );
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Util.setLoading(false, fragmentActivity);
+                            Log.v("sessioninfo", list.data.name);
+
+                            // sharedPreferenceにsessionの詳細情報を渡す
+                            SelectedSession.setSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
+                            Toast.makeText(fragmentActivity, "実額を更新しました", Toast.LENGTH_LONG).show();
+
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            Toast.makeText(fragmentActivity, "実額の更新に失敗しました", Toast.LENGTH_LONG).show();
+                        }
+                );
     }
 }
