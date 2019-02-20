@@ -3,6 +3,7 @@ package com.hew.second.gathering.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -43,10 +44,14 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    Handler mHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mHandler = new Handler();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,7 +72,7 @@ public class MainActivity extends BaseActivity
                 .subscribe(
                         list -> {
                             profile(list.data);
-                            if(savedInstanceState == null) {
+                            if (savedInstanceState == null) {
                                 // FragmentManagerのインスタンス生成
                                 FragmentManager fragmentManager = getSupportFragmentManager();
                                 // FragmentTransactionのインスタンスを取得
@@ -89,33 +94,34 @@ public class MainActivity extends BaseActivity
     private void profile(Profile data) {
         //ユーザー情報表示
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View header=navigationView.getHeaderView(0);
-        TextView user_name = (TextView)header.findViewById(R.id.user_name);
-        TextView user_email = (TextView)header.findViewById(R.id.user_email);
+        View header = navigationView.getHeaderView(0);
+        TextView user_name = (TextView) header.findViewById(R.id.user_name);
+        TextView user_email = (TextView) header.findViewById(R.id.user_email);
         user_name.setText(data.username);
         user_email.setText(data.email);
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        try{
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof MemberFragment){
+        try {
+            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof MemberFragment) {
                 MemberFragment fragment = (MemberFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment){
+            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment) {
                 GroupFragment fragment = (GroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditShopFragment){
+            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditShopFragment) {
                 EditShopFragment fragment = (EditShopFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
         }
         return super.dispatchTouchEvent(ev);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -164,7 +170,7 @@ public class MainActivity extends BaseActivity
             }
         } else if (id == R.id.nav_group) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
@@ -172,16 +178,16 @@ public class MainActivity extends BaseActivity
             }
         } else if (id == R.id.nav_member) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
                 fragmentTransaction.commit();
             }
 
-        }else if (id == R.id.nav_session) {
+        } else if (id == R.id.nav_session) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
@@ -197,7 +203,7 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_budget) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, BudgetFragment.newInstance());
@@ -215,16 +221,16 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_finish) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, InviteFragment.newInstance());
                 fragmentTransaction.commit();
             }
 
-        } else if (id == R.id.nav_default){
+        } else if (id == R.id.nav_default) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
@@ -235,5 +241,30 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // fragmentからの呼びだしの場合
+        switch (requestCode & 0xffff) {
+            //店検索から戻ってきた場合
+            case (INTENT_SHOP_DETAIL):
+                if (resultCode == RESULT_OK) {
+                    mHandler.post(() -> {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        if (fragmentManager != null) {
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.replace(R.id.container, SessionMainFragment.newInstance());
+                            fragmentTransaction.commit();
+                        }
+
+                    });
+                }
+                break;
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

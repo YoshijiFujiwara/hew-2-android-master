@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.SearchArgs;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.views.adapters.EditShopFragmentPagerAdapter;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
@@ -55,6 +56,8 @@ public class EditShopFragment extends BaseFragment {
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
         activity.setTitle("店舗選択");
+
+        SearchArgs.clear();
 
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);

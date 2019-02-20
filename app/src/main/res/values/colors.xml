@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#E46161</color>
-    <color name="colorPrimaryDark">#b34040</color>
+    <color name="colorPrimaryDark">#B34040</color>
     <color name="colorAccent">#F8F3D4</color>
     <color name="colorAccentDark">#B98E70</color>
     <color name="colorBackground">#fafafa</color>
@@ -10,7 +10,7 @@
     <color name="start_bg_left">#00B8A9</color>
 
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorWhite_70">#B3ffffff</color>
+    <color name="colorWhite_70">#B3FFFFFF</color>
     <color name="colorPurple">#833ab4</color>
     <color name="colorSemiPurple">#c13584</color>
     <color name="colorPink">#e1306c</color>

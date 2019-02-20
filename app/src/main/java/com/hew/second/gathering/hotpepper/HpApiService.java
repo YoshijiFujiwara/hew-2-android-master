@@ -1,5 +1,7 @@
 package com.hew.second.gathering.hotpepper;
 
+import android.support.annotation.RequiresPermission;
+
 import com.hew.second.gathering.api.JWT;
 
 import java.util.HashMap;
@@ -14,9 +16,9 @@ import retrofit2.http.QueryMap;
 
 public interface HpApiService {
 
-    @GET("gourmet/v1/?key=372039502fb1977e&format=json&count=50")
-    Observable<GourmetResult> getShopList(@QueryMap(encoded=true) HashMap<String, String> options);
+    @GET("gourmet/v1/?key=372039502fb1977e&format=json&count=30")
+    Observable<GourmetResult> getShopList(@QueryMap(encoded=true) Map<String, String> options);
 
     @GET("genre/v1/?key=372039502fb1977e&format=json")
-    Observable<GenreResult> getGenreList(@QueryMap(encoded=true) HashMap<String, String> options);
+    Observable<GenreResult> getGenreList();
 }

@@ -14,19 +14,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Spinner;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.SearchArgs;
 import com.hew.second.gathering.activities.EditGroupActivity;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
 import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.GroupDetail;
 import com.hew.second.gathering.api.GroupList;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.hotpepper.Genre;
+import com.hew.second.gathering.hotpepper.GenreList;
+import com.hew.second.gathering.hotpepper.GenreResult;
 import com.hew.second.gathering.hotpepper.GourmetResult;
 import com.hew.second.gathering.hotpepper.HpHttp;
 import com.hew.second.gathering.views.adapters.GroupAdapter;
@@ -47,9 +55,11 @@ import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_GROUP
 
 public class SearchShopFragment extends BaseFragment {
     ArrayList<GroupAdapter.Data> ar = new ArrayList<GroupAdapter.Data>();
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout = null;
     GroupAdapter adapter = null;
     private CompositeDisposable cd = new CompositeDisposable();
+    private List<Genre> genreList = new ArrayList<>();
+    private Spinner spinner = null;
 
     public static SearchShopFragment newInstance() {
         return new SearchShopFragment();
@@ -71,21 +81,99 @@ public class SearchShopFragment extends BaseFragment {
         SlidingUpPanelLayout sup = activity.findViewById(R.id.sliding_layout_search);
         sup.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
 
-        HashMap<String,String> options = new HashMap<>();
-        options.put("keyword","a");
-        Observable<GourmetResult> ShopList = HpHttp.getService().getShopList(options);
-        cd.add(ShopList.subscribeOn(Schedulers.io())
+        spinner = activity.findViewById(R.id.spinner_genre);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //　アイテムが選択された時
+            @Override
+            public void onItemSelected(AdapterView<?> parent,
+                                       View view, int position, long id) {
+                Spinner spinner = (Spinner) parent;
+                String item = (String) spinner.getSelectedItem();
+                String result = null;
+                for (Genre g : genreList) {
+                    if (g.name.equals(item)) {
+                        result = g.code;
+                        break;
+                    }
+                }
+                SearchArgs.genre = result;
+            }
+
+            //　アイテムが選択されなかった
+            public void onNothingSelected(AdapterView<?> parent) {
+                //
+            }
+        });
+
+        Spinner rangeSpinner = activity.findViewById(R.id.spinner_range);
+        rangeSpinner.setSelection(2);
+        rangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //　アイテムが選択された時
+            @Override
+            public void onItemSelected(AdapterView<?> parent,
+                                       View view, int position, long id) {
+                Spinner spinner = (Spinner) parent;
+                String item = (String) spinner.getSelectedItem();
+                Integer result = 3;
+                for (int i = 0; i < SearchArgs.rangeList.size(); i++) {
+                    if (SearchArgs.rangeList.get(i).toString().equals(item)) {
+                        result = i;
+                        break;
+                    }
+                }
+                SearchArgs.range = result;
+            }
+
+            //　アイテムが選択されなかった
+            public void onNothingSelected(AdapterView<?> parent) {
+                //
+            }
+        });
+
+        SearchView searchView = activity.findViewById(R.id.searchView_keyword);
+        searchView.setOnClickListener((v) -> {
+            searchView.setIconified(false);
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                SearchArgs.keyword = s;
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                SearchArgs.keyword = s;
+                return true;
+            }
+        });
+
+
+        HashMap<String, String> body = new HashMap<>();
+        Observable<GenreResult> GenreResult = HpHttp.getService().getGenreList();
+        cd.add(GenreResult.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            if(activity != null){
-
+                            if (activity != null) {
+                                genreList = new ArrayList<>(list.results.genre);
+                                ArrayList<String> data = new ArrayList<>();
+                                data.add("（指定なし）");
+                                for (Genre g : genreList) {
+                                    data.add(g.name);
+                                }
+                                spinner = activity.findViewById(R.id.spinner_genre);
+                                ArrayAdapter adapter =
+                                        new ArrayAdapter(activity, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                spinner.setAdapter(adapter);
                             }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if(activity != null && !cd.isDisposed()){
+                            if (activity != null && !cd.isDisposed()) {
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
