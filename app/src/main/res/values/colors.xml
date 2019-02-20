@@ -9,7 +9,7 @@
     <color name="transparent_bg">#2affff</color>
     <color name="start_bg_left">#00B8A9</color>
 
-    <color name="colorWhite">#ffffff</color>
+    <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhite_70">#B3ffffff</color>
     <color name="colorPurple">#833ab4</color>
     <color name="colorSemiPurple">#c13584</color>
@@ -28,11 +28,11 @@
     <color name="btn_default_light_pressed">#40ffffff</color>
     <color name="btn_send_normal">#02c754</color>
     <color name="btn_send_pressed">#006633</color>
-    <color name="btn_context_menu_normal">#ffffff</color>
+    <color name="btn_context_menu_normal">#FFFFFF</color>
     <color name="btn_context_menu_pressed">#40000000</color>
     <color name="btn_context_menu_text_red">#ffff0000</color>
 
     <color name="text_like_counter">#2b5a83</color>
 
-    <color name="bg_comments">#ffffff</color>
+    <color name="bg_comments">#FFFFFF</color>
 </resources>

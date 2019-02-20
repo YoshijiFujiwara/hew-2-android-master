@@ -42,11 +42,10 @@ import retrofit2.HttpException;
 
 import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_GROUP;
 
-public class GroupFragment extends Fragment {
+public class GroupFragment extends BaseFragment {
     ArrayList<GroupAdapter.Data> ar = new ArrayList<GroupAdapter.Data>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     GroupAdapter adapter = null;
-    private CompositeDisposable cd = new CompositeDisposable();
 
     public static GroupFragment newInstance() {
         return new GroupFragment();
@@ -57,25 +56,19 @@ public class GroupFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_group,
+        view = inflater.inflate(R.layout.fragment_group,
                 container, false);
+        return view;
     }
 
     public void removeFocus() {
-        SearchView searchView = getActivity().findViewById(R.id.searchView);
+        SearchView searchView = activity.findViewById(R.id.searchView);
         searchView.clearFocus();
-    }
-
-    @Override
-    public void onDestroy(){
-        cd.clear();
-        super.onDestroy();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
         activity.setTitle("グループ一覧");
 
         FloatingActionButton fab = activity.findViewById(R.id.fab_newGroup);
@@ -119,13 +112,12 @@ public class GroupFragment extends Fragment {
                 case R.id.delete_group:
                     ApiService service = Util.getService();
                     Completable token = service.deleteGroup(LoginUser.getToken(), adapter.getList().get(position).id);
-                    Util.setLoading(true, getActivity());
                     cd.add(token.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .unsubscribeOn(Schedulers.io())
                             .subscribe(
                                     () -> {
-                                        if (getActivity() != null) {
+                                        if (activity != null) {
                                             fetchList();
                                             final Snackbar snackbar = Snackbar.make(getView(), "グループを削除しました", Snackbar.LENGTH_LONG);
                                             snackbar.getView().setBackgroundColor(Color.BLACK);
@@ -135,8 +127,7 @@ public class GroupFragment extends Fragment {
                                     }, // 終了時
                                     (throwable) -> {
                                         Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                        if (getActivity() != null) {
-                                            Util.setLoading(false, getActivity());
+                                        if (activity != null && !cd.isDisposed()) {
                                             if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                                 //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
                                                 final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているデフォルト設定があるので、削除できません", Snackbar.LENGTH_LONG);
@@ -160,12 +151,11 @@ public class GroupFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, getActivity());
+        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
     private void createGroup() {
-        Util.setLoading(true, getActivity());
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", "グループ");
@@ -175,19 +165,16 @@ public class GroupFragment extends Fragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            if (getActivity() != null) {
-                                Util.setLoading(false, getActivity());
-                                Intent intent = new Intent(getActivity().getApplication(), EditGroupActivity.class);
+                            if (activity != null) {
+                                Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
                                 intent.putExtra("GROUP_ID", list.data.id);
                                 startActivityForResult(intent, INTENT_EDIT_GROUP);
                             }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (getActivity() != null) {
-                                Util.setLoading(false, getActivity());
-                                // ログインアクティビティへ遷移
-                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
                         }
@@ -202,18 +189,15 @@ public class GroupFragment extends Fragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            if (getActivity() != null) {
-                                Util.setLoading(false, getActivity());
+                            if (activity != null) {
                                 mSwipeRefreshLayout.setRefreshing(false);
                                 updateList(list.data);
                             }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (getActivity() != null) {
-                                Util.setLoading(false, getActivity());
-                                // ログインアクティビティへ遷移
-                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
                         }
@@ -222,7 +206,7 @@ public class GroupFragment extends Fragment {
 
     private void updateList(List<Group> data) {
         // ListView生成
-        GridView gridView = getActivity().findViewById(R.id.gridView_group);
+        GridView gridView = activity.findViewById(R.id.gridView_group);
         ar.clear();
         for (Group m : data) {
             ar.add(new GroupAdapter.Data(m.id, m.name, m.users.size() + "名"));

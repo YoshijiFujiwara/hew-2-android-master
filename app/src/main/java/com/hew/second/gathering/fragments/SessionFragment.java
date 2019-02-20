@@ -26,21 +26,17 @@ public class SessionFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_session_main, container, false);
-    }
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-        tabLayout = getActivity().findViewById(R.id.session_tablayout_id);
-        viewPager = getActivity().findViewById(R.id.session_viewpager_id);
+       View view =  inflater.inflate(R.layout.fragment_session_main, container, false);
+
+        tabLayout = view.findViewById(R.id.session_tablayout_id);
+        viewPager = view.findViewById(R.id.session_viewpager_id);
         adapter = new ViewPagerAdapter(getChildFragmentManager());
-
-        adapter.AddFragment("進行中");
-        adapter.AddFragment("支払い待ち");
-        adapter.AddFragment("履歴");
-
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2);
         tabLayout.setupWithViewPager(viewPager);
+
+        return view;
     }
+
 }

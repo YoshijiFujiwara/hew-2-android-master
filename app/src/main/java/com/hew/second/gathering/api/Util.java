@@ -53,6 +53,16 @@ public class Util {
             Log.d("loading","不正な呼び出しです。");
         }
         */
+        try {
+            ProgressBar loadingProgressBar = activity.findViewById(R.id.loading_progressBar);
+            if (loading) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+            } else {
+                loadingProgressBar.setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            Log.d("loading","呼び出しに失敗しました。");
+        }
     }
 
     public static void setLoading(boolean loading, Activity activity) {

@@ -38,7 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
-public class PendingFragment extends Fragment {
+public class PendingFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private MemberAdapter adapter = null;
@@ -64,14 +64,13 @@ public class PendingFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_pending, container, false);
+        view = inflater.inflate(R.layout.fragment_pending, container, false);
         return view;
     }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
 
         mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout_pending);
         // 色設定
@@ -82,7 +81,7 @@ public class PendingFragment extends Fragment {
         listView = activity.findViewById(R.id.member_list_pending);
         // 申請受諾
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            final Snackbar snackbar = Snackbar.make(getView(), "友達になりますか？", Snackbar.LENGTH_LONG);
+            final Snackbar snackbar = Snackbar.make(view, "友達になりますか？", Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(Color.BLACK);
             snackbar.setActionTextColor(Color.WHITE);
             HashMap<String, Integer> body = new HashMap<>();
@@ -90,61 +89,66 @@ public class PendingFragment extends Fragment {
             snackbar.setAction("Yes", (v) -> {
                 ApiService service = Util.getService();
                 Completable friendList = service.permitFriendRequest(LoginUser.getToken(), body);
-                friendList.subscribeOn(Schedulers.io())
+                cd.add(friendList.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .unsubscribeOn(Schedulers.io())
                         .subscribe(
                                 () -> {
-                                    Util.setLoading(false, getActivity());
-                                    final Snackbar sbYes = Snackbar.make(getView(), "友達になりました！", Snackbar.LENGTH_SHORT);
-                                    sbYes.getView().setBackgroundColor(Color.BLACK);
-                                    sbYes.setActionTextColor(Color.WHITE);
-                                    sbYes.show();
+                                    if( activity != null ){
+                                        final Snackbar sbYes = Snackbar.make(view, "友達になりました！", Snackbar.LENGTH_SHORT);
+                                        sbYes.getView().setBackgroundColor(Color.BLACK);
+                                        sbYes.setActionTextColor(Color.WHITE);
+                                        sbYes.show();
+                                    }
                                 },  // 成功時
                                 throwable -> {
                                     Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                    Util.setLoading(false, getActivity());
                                     mSwipeRefreshLayout.setRefreshing(false);
-                                    if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                        // ログインアクティビティへ遷移
-                                        Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                                        startActivity(intent);
+                                    if (activity != null && !cd.isDisposed()) {
+                                        if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                            // ログインアクティビティへ遷移
+                                            Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                            startActivity(intent);
+                                        }
                                     }
                                 }
-                        );
+                        ));
             });
             snackbar.show();
         });
         // 申請拒否
         listView.setOnItemLongClickListener((parent, view, position, id) -> {
-            final Snackbar snackbar = Snackbar.make(getView(), "申請を拒否しますか？", Snackbar.LENGTH_LONG);
+            final Snackbar snackbar = Snackbar.make(view, "申請を拒否しますか？", Snackbar.LENGTH_LONG);
             snackbar.setAction("Yes", (v) -> {
                 ApiService service = Util.getService();
                 HashMap<String, Integer> body = new HashMap<>();
                 body.put("user_id", adapter.getList().get(position).id);
                 Completable friendList = service.rejectFriendRequest(LoginUser.getToken(), body);
-                friendList.subscribeOn(Schedulers.io())
+                cd.add(friendList.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .unsubscribeOn(Schedulers.io())
                         .subscribe(
                                 () -> {
-                                    fetchList();
-                                    final Snackbar sbNo = Snackbar.make(getView(), "申請を拒否しました。", Snackbar.LENGTH_SHORT);
-                                    sbNo.getView().setBackgroundColor(Color.BLACK);
-                                    sbNo.setActionTextColor(Color.WHITE);
-                                    sbNo.show();
+                                    if(activity != null) {
+                                        fetchList();
+                                        final Snackbar sbNo = Snackbar.make(view, "申請を拒否しました。", Snackbar.LENGTH_SHORT);
+                                        sbNo.getView().setBackgroundColor(Color.BLACK);
+                                        sbNo.setActionTextColor(Color.WHITE);
+                                        sbNo.show();
+                                    }
                                 },  // 成功時
                                 throwable -> {
                                     Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                    Util.setLoading(false, getActivity());
-                                    mSwipeRefreshLayout.setRefreshing(false);
-                                    if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                        // ログインアクティビティへ遷移
-                                        Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                                        startActivity(intent);
+                                    if(activity != null && !cd.isDisposed()) {
+                                        mSwipeRefreshLayout.setRefreshing(false);
+                                        if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                            // ログインアクティビティへ遷移
+                                            Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                            startActivity(intent);
+                                        }
                                     }
                                 }
-                        );
+                        ));
 
             });
             snackbar.show();
@@ -188,7 +192,7 @@ public class PendingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, getActivity());
+        mSwipeRefreshLayout.setRefreshing(false);
         fetchList();
     }
 
@@ -202,31 +206,33 @@ public class PendingFragment extends Fragment {
         ApiService service = Util.getService();
         Observable<FriendList> friendList;
         friendList = service.getPendedFriendList(LoginUser.getToken());
-        friendList.subscribeOn(Schedulers.io())
+        cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
-                            mSwipeRefreshLayout.setRefreshing(false);
-                            updateList(list.data);
+                            if(activity != null){
+                                mSwipeRefreshLayout.setRefreshing(false);
+                                updateList(list.data);
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
                             mSwipeRefreshLayout.setRefreshing(false);
-                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                // ログインアクティビティへ遷移
-                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                                startActivity(intent);
+                            if(activity != null && !cd.isDisposed()){
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
                             }
                         }
-                );
+                ));
     }
 
     private void updateList(List<Friend> data) {
         // ListView生成
-        listView = getActivity().findViewById(R.id.member_list_pending);
+        listView = activity.findViewById(R.id.member_list_pending);
         ArrayList<Friend> list = new ArrayList<>(data);
         ar = new ArrayList<>(data);
         adapter = new MemberAdapter(list);

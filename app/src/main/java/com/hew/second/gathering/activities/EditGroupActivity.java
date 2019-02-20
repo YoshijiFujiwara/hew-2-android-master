@@ -59,7 +59,6 @@ public class EditGroupActivity extends BaseActivity {
     @Override
     public void onBackPressed(){
         // データ保存
-        Util.setLoading(true,this);
         try{
             if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditGroupFragment){
                 @NonNull EditGroupFragment fragment = (EditGroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
@@ -67,7 +66,6 @@ public class EditGroupActivity extends BaseActivity {
             }
         }catch (Exception e){
             Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
-            Util.setLoading(false,this);
             Intent intent = new Intent();
             intent.putExtra(SNACK_MESSAGE,"更新に失敗しました。");
             setResult(RESULT_OK, intent);

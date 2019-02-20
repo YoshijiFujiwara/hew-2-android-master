@@ -3,6 +3,7 @@ package com.hew.second.gathering.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,11 +71,13 @@ public class InProgressFragment extends Fragment {
     public void updateList(List<Session> data) {
 
         ListView listView = getActivity().findViewById(R.id.listView_in_progress);
-
+        ConstraintLayout constraintLayout = getView().findViewById(R.id.session_cell);
         ArrayList<Session> sessionArrayList = new ArrayList<>();
-
+//      開始時刻がセットされて終了時刻が？？？
         for (Session sl : data) {
-            sessionArrayList.add(sl);
+            if (sl.start_time != null && sl.end_time == null) {
+                sessionArrayList.add(sl);
+            }
         }
 
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
