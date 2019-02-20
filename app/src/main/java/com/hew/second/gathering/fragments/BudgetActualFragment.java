@@ -110,7 +110,7 @@ public class BudgetActualFragment extends BudgetFragment {
                     LoginUser.setToken(result.access_token);
                     HashMap<String, String> body = new HashMap<>();
                     body.put("name", session.name);
-                    body.put("shop_id", Integer.toString(session.shop_id));
+                    body.put("shop_id", session.shop_id);
                     body.put("budget", Integer.toString(session.budget));
                     body.put("actual", budgetText);
                     body.put("start_time", session.start_time);

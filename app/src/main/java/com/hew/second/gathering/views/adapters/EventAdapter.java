@@ -26,7 +26,7 @@ public class EventAdapter extends BaseAdapter {
         TextView users;
     }
     static public class Data {
-        public Data(int id, String name, int shop_id, String start_time, String users) {
+        public Data(int id, String name, String shop_id, String start_time, String users) {
             this.id = id;
             this.name = name;
             this.shop_id = shop_id;
@@ -35,7 +35,7 @@ public class EventAdapter extends BaseAdapter {
         }
         public int id;
         public String name;
-        public int shop_id;
+        public String shop_id;
         public String start_time;
         public String users;
     }
