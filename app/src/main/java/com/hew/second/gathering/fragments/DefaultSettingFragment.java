@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.activities.AddDefaultSettingActivity;
 import com.hew.second.gathering.activities.EditDefaultSettingActivity;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.activities.MainActivity;
@@ -162,7 +163,7 @@ public class DefaultSettingFragment extends BaseFragment {
     }
 
     private void createDefault() {
-        Intent intent = new Intent(getActivity().getApplication(), EditDefaultSettingActivity.class);
+        Intent intent = new Intent(getActivity().getApplication(), AddDefaultSettingActivity.class);
         startActivity(intent);
     }
 
