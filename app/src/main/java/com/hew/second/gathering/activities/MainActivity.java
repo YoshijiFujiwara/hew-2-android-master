@@ -231,9 +231,6 @@ public class MainActivity extends BaseActivity
             }
 
         }
-        else if (id == R.id.nav_session_process){
-//LIstView に変更予定　Iteｍ選択時EventProcessMainを呼び込む予定
-        }
 //        else if (id == R.id.nav_default){
 //            FragmentManager fragmentManager = getSupportFragmentManager();
 //            if(fragmentManager != null){

@@ -88,7 +88,7 @@ public class WaitingPaymentFragment extends Fragment {
 
     public void updateList(List<Session> data) {
 
-
+        int paidcheck = 0;
         ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
 
         ArrayList<Session> sessionArrayList = new ArrayList<>();
@@ -97,9 +97,13 @@ public class WaitingPaymentFragment extends Fragment {
         for (Session sl : data) {
             for (int i = 0; i < sl.users.size(); i++) {
                 if (sl.users.get(i).paid != 1 ) {
-                    sessionArrayList.add(sl);
+                    paidcheck++;
                 }
             }
+            if (paidcheck != 0) {
+                sessionArrayList.add(sl);
+            }
+
         }
 
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
