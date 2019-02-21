@@ -96,14 +96,15 @@ public class WaitingPaymentFragment extends Fragment {
 //       支払ってない場合追加
         for (Session sl : data) {
             for (int i = 0; i < sl.users.size(); i++) {
-                if (sl.users.get(i).paid != 1 ) {
+                if (sl.users.get(i).paid == 1 ) {
                     paidcheck++;
                 }
             }
-            if (paidcheck != 0) {
+
+            if (paidcheck != sl.users.size()) {
                 sessionArrayList.add(sl);
             }
-
+            paidcheck = 0;
         }
 
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
