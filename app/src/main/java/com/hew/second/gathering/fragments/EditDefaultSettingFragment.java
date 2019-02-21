@@ -213,7 +213,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
         Spinner spinner = activity.findViewById(R.id.group_spinner);
-//        textView.setText(item);
+
         HashMap<String, String> body = new HashMap<>();
 
         body.put("name", defaultName.getText().toString());
