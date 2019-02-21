@@ -98,6 +98,12 @@ public interface ApiService {
     Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     /*
+     * セッションユーザー系API
+     */
+    @GET("api/sessions/{session}/users")
+    Observable<FriendList> getSessionUserList(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+    /*
      * デフォルト設定系API
      */
     @GET("api/default_settings")
