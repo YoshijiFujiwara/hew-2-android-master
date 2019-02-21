@@ -2,18 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
     <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_top"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="TOP" />
-        <item
-            android:id="@+id/nav_session_process"
-            android:icon="@drawable/ic_shopping_basket"
-            android:title="進行中のセッション"
-            />
         <item
             android:id="@+id/nav_session"
             android:icon="@drawable/ic_menu_slideshow"
