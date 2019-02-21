@@ -62,8 +62,6 @@ public class EditDefaultSettingFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     int defaultSettingId = -1;
 
-    private String spinnerItems[] = {"グループ1", "グループ2"};
-
     public static EditDefaultSettingFragment newInstance() {
         return new EditDefaultSettingFragment();
     }
@@ -123,34 +121,6 @@ public class EditDefaultSettingFragment extends BaseFragment {
 //        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
 //        int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
-        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
-
-        // ArrayAdapter
-        ArrayAdapter<String> adapter
-                = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerItems);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // spinner に adapter をセット
-        spinner.setAdapter(adapter);
-
-        // リスナーを登録
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            //　アイテムが選択された時
-            @Override
-            public void onItemSelected(AdapterView<?> parent,
-                                       View view, int position, long id) {
-                Spinner spinner = (Spinner)parent;
-                String item = (String)spinner.getSelectedItem();
-            }
-
-            //　アイテムが選択されなかった
-            public void onNothingSelected(AdapterView<?> parent) {
-                //
-            }
-        });
-
-
         Button saveButton = activity.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,38 +163,12 @@ public class EditDefaultSettingFragment extends BaseFragment {
     private void updateList(DefaultSetting gdi) {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
+        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
 
         defaultName.setText(gdi.name);
         startTime.setText(gdi.timer);
+//        spinner.setId(gdi.group);
     }
-
-//        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
-//
-//        // ArrayAdapter
-//        ArrayAdapter<String> adapter
-//                = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerItems);
-//
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        // spinner に adapter をセット
-//        spinner.setAdapter(adapter);
-//
-//        // リスナーを登録
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            //　アイテムが選択された時
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent,
-//                                       View view, int position, long id) {
-//                Spinner spinner = (Spinner)parent;
-//                String item = (String)spinner.getSelectedItem();
-//            }
-//
-//            //　アイテムが選択されなかった
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                //
-//            }
-//        });
-
 
     public void saveDefaultSettingName() {
         ApiService service = Util.getService();

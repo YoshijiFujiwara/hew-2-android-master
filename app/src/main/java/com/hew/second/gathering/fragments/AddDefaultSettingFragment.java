@@ -42,8 +42,6 @@ public class AddDefaultSettingFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     int defaultSettingId = -1;
 
-    private String spinnerItems[] = {"グループ1", "グループ2"};
-
     public static AddDefaultSettingFragment newInstance() {
         return new AddDefaultSettingFragment();
     }
@@ -76,7 +74,6 @@ public class AddDefaultSettingFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         activity.setTitle("デフォルト追加");
 
-
 //        Intent beforeIntent = activity.getIntent();
 //        defaultSettingId = beforeIntent.getIntExtra("DEFAULTSETTING_ID", -1);//設定したkeyで取り出す
 
@@ -103,35 +100,7 @@ public class AddDefaultSettingFragment extends BaseFragment {
 //        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
 //        int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
-        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
-
-        // ArrayAdapter
-        ArrayAdapter<String> adapter
-                = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerItems);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // spinner に adapter をセット
-        spinner.setAdapter(adapter);
-
-        // リスナーを登録
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            //　アイテムが選択された時
-            @Override
-            public void onItemSelected(AdapterView<?> parent,
-                                       View view, int position, long id) {
-                Spinner spinner = (Spinner)parent;
-                String item = (String)spinner.getSelectedItem();
-            }
-
-            //　アイテムが選択されなかった
-            public void onNothingSelected(AdapterView<?> parent) {
-                //
-            }
-        });
-
-
-        Button saveButton = activity.findViewById(R.id.save_button);
+         Button saveButton = activity.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,33 +146,6 @@ public class AddDefaultSettingFragment extends BaseFragment {
         defaultName.setText(gdi.name);
         startTime.setText(gdi.timer);
     }
-
-//        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
-//
-//        // ArrayAdapter
-//        ArrayAdapter<String> adapter
-//                = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerItems);
-//
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        // spinner に adapter をセット
-//        spinner.setAdapter(adapter);
-//
-//        // リスナーを登録
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            //　アイテムが選択された時
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent,
-//                                       View view, int position, long id) {
-//                Spinner spinner = (Spinner)parent;
-//                String item = (String)spinner.getSelectedItem();
-//            }
-//
-//            //　アイテムが選択されなかった
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                //
-//            }
-//        });
 
 
     public void createDefault() {

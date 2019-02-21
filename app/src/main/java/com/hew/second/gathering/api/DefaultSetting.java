@@ -11,7 +11,6 @@ public class DefaultSetting {
     public String name; // このデフォルト設定の名前
     public String timer; // Time型かなにかを入れたいから、型を間違えている気がします（'01:00;00'などをいれれたら良い）
     public Group group;
-    public String group_id;
     public Date created_at;
     public Date updated_at;
 }
