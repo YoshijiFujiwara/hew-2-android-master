@@ -29,10 +29,11 @@ import io.reactivex.schedulers.Schedulers;
 import static com.hew.second.gathering.R.layout;
 
 //支払い待ち
-public class WaitingPaymentFragment extends Fragment {
+public class WaitingPaymentFragment extends Fragment  {
 
-    ListView listview ;
+
     int i = 0;
+
 
     public WaitingPaymentFragment() {
     }
@@ -75,7 +76,10 @@ public class WaitingPaymentFragment extends Fragment {
                 .subscribe(
                         list -> {
 //                          表示
-                            updateList(list.data);
+                            ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
+                            updateList(list.data ,listView);
+
+
 
                         },  // 成功時
                         throwable -> {
@@ -86,10 +90,9 @@ public class WaitingPaymentFragment extends Fragment {
                 );
     }
 
-    public void updateList(List<Session> data) {
+    public void updateList(List<Session> data,ListView listView) {
 
         int paidcheck = 0;
-        ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
 
         ArrayList<Session> sessionArrayList = new ArrayList<>();
 
@@ -111,6 +114,7 @@ public class WaitingPaymentFragment extends Fragment {
         listView.setAdapter(adapter);
 
     }
+
 
 
 }
