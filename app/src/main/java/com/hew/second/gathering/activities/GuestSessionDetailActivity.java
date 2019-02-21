@@ -40,6 +40,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_guest_session_detail);
         Shop shop = Parcels.unwrap(getIntent().getParcelableExtra("SHOP_DETAIL"));
         Session session = Parcels.unwrap(getIntent().getParcelableExtra("SESSION_DETAIL"));
+        String status = getIntent().getStringExtra("STATUS");
         setTitle("セッション詳細");
 
         intent = new Intent();
@@ -91,14 +92,19 @@ public class GuestSessionDetailActivity extends BaseActivity {
         });
 
         Button allow = findViewById(R.id.button_allow);
-        allow.setOnClickListener((l) -> {
-            // TODO:参加する
-            joinSession(session.id);
-        });
+        if(status.equals("WAIT")){
+            allow.setOnClickListener((l) -> {
+                // 参加する
+                joinSession(session.id);
+            });
+        } else {
+            allow.setText("参加済みです");
+            allow.setEnabled(false);
+        }
         Button deny = findViewById(R.id.button_deny);
         deny.setOnClickListener((l) -> {
-            // TODO:参加しない
-            onBackPressed();
+            // 参加しない
+            denySession(session.id);
         });
     }
 
@@ -121,6 +127,34 @@ public class GuestSessionDetailActivity extends BaseActivity {
                         (list) -> {
                             //遷移
                             intent.putExtra(SNACK_MESSAGE, "セッションに参加しました。");
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        },
+                        (throwable) -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (!cd.isDisposed()) {
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                    Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }));
+    }
+
+    private void denySession(int sessionId) {
+
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("join_status", "deny");
+        Observable<SessionDetail> session = service.updateGuestSession(LoginUser.getToken(),sessionId, body);
+        cd.add(session.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        (list) -> {
+                            //遷移
+                            intent.putExtra(SNACK_MESSAGE, "セッションへの参加を断りました。");
+                            setResult(RESULT_OK, intent);
                             finish();
                         },
                         (throwable) -> {

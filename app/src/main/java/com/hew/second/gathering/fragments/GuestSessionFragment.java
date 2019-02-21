@@ -80,6 +80,7 @@ public class GuestSessionFragment extends BaseFragment {
             Bundle bundle = new Bundle();
             bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(ar.get(position)));
             bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(position)));
+            bundle.putString("STATUS", "WAIT");
             intent.putExtras(bundle);
             startActivityForResult(intent,INTENT_GUEST_SESSION_DETAIL);
         });
