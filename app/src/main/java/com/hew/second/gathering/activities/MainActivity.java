@@ -212,13 +212,17 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_session_main) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, SessionMainFragment.newInstance());
                 fragmentTransaction.commit();
             }
-
+        } else if (id == R.id.nav_guest) {
+            mHandler.post(() -> {
+                Intent intent = new Intent(getApplication(), GuestActivity.class);
+                startActivity(intent);
+            });
         } else if (id == R.id.nav_finish) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {
