@@ -2,7 +2,7 @@
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_sp_main">
+    android:id="@+id/event_process_main">
     <include
         layout="@layout/loading"
         android:layout_width="wrap_content"
