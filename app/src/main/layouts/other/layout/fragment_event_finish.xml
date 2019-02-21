@@ -16,13 +16,14 @@
 
     <!--中央に載せるテキスト画像-->
     <TextView
+        android:id="@+id/session_main_image_text"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="50dp"
         android:textAlignment="center"
         android:gravity="center"
         android:textColor="@color/colorWhite"
-        android:text="進行中のイベント(仮)"
         />
 
     <RelativeLayout
@@ -43,8 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
-            android:text="麦とろ自然物語"
-            android:id="@+id/session_name"
+            android:id="@+id/session_site"
             android:minHeight="30dp"
             />
 
@@ -52,16 +52,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
-            android:text="20:00 ~ 23:00"
             android:id="@+id/session_time"
-            android:layout_below="@+id/session_name"
+            android:layout_below="@+id/session_site"
             android:minHeight="30dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
-            android:text="5人"
             android:id="@+id/session_people"
             android:layout_gravity="bottom"
             android:layout_below="@+id/session_time"

@@ -48,6 +48,12 @@ public class AddGroupMemberActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group_member);
 
+        // Backボタンを有効にする
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
         Intent beforeIntent = getIntent();
         groupId = beforeIntent.getIntExtra("GROUP_ID", -1);
 
@@ -131,6 +137,11 @@ public class AddGroupMemberActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
         fetchList();
+    }
+    @Override
+    public boolean onSupportNavigateUp(){
+        onBackPressed();
+        return true;
     }
 
     private void fetchList() {

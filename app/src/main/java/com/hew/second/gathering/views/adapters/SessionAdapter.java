@@ -40,7 +40,7 @@ public class SessionAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fragment_session_cell,parent,false);
             holder = new SessionAdapter.ViewHolder();
-            holder.sessionName = convertView.findViewById(R.id.session_name);
+            holder.sessionName = convertView.findViewById(R.id.session_site);
             holder.sessionDate = convertView.findViewById(R.id.session_date);
             holder.sessionPeople = convertView.findViewById(R.id.session_people);
             holder.sessionImage = convertView.findViewById(R.id.session_image_her);

@@ -15,6 +15,7 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
+import com.hew.second.gathering.api.FriendList;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
@@ -40,6 +41,12 @@ public class AddMemberActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group_member);
 
+        // Backボタンを有効にする
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
         mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
         // 色設定
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccentDark);
@@ -49,15 +56,10 @@ public class AddMemberActivity extends BaseActivity {
         listView = findViewById(R.id.member_list);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             ApiService service = Util.getService();
-            Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
             HashMap<String, String> body = new HashMap<>();
             body.put("email", adapter.getList().get(position).email);
-            Util.setLoading(true, this);
-            token.subscribeOn(Schedulers.io())
-                    .flatMap(result -> {
-                        LoginUser.setToken(result.access_token);
-                        return service.requestAddFriend(LoginUser.getToken(), body);
-                    })
+            Observable<Friend> token = service.requestAddFriend(LoginUser.getToken(), body);
+            cd.add(token.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .unsubscribeOn(Schedulers.io())
                     .subscribe(
@@ -70,15 +72,20 @@ public class AddMemberActivity extends BaseActivity {
                             }, // 終了時
                             (throwable) -> {
                                 Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                Util.setLoading(false, this);
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
-                                    //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
-                                    final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "すでにフレンドか、申請中です。", Snackbar.LENGTH_LONG);
-                                    snackbar.getView().setBackgroundColor(Color.BLACK);
-                                    snackbar.setActionTextColor(Color.WHITE);
-                                    snackbar.show();
+
+                                if (!cd.isDisposed()) {
+                                    if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
+                                        //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
+                                        final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "すでにフレンドか、申請中です。", Snackbar.LENGTH_LONG);
+                                        snackbar.getView().setBackgroundColor(Color.BLACK);
+                                        snackbar.setActionTextColor(Color.WHITE);
+                                        snackbar.show();
+                                    } else if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                        Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                        startActivity(intent);
+                                    }
                                 }
-                            });
+                            }));
         });
 
         SearchView searchView = findViewById(R.id.searchView);
@@ -125,34 +132,36 @@ public class AddMemberActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, this);
+        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
-
+    @Override
+    public boolean onSupportNavigateUp(){
+        onBackPressed();
+        return true;
+    }
     private void fetchList() {
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getAddableFriendList(LoginUser.getToken());
-                })
+        Observable<FriendList> token = service.getAddableFriendList(LoginUser.getToken());
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, this);
                             mSwipeRefreshLayout.setRefreshing(false);
                             updateList(list.data);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, this);
                             // ログインアクティビティへ遷移
-                            Intent intent = new Intent(getApplication(), LoginActivity.class);
-                            startActivity(intent);
+                            if (!cd.isDisposed()) {
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                    Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
                         }
-                );
+                ));
     }
 
     private void updateList(List<Friend> data) {

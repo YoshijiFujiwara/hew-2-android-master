@@ -12,14 +12,14 @@ import com.hew.second.gathering.R;
 public class BudgetEstimateListAdapter extends ArrayAdapter {
     private final Activity context;
     private final String[] nameArray;
-    private final String[] infoArray;
+    private final Integer[] costArray;
 
-    public BudgetEstimateListAdapter(Activity context, String[] nameArrayParam, String[] infoArrayParam) {
+    public BudgetEstimateListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam) {
         super(context, R.layout.listview_estimate_row, nameArrayParam);
 
         this.context = context;
         this.nameArray = nameArrayParam;
-        this.infoArray = infoArrayParam;
+        this.costArray = costArrayParam;
     }
 
     public View getView(int position, View view, ViewGroup parent) {
@@ -32,7 +32,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
 
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
-        infoTextField.setText(infoArray[position]);
+        infoTextField.setText(costArray[position].toString() + "円");
 
         return rowView;
     };
