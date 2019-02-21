@@ -29,12 +29,14 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.AddGroupMemberActivity;
 import com.hew.second.gathering.activities.EditDefaultSettingActivity;
 import com.hew.second.gathering.activities.EditGroupActivity;
+import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.api.DefaultSettingDetail;
 import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.GroupDetail;
+import com.hew.second.gathering.api.GroupList;
 import com.hew.second.gathering.api.GroupUser;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
@@ -61,6 +63,10 @@ import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 public class EditDefaultSettingFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     int defaultSettingId = -1;
+    ArrayList<GroupAdapter.Data> ar = new ArrayList<GroupAdapter.Data>();
+    GroupAdapter adapter = null;
+    private List<Group> groupList = new ArrayList<>();
+    private Spinner spinner = null;
 
     public static EditDefaultSettingFragment newInstance() {
         return new EditDefaultSettingFragment();
@@ -121,6 +127,37 @@ public class EditDefaultSettingFragment extends BaseFragment {
 //        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
 //        int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        Observable<GroupList> token = service.getGroupList(LoginUser.getToken());
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            if (activity != null) {
+                                groupList = new ArrayList<>(list.data);
+                                ArrayList<String> data = new ArrayList<>();
+                                for (Group g : groupList) {
+                                    data.add(g.name);
+                                }
+                                spinner = activity.findViewById(R.id.group_spinner);
+                                ArrayAdapter adapter =
+                                        new ArrayAdapter(activity, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                spinner.setAdapter(adapter);
+                            }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
+
+
         Button saveButton = activity.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,19 +204,21 @@ public class EditDefaultSettingFragment extends BaseFragment {
 
         defaultName.setText(gdi.name);
         startTime.setText(gdi.timer);
-//        spinner.setId(gdi.group);
+        spinner.setSelection(gdi.group.id);
     }
 
     public void saveDefaultSettingName() {
         ApiService service = Util.getService();
+
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
-//        Spinner spinner = activity.findViewById(R.id.group_spinner);
-//        textView.setText(item);
+        Spinner spinner = activity.findViewById(R.id.group_spinner);
+
         HashMap<String, String> body = new HashMap<>();
+
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-//        body.put("group", spinner.getSelectedItem().toString());
+        body.put("group", spinner.getSelectedItem().toString());
 
         Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(LoginUser.getToken(), defaultSettingId, body);
         cd.add(token.subscribeOn(Schedulers.io())
