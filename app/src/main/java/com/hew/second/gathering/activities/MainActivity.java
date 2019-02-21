@@ -39,6 +39,7 @@ import com.hew.second.gathering.fragments.SessionFragment;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 //import com.hew.second.gathering.fragments.EventFragment;
 
@@ -73,31 +74,36 @@ public class MainActivity extends BaseActivity
                 .subscribe(
                         list -> {
                             profile(list.data);
-                            if (savedInstanceState == null) {
-                                // FragmentManagerのインスタンス生成
-                                FragmentManager fragmentManager = getSupportFragmentManager();
-                                // FragmentTransactionのインスタンスを取得
-                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                // インスタンスに対して張り付け方を指定する
-                                fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
-                                // 張り付けを実行
-                                fragmentTransaction.commit();
-                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
                         }
                 ));
+
+        if (savedInstanceState == null) {
+            // FragmentManagerのインスタンス生成
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            // FragmentTransactionのインスタンスを取得
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            // インスタンスに対して張り付け方を指定する
+            fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+            // 張り付けを実行
+            fragmentTransaction.commit();
+        }
 
 
     }
 
     private void profile(Profile data) {
         //ユーザー情報表示
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
-        TextView user_name = (TextView) header.findViewById(R.id.user_name);
-        TextView user_email = (TextView) header.findViewById(R.id.user_email);
+        TextView user_name = header.findViewById(R.id.user_name);
+        TextView user_email =  header.findViewById(R.id.user_email);
         user_name.setText(data.username);
         user_email.setText(data.email);
     }

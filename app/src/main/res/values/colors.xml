@@ -30,7 +30,7 @@
     <color name="btn_send_pressed">#006633</color>
     <color name="btn_context_menu_normal">#FFFFFF</color>
     <color name="btn_context_menu_pressed">#40000000</color>
-    <color name="btn_context_menu_text_red">#ffff0000</color>
+    <color name="btn_context_menu_text_red">#FF0000</color>
 
     <color name="text_like_counter">#2b5a83</color>
 

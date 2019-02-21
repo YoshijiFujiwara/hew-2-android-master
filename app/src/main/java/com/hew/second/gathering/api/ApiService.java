@@ -55,6 +55,9 @@ public interface ApiService {
     @DELETE("api/friends/{friend}")
     Completable deleteFriend(@Header("Authorization") String authorization, @Path("friend") int userId);
 
+    @PUT("api/friends/{friend}/cancel_invitation")
+    Completable cancelFriendInvitation(@Header("Authorization") String authorization, @Path("friend") int userId);
+
     /*
      * グループ系API
      */
