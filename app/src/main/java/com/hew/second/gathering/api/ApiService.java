@@ -104,10 +104,10 @@ public interface ApiService {
     Observable<DefaultSettingList> getDefaultSettingList(@Header("Authorization") String authorization);
 
     @GET("api/default_settings/{default_setting}")
-    Observable<DefaultSettingDetail> getDefaultSettingDetail(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting);
+    Observable<DefaultSettingDetail> getDefaultSettingDetail(@Header("Authorization") String authorization, @Path("default_setting") int defaultSettingId);
 
     @PUT("api/default_settings/{default_setting}")
-    Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting, @Body HashMap<String, String> body);
+    Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("default_setting") int defaultSettingId, @Body HashMap<String, String> body);
 
     @POST("api/default_settings")
     Observable<DefaultSettingDetail> createDefaultSetting(@Header("Authorization") String authorization, @Body HashMap<String, String> body);

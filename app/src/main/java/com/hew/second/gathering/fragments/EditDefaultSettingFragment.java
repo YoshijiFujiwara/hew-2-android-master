@@ -61,9 +61,8 @@ import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 public class EditDefaultSettingFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     int defaultSettingId = -1;
-    private CompositeDisposable cd = new CompositeDisposable();
 
-    private String spinnerItems[] = {"グループ1", "グループ2", "グループ3", "グループ4"};
+    private String spinnerItems[] = {"グループ1", "グループ2"};
 
     public static EditDefaultSettingFragment newInstance() {
         return new EditDefaultSettingFragment();
@@ -84,29 +83,22 @@ public class EditDefaultSettingFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy(){
-        cd.clear();
-        super.onDestroy();
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_edit_default,
+        view = inflater.inflate(R.layout.fragment_edit_default,
                 container, false);
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        Activity activity = getActivity();
         activity.setTitle("デフォルト編集");
 
 
-        //Intent beforeIntent = activity.getIntent();
-        //defaultSettingId = beforeIntent.getIntExtra("DEFAULTSETTING_ID", -1);//設定したkeyで取り出す
+        Intent beforeIntent = activity.getIntent();
+        defaultSettingId = beforeIntent.getIntExtra("DEFAULTSETTING_ID", -1);//設定したkeyで取り出す
 
         EditText defaultName = activity.findViewById(R.id.default_input);
         defaultName.setOnFocusChangeListener((v, hasFocus) -> {
@@ -131,6 +123,34 @@ public class EditDefaultSettingFragment extends BaseFragment {
 //        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
 //        int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
+        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
+
+        // ArrayAdapter
+        ArrayAdapter<String> adapter
+                = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerItems);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // spinner に adapter をセット
+        spinner.setAdapter(adapter);
+
+        // リスナーを登録
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //　アイテムが選択された時
+            @Override
+            public void onItemSelected(AdapterView<?> parent,
+                                       View view, int position, long id) {
+                Spinner spinner = (Spinner)parent;
+                String item = (String)spinner.getSelectedItem();
+            }
+
+            //　アイテムが選択されなかった
+            public void onNothingSelected(AdapterView<?> parent) {
+                //
+            }
+        });
+
+
         Button saveButton = activity.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,11 +162,6 @@ public class EditDefaultSettingFragment extends BaseFragment {
         });
 
     }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        Util.setLoading(true, activity);
 
 //        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
 //
@@ -175,75 +190,28 @@ public class EditDefaultSettingFragment extends BaseFragment {
 //            }
 //        });
 
-        EditText defaultName = getActivity().findViewById(R.id.default_input);
-        EditText startTime = getActivity().findViewById(R.id.start_time);
 
-//        fetchList();
-    }
-
-    private void fetchList(){
-        ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getDefaultSettingDetail(LoginUser.getToken(), defaultSettingId);
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            Util.setLoading(false, getActivity());
-                            updateList(list.data);
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
-                            Intent intent = new Intent();
-                            intent.putExtra(SNACK_MESSAGE, "デフォルト情報の取得に失敗しました。");
-                            getActivity().setResult(RESULT_OK, intent);
-                            getActivity().finish();
-                        }
-                );
-    }
-
-
-    private void updateList(DefaultSetting gdi) {
-
-        EditText defaultName = activity.findViewById(R.id.default_input);
-        EditText startTime = activity.findViewById(R.id.start_time);
-
-        defaultName.setText(gdi.name);
-        startTime.setText(gdi.timer);
-    }
+//    private void updateList(DefaultSetting gdi) {
+//
+//        EditText defaultName = activity.findViewById(R.id.default_input);
+//        EditText startTime = activity.findViewById(R.id.start_time);
+//
+//        defaultName.setText(gdi.name);
+//        startTime.setText(gdi.timer);
+//    }
 
     public void saveDefaultSettingName() {
         ApiService service = Util.getService();
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
-//        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
+        Spinner spinner = activity.findViewById(R.id.group_spinner);
 
-        // リスナーを登録
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            //　アイテムが選択された時
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent,
-//                                       View view, int position, long id) {
-//                Spinner spinner = (Spinner)parent;
-//                String item = (String)spinner.getSelectedItem();
-//            }
-//
-//            //　アイテムが選択されなかった
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                //
-//            }
-//        });
 //        textView.setText(item);
 
         HashMap<String, String> body = new HashMap<>();
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-//        body.put("group", spinner.getSelectedItem().toString());
+        body.put("group", spinner.getSelectedItem().toString());
         Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(),body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -251,13 +219,13 @@ public class EditDefaultSettingFragment extends BaseFragment {
                 .subscribe(
                         list -> {
                             if (activity != null) {
-                                Intent intent = new Intent();
-//                                Intent intent = new Intent(activity.getApplication(), DefaultSettingFragment.class);
-//                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
-//                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
+//                                Intent intent = new Intent();
+                                Intent intent = new Intent(activity.getApplication(), EditDefaultSettingActivity.class);
+                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
+                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
 //                                intent.putExtra(SNACK_MESSAGE, "デフォルトを更新しました。");
-                                activity.setResult(RESULT_OK, intent);
-                                activity.finish();
+//                                activity.setResult(RESULT_OK, intent);
+//                                activity.finish();
                             }
                         },  // 成功時
                         throwable -> {

@@ -22,7 +22,9 @@ import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.api.DefaultSettingDetail;
+import com.hew.second.gathering.api.DefaultSettingList;
 import com.hew.second.gathering.api.GroupDetail;
+import com.hew.second.gathering.api.GroupList;
 import com.hew.second.gathering.views.adapters.DefaultSettingAdapter;
 import com.hew.second.gathering.views.adapters.GroupAdapter;
 import com.hew.second.gathering.LogUtil;
@@ -40,6 +42,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -48,13 +51,11 @@ import retrofit2.HttpException;
 
 import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_DEFAULT;
 
-import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_DEFAULT;
 
-public class DefaultSettingFragment extends Fragment {
+public class DefaultSettingFragment extends BaseFragment {
     ArrayList<DefaultSettingAdapter.Data> ar = new ArrayList<DefaultSettingAdapter.Data>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     DefaultSettingAdapter adapter = null;
-    private CompositeDisposable cd = new CompositeDisposable();
 
     public static DefaultSettingFragment newInstance() {
         return new DefaultSettingFragment();
@@ -65,25 +66,19 @@ public class DefaultSettingFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_default,
+        view = inflater.inflate(R.layout.fragment_default,
                 container, false);
+        return view;
     }
 
     public void removeFocus() {
-        SearchView searchView = getActivity().findViewById(R.id.searchView);
+        SearchView searchView = activity.findViewById(R.id.searchView);
         searchView.clearFocus();
-    }
-
-    @Override
-    public void onDestroy(){
-        cd.clear();
-        super.onDestroy();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
         activity.setTitle("デフォルト設定");
 
         FloatingActionButton fab = activity.findViewById(R.id.fab_newDefault);
@@ -126,30 +121,31 @@ public class DefaultSettingFragment extends Fragment {
             switch (view.getId()) {
                 case R.id.delete_default:
                     ApiService service = Util.getService();
-                    Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-                    Util.setLoading(true, getActivity());
-                    token.subscribeOn(Schedulers.io())
-                            .flatMapCompletable(result -> {
-                                LoginUser.setToken(result.access_token);
-                                return service.deleteDefaultSetting(LoginUser.getToken(), adapter.getList().get(position).id);
-                            })
+                    Completable token = service.deleteDefaultSetting(LoginUser.getToken(), adapter.getList().get(position).id);
+                    cd.add(token.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .unsubscribeOn(Schedulers.io())
                             .subscribe(
                                     () -> {
-                                        fetchList();
-                                        final Snackbar snackbar = Snackbar.make(getView(), "デフォルトを削除しました", Snackbar.LENGTH_LONG);
-                                        snackbar.getView().setBackgroundColor(Color.BLACK);
-                                        snackbar.setActionTextColor(Color.WHITE);
-                                        snackbar.show();
+                                        if (activity != null) {
+                                            fetchList();
+                                            final Snackbar snackbar = Snackbar.make(getView(), "デフォルトを削除しました", Snackbar.LENGTH_LONG);
+                                            snackbar.getView().setBackgroundColor(Color.BLACK);
+                                            snackbar.setActionTextColor(Color.WHITE);
+                                            snackbar.show();
+                                        }
                                     }, // 終了時
                                     (throwable) -> {
                                         Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                        Util.setLoading(false, getActivity());
-
+                                        if (activity != null && !cd.isDisposed()) {
+                                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                                startActivity(intent);
+                                            }
+                                        }
                                     }
-                            );
-                    break;
+                            ));
                 default:
                     // メンバ編集画面へグループIDを渡す
                     Intent intent = new Intent(activity.getApplication(), EditDefaultSettingActivity.class);
@@ -161,7 +157,7 @@ public class DefaultSettingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, getActivity());
+        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
@@ -172,28 +168,25 @@ public class DefaultSettingFragment extends Fragment {
 
     private void fetchList() {
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getDefaultSettingList(LoginUser.getToken());
-                })
+        Observable<DefaultSettingList> token = service.getDefaultSettingList(LoginUser.getToken());
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
-                            mSwipeRefreshLayout.setRefreshing(false);
-                            updateList(list.data);
+                            if (activity != null) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                                updateList(list.data);
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
-                            // ログインアクティビティへ遷移
-                            Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                            startActivity(intent);
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
                         }
-                );
+                ));
     }
 
     private void updateList(List<DefaultSetting> data) {
