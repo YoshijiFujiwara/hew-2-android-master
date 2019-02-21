@@ -169,7 +169,6 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
                 fragmentTransaction.commit();
             }
-<<<<<<<HEAD
         }
 // else if (id == R.id.nav_group) {
 //            FragmentManager fragmentManager = getSupportFragmentManager();
@@ -181,17 +180,6 @@ public class MainActivity extends BaseActivity
 //            }
 //        }
         else if (id == R.id.nav_member) {
-=======
-        } else if (id == R.id.nav_group) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
-                fragmentTransaction.commit();
-            }
-        } else if (id == R.id.nav_member) {
->>>>>>> develop
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -243,12 +231,8 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.commit();
             }
 
-<<<<<<<HEAD
         }
         else if (id == R.id.nav_session_process){
-=======
-        } else if (id == R.id.nav_default) {
->>>>>>> develop
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

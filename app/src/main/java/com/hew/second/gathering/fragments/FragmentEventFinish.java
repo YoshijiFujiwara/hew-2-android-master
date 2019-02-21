@@ -15,6 +15,10 @@ public class FragmentEventFinish extends Fragment {
     public FragmentEventFinish() {
     }
 
+
+    public static FragmentEventFinish newInstance() {
+        return new FragmentEventFinish();
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

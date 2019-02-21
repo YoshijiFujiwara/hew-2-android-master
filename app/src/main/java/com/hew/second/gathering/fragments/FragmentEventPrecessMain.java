@@ -31,7 +31,7 @@ public class FragmentEventPrecessMain extends Fragment {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
 //           FragmentにActivityに登録
-//            fragmentTransaction.replace(R.id.sip_container,);
+            fragmentTransaction.replace(R.id.sip_container,FragmentEventFinish.newInstance());
 //          バックスタックに登録
             fragmentTransaction.addToBackStack(null);
 //           上記の変更を登録
