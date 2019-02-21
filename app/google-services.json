@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "748282035554",
+    "firebase_url": "https://hew-2-whistle.firebaseio.com",
+    "project_id": "hew-2-whistle",
+    "storage_bucket": "hew-2-whistle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748282035554:android:50fb7a8305001e18",
+        "android_client_info": {
+          "package_name": "com.hew.second.gathering"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748282035554-qkb1fldess7nomerif5utn2dejd28a3u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hew.second.gathering",
+            "certificate_hash": "f661d62d07268426b248cc46496cdd2ef8c2803c"
+          }
+        },
+        {
+          "client_id": "748282035554-35t3onjcnhtd30qkgv9kgtlj4jmmfdqp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl8MCbGDPR0VzPIHCei42aDYvavWvO0A0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748282035554-35t3onjcnhtd30qkgv9kgtlj4jmmfdqp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
