@@ -1,17 +1,15 @@
 //package com.hew.second.gathering.views.adapters;
 //
-//import android.content.ClipData;
 //import android.view.LayoutInflater;
 //import android.view.View;
 //import android.view.ViewGroup;
-//import android.widget.ArrayAdapter;
 //import android.widget.BaseAdapter;
 //import android.widget.GridView;
 //import android.widget.Spinner;
 //import android.widget.TextView;
 //
 //import com.hew.second.gathering.R;
-//import com.hew.second.gathering.api.Group;
+//import com.hew.second.gathering.api.User;
 //
 //import java.util.ArrayList;
 //import java.util.Arrays;
@@ -22,17 +20,16 @@
 //    private List<Data> list;
 //
 //    static class ViewHolder {
-//        Spinner group;
+//        Spinner name;
+//
 //    }
 //    static public class Data {
-//        public Data(int id, Group group) {
+//        public Data(int id, String name) {
 //            this.id = id;
-//            this.group = group;
+//            this.name = name;
 //        }
-//
 //        public int id;
-//        public Group group;
-//
+//        public String name;
 //    }
 //
 //    public DefaultSettingDetailAdapter(Data[] names){
@@ -48,18 +45,16 @@
 //        ViewHolder holder;
 //
 //        if (convertView == null) {
-//
-//           convertView = LayoutInflater.from(parent.getContext())
-//                    .inflate(android.R.layout.simple_spinner_item, parent, false);
+//            convertView = LayoutInflater.from(parent.getContext())
+//                    .inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
 //            holder = new ViewHolder();
-//            holder.group = convertView.findViewById(R.id.group_spinner);
+//            holder.name = convertView.findViewById(R.id.group_spinner);
 //            convertView.setTag(holder);
 //        } else {
 //            holder = (ViewHolder) convertView.getTag();
 //        }
 //
-//        holder.group.set(list.get(position).group);
-//
+//        holder.name.setText(list.get(position).name);
 //
 //        return convertView;
 //    }
@@ -73,7 +68,7 @@
 //    public Object getItem(int position) {
 //        return position;
 //    }
-//    public List<DefaultSettingDetailAdapter.Data> getList(){
+//    public List<Data> getList(){
 //        return list;
 //    }
 //    @Override
