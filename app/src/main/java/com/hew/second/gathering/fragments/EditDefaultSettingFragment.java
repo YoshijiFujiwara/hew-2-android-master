@@ -252,7 +252,10 @@ public class EditDefaultSettingFragment extends BaseFragment {
                         list -> {
                             if (activity != null) {
                                 Intent intent = new Intent();
-                                intent.putExtra(SNACK_MESSAGE, "デフォルトを更新しました。");
+//                                Intent intent = new Intent(activity.getApplication(), DefaultSettingFragment.class);
+//                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
+//                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
+//                                intent.putExtra(SNACK_MESSAGE, "デフォルトを更新しました。");
                                 activity.setResult(RESULT_OK, intent);
                                 activity.finish();
                             }
