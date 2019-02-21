@@ -17,7 +17,7 @@ public class FragmentEventFinish extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view =
+        
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 }
