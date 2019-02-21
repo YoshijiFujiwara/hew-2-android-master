@@ -133,6 +133,12 @@ public interface ApiService {
      */
     @GET("api/guest/sessions")
     Observable<SessionList> getGuestSessionList(@Header("Authorization") String authorization);
+    @GET("api/guest/sessions/wait")
+    Observable<SessionList> getGuestSessionWaitList(@Header("Authorization") String authorization);
+    @GET("api/guest/sessions/allow")
+    Observable<SessionList> getGuestSessionAllowList(@Header("Authorization") String authorization);
+    @PUT("api/guest/sessions/{session}")
+    Observable<SessionDetail> updateGuestSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
     @GET("api/guest/sessions/{session}")
     Observable<SessionDetail> getGuestSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
 

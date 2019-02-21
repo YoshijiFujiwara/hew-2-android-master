@@ -83,7 +83,7 @@ public class GuestJoinedSessionFragment extends BaseFragment {
                         list -> {
                             if(activity != null){
                                 mSwipeRefreshLayout.setRefreshing(false);
-                                updateList(list.data);
+                                //updateList(list.data);
                             }
                         },  // 成功時
                         throwable -> {
@@ -99,7 +99,7 @@ public class GuestJoinedSessionFragment extends BaseFragment {
                         }
                 ));
     }
-
+/*
     private void updateList(List<Session> data) {
         // ListView生成
         listView = activity.findViewById(R.id.listView_guest_joined);
@@ -109,5 +109,6 @@ public class GuestJoinedSessionFragment extends BaseFragment {
         // ListViewにadapterをセット
         listView.setAdapter(adapter);
     }
+    */
 
 }
