@@ -34,7 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
-public class ApplyingFragment extends Fragment {
+public class ApplyingFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private MemberAdapter adapter = null;
@@ -50,21 +50,23 @@ public class ApplyingFragment extends Fragment {
 
         return fragment;
     }
-    public static ApplyingFragment newInstance() { return new ApplyingFragment(); }
+
+    public static ApplyingFragment newInstance() {
+        return new ApplyingFragment();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_applying,container, false);
+        view = inflater.inflate(R.layout.fragment_applying, container, false);
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
 
         mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout_applying);
         // 色設定
@@ -90,7 +92,7 @@ public class ApplyingFragment extends Fragment {
                     if (event != DISMISS_EVENT_MANUAL) {
                         ApiService service = Util.getService();
                         Completable friendList = service.deleteFriend(LoginUser.getToken(), deleteFriend.id);
-                        friendList.subscribeOn(Schedulers.io())
+                        cd.add(friendList.subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .unsubscribeOn(Schedulers.io())
                                 .subscribe(
@@ -98,14 +100,13 @@ public class ApplyingFragment extends Fragment {
                                         },  // 成功時
                                         throwable -> {
                                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                            Util.setLoading(false, getActivity());
-                                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
                                                 // ログインアクティビティへ遷移
-                                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                                 startActivity(intent);
                                             }
                                         }
-                                );
+                                ));
                     }
                 }
             });
@@ -149,7 +150,7 @@ public class ApplyingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, getActivity());
+        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
@@ -164,31 +165,32 @@ public class ApplyingFragment extends Fragment {
         ApiService service = Util.getService();
         Observable<FriendList> friendList;
         friendList = service.getApplyingFriendList(LoginUser.getToken());
-        friendList.subscribeOn(Schedulers.io())
+        cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, getActivity());
                             mSwipeRefreshLayout.setRefreshing(false);
-                            updateList(list.data);
+                            if (activity != null) {
+                                updateList(list.data);
+                            }
+
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, getActivity());
                             mSwipeRefreshLayout.setRefreshing(false);
-                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
                                 // ログインアクティビティへ遷移
-                                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
                         }
-                );
+                ));
     }
 
     private void updateList(List<Friend> data) {
         // ListView生成
-        listView = getActivity().findViewById(R.id.member_list_applying);
+        listView = activity.findViewById(R.id.member_list_applying);
         ArrayList<Friend> list = new ArrayList<>(data);
         ar = new ArrayList<>(data);
         adapter = new MemberAdapter(list);

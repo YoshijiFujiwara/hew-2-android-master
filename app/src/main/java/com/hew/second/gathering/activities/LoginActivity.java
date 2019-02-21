@@ -123,27 +123,23 @@ public class LoginActivity extends BaseActivity {
 
         ApiService service = Util.getService();
         Observable<JWT> token = service.getToken(email, password);
-        Util.setLoading(true, this);
-        token.subscribeOn(Schedulers.io())
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, this);
                             finishLogin(list);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, this);
                             // ログイン情報初期化
                             LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
-
                             final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "ログイン情報が異なります。再度お試しください。", Snackbar.LENGTH_SHORT);
                             snackbar.getView().setBackgroundColor(Color.BLACK);
                             snackbar.setActionTextColor(Color.WHITE);
                             snackbar.show();
                         }
-                );
+                ));
     }
 
     private void finishLogin(JWT token) {

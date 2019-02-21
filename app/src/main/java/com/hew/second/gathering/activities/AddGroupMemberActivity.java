@@ -18,6 +18,7 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
+import com.hew.second.gathering.api.FriendList;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.GroupFragment;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -46,6 +48,12 @@ public class AddGroupMemberActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group_member);
 
+        // Backボタンを有効にする
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
         Intent beforeIntent = getIntent();
         groupId = beforeIntent.getIntExtra("GROUP_ID", -1);
 
@@ -58,15 +66,10 @@ public class AddGroupMemberActivity extends BaseActivity {
         listView = findViewById(R.id.member_list);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             ApiService service = Util.getService();
-            Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
             HashMap<String, Integer> body = new HashMap<>();
             body.put("user_id", adapter.getList().get(position).id);
-            Util.setLoading(true, this);
-            token.subscribeOn(Schedulers.io())
-                    .flatMapCompletable(result -> {
-                        LoginUser.setToken(result.access_token);
-                        return service.addUserToGroup(LoginUser.getToken(), groupId, body);
-                    })
+            Completable token = service.addUserToGroup(LoginUser.getToken(), groupId, body);
+            cd.add(token.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .unsubscribeOn(Schedulers.io())
                     .subscribe(
@@ -79,7 +82,6 @@ public class AddGroupMemberActivity extends BaseActivity {
                             }, // 終了時
                             (throwable) -> {
                                 Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                Util.setLoading(false, this);
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                     //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
                                     final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "既に追加されています。", Snackbar.LENGTH_LONG);
@@ -87,7 +89,7 @@ public class AddGroupMemberActivity extends BaseActivity {
                                     snackbar.setActionTextColor(Color.WHITE);
                                     snackbar.show();
                                 }
-                            });
+                            }));
         });
 
         SearchView searchView = findViewById(R.id.searchView);
@@ -134,34 +136,33 @@ public class AddGroupMemberActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Util.setLoading(true, this);
         fetchList();
+    }
+    @Override
+    public boolean onSupportNavigateUp(){
+        onBackPressed();
+        return true;
     }
 
     private void fetchList() {
+        mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-                .flatMap(result -> {
-                    LoginUser.setToken(result.access_token);
-                    return service.getAddableToGroupFriendList(LoginUser.getToken(),groupId);
-                })
+        Observable<FriendList> token = service.getAddableToGroupFriendList(LoginUser.getToken(),groupId);
+        cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Util.setLoading(false, this);
                             mSwipeRefreshLayout.setRefreshing(false);
                             updateList(list.data);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            Util.setLoading(false, this);
                             // ログインアクティビティへ遷移
                             Intent intent = new Intent(getApplication(), LoginActivity.class);
                             startActivity(intent);
                         }
-                );
+                ));
     }
 
     private void updateList(List<Friend> data) {

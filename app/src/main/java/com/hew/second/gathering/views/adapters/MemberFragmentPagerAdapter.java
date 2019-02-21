@@ -30,7 +30,7 @@ public class MemberFragmentPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 return PendingFragment.newInstance();
             default:
-                return null;
+                return FriendFragment.newInstance();
         }
     }
 

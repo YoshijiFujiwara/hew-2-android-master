@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.views.adapters.InviteFragmentPagerAdapter;
 
-public class InviteFragment extends Fragment {
+public class InviteFragment extends BaseFragment {
 
     public static InviteFragment newInstance() {
         return new InviteFragment();
@@ -25,7 +25,7 @@ public class InviteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_invite, container, false);
+        view = inflater.inflate(R.layout.fragment_invite, container, false);
         return view;
     }
 
@@ -33,10 +33,10 @@ public class InviteFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         InviteFragmentPagerAdapter adapter = new InviteFragmentPagerAdapter(getChildFragmentManager());
-        ViewPager viewPager = getView().findViewById(R.id.viewPager);
+        ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
-        TabLayout tabLayout = getView().findViewById(R.id.tabLayout);
+        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
     }
 }
