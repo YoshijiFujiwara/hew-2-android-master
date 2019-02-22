@@ -1,19 +1,11 @@
 package com.hew.second.gathering.fragments;
 
 
-import android.content.Context;
-import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,30 +15,22 @@ import android.widget.ListView;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.SelectedSession;
 import com.hew.second.gathering.activities.EventProcessMainActivity;
 import com.hew.second.gathering.activities.LoginActivity;
-import com.hew.second.gathering.activities.ShopDetailActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
-import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.SessionList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.EventAdapter;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
-
-import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 
 
 public class EventFragment extends BaseFragment {

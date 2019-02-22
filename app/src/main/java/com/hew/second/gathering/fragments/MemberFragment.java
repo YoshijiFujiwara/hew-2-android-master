@@ -1,42 +1,21 @@
 package com.hew.second.gathering.fragments;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.hew.second.gathering.LogUtil;
-import com.hew.second.gathering.LoginUser;
-import com.hew.second.gathering.SelectedSession;
-import com.hew.second.gathering.activities.AddMemberActivity;
-import com.hew.second.gathering.activities.LoginActivity;
-import com.hew.second.gathering.views.adapters.BudgetFragmentPagerAdapter;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
-import com.hew.second.gathering.api.JWT;
-import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.MemberFragmentPagerAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class MemberFragment extends BaseFragment {
     private static final String MESSAGE = "message";

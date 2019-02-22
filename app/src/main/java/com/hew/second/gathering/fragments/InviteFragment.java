@@ -1,9 +1,7 @@
 package com.hew.second.gathering.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -11,9 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.SelectedSession;
-import com.hew.second.gathering.api.Session;
-import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.InviteFragmentPagerAdapter;
 
 public class InviteFragment extends SessionBaseFragment {

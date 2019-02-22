@@ -1,34 +1,18 @@
 package com.hew.second.gathering.fragments;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.hew.second.gathering.LogUtil;
-import com.hew.second.gathering.LoginUser;
-import com.hew.second.gathering.SelectedSession;
-import com.hew.second.gathering.activities.LoginActivity;
-import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Session;
-import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetFragmentPagerAdapter;
 import com.hew.second.gathering.R;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.HttpException;
 
 public class BudgetFragment extends SessionBaseFragment {
     protected static final String BUDGET_MESSAGE = "budget_message";
