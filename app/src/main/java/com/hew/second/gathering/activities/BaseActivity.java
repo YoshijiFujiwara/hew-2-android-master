@@ -16,7 +16,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected CompositeDisposable cd = new CompositeDisposable();
     public static final int INTENT_EDIT_GROUP = 1;
     public static final int INTENT_ADD_GROUP_MEMBER = 2;
+    public static final int INTENT_EDIT_DEFAULT = 3;
     public static final int INTENT_SHOP_DETAIL = 3;
+    public static final int INTENT_GUEST_SESSION_DETAIL = 4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

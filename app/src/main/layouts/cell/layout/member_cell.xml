@@ -57,7 +57,6 @@
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/member_unique_name"
-                app:layout_constraintHorizontal_bias="0.255"
                 app:layout_constraintStart_toEndOf="@+id/cardView"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.583" />
@@ -66,18 +65,26 @@
                 android:id="@+id/member_unique_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
                 android:singleLine="true"
                 android:text="TextView"
                 android:textColor="@color/colorAccentDark"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/member_name"
+                app:layout_constraintEnd_toStartOf="@+id/member_delete"
+                app:layout_constraintTop_toTopOf="@+id/member_name" />
+
+            <TextView
+                android:id="@+id/member_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="@string/cross"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/member_unique_name"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.583" />
+                app:layout_constraintTop_toTopOf="@+id/member_unique_name" />
 
         </android.support.constraint.ConstraintLayout>
 

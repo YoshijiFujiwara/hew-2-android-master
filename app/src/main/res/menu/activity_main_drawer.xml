@@ -26,6 +26,11 @@
             android:id="@+id/nav_session_main"
             android:icon="@drawable/ic_menu_share"
             android:title="セッションのメイン(仮)" />
+
+        <item
+            android:id="@+id/nav_guest"
+            android:icon="@drawable/ic_menu_share"
+            android:title="ゲスト（仮）" />
         <item
             android:id="@+id/nav_finish"
             android:icon="@drawable/ic_menu_send"

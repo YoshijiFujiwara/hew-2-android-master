@@ -1,26 +1,34 @@
 package com.hew.second.gathering.fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.AddMemberActivity;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
@@ -85,43 +93,17 @@ public class FriendFragment extends BaseFragment {
 
         listView = activity.findViewById(R.id.member_list);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            // リストから要素を削除
-            Friend deleteFriend = adapter.getList().get(position);
-            ar.remove(deleteFriend);
-            updateList(ar);
-            final Snackbar snackbar = Snackbar.make(view, "友達から削除しました。", Snackbar.LENGTH_LONG);
-            snackbar.getView().setBackgroundColor(Color.BLACK);
-            snackbar.setActionTextColor(Color.WHITE);
-            snackbar.setAction("元に戻す", (v) -> {
-                snackbar.dismiss();
-            });
-            snackbar.addCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    if (event != DISMISS_EVENT_MANUAL) {
-                        ApiService service = Util.getService();
-                        Completable friendList = service.deleteFriend(LoginUser.getToken(), deleteFriend.id);
-                        cd.add(friendList.subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .unsubscribeOn(Schedulers.io())
-                                .subscribe(
-                                        () -> {
-                                        },  // 成功時
-                                        throwable -> {
-                                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                            if(activity != null && !cd.isDisposed()){
-                                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                                    // ログインアクティビティへ遷移
-                                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                                    startActivity(intent);
-                                                }
-                                            }
-                                        }
-                                ));
-                    }
-                }
-            });
-            snackbar.show();
+            if(view.getId() == R.id.member_delete) {
+                new MaterialDialog.Builder(activity)
+                        .title("友達解除")
+                        .content(ar.get(position).username + "さんとの友達登録を解除しますか？")
+                        .positiveText("OK")
+                        .onPositive((dialog, which) -> {
+                            deleteFriend(ar.get(position).id);
+                        })
+                        .negativeText("キャンセル")
+                        .show();
+            }
         });
 
         SearchView searchView = activity.findViewById(R.id.searchView);
@@ -161,7 +143,6 @@ public class FriendFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
@@ -173,6 +154,7 @@ public class FriendFragment extends BaseFragment {
 
 
     private void fetchList() {
+        mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<FriendList> friendList = service.getFriendList(LoginUser.getToken());
         cd.add(friendList.subscribeOn(Schedulers.io())
@@ -181,14 +163,14 @@ public class FriendFragment extends BaseFragment {
                 .subscribe(
                         list -> {
                             mSwipeRefreshLayout.setRefreshing(false);
-                            if(activity != null && !cd.isDisposed()) {
+                            if (activity != null && !cd.isDisposed()) {
                                 updateList(list.data);
                             }
                         },  // 成功時
                         throwable -> {
                             mSwipeRefreshLayout.setRefreshing(false);
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if(activity != null && !cd.isDisposed()) {
+                            if (activity != null && !cd.isDisposed()) {
                                 if (throwable instanceof NullPointerException) {
                                     final Snackbar snackbar = Snackbar.make(view, "データがありません。", Snackbar.LENGTH_LONG);
                                     snackbar.getView().setBackgroundColor(Color.BLACK);
@@ -213,5 +195,36 @@ public class FriendFragment extends BaseFragment {
         // ListViewにadapterをセット
         listView.setAdapter(adapter);
     }
+
+    public void deleteFriend(int id) {
+
+        ApiService service = Util.getService();
+        Completable friendList = service.deleteFriend(LoginUser.getToken(), id);
+        cd.add(friendList.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if (activity != null) {
+                                final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "友達登録を解除しました。", Snackbar.LENGTH_SHORT);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
+                                fetchList();
+                            }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
+    }
+
 
 }
