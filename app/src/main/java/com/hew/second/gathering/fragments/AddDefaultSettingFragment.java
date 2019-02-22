@@ -183,13 +183,13 @@ public class AddDefaultSettingFragment extends BaseFragment {
 //                ));
 //    }
 
-    private void updateList(DefaultSetting gdi) {
-        EditText defaultName = activity.findViewById(R.id.default_input);
-        EditText startTime = activity.findViewById(R.id.start_time);
-
-        defaultName.setText(gdi.name);
-        startTime.setText(gdi.timer);
-    }
+//    private void updateList(DefaultSetting gdi) {
+//        EditText defaultName = activity.findViewById(R.id.default_input);
+//        EditText startTime = activity.findViewById(R.id.start_time);
+//
+//        defaultName.setText(gdi.name);
+//        startTime.setText(gdi.timer);
+//    }
 
 
     public void createDefault() {
@@ -203,7 +203,7 @@ public class AddDefaultSettingFragment extends BaseFragment {
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-        body.put("group", spinner.getSelectedItem().toString());
+        body.put("group.name", spinner.getSelectedItem().toString());
 
         Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(), body);
         cd.add(token.subscribeOn(Schedulers.io())
