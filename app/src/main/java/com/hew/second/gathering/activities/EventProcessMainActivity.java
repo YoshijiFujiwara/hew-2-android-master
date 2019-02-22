@@ -18,7 +18,8 @@ public class EventProcessMainActivity extends AppCompatActivity {
 //    activity_event_process_main.xml
 //      |→FrameLayout(id :eip_parent_container)
 //      | include → event_in_process.xml(FrameLayout id :eip_container)
-//
+//      BottomNavigationの挙動が停止状態で各画面（Fragment」）呼び出し可能
+//        |→ViewPager＋TabLayout＋Fragmentを呼び出すはアプリが落ちる？？？
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
