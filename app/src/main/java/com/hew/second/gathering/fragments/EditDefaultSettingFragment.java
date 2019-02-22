@@ -146,6 +146,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
                                         new ArrayAdapter(activity, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinner.setAdapter(adapter);
+                                fetchList();
                             }
                         },  // 成功時
                         throwable -> {
@@ -162,8 +163,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // データ保存
-               Util.setLoading(true,activity);
+                // データ保存Loadin
                saveDefaultSettingName();
             }
         });
@@ -173,7 +173,6 @@ public class EditDefaultSettingFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        fetchList();
     }
 
     private void fetchList() {
@@ -210,7 +209,16 @@ public class EditDefaultSettingFragment extends BaseFragment {
 
         defaultName.setText(gdi.name);
         startTime.setText(gdi.timer);
-        spinner.setSelection(gdi.group.id);
+        int sid = -1;
+        for (int i = 0;i < groupList.size(); i++){
+            if(groupList.get(i).id == gdi.group.id){
+                sid = i;
+                break;
+            }
+        }
+        if( sid != -1){
+            spinner.setSelection(sid);
+        }
 //        mRadioGroup.check(R.id.specific_location);
     }
 
@@ -226,7 +234,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-        body.put("group_id", String.valueOf(spinner.getSelectedItemId()));
+        body.put("group_id", String.valueOf(groupList.get((int)spinner.getSelectedItemPosition()).id));
 //        body.put("", String.valueOf(mRadioGroup.getCheckedRadioButtonId()));
 
         Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(LoginUser.getToken(), defaultSettingId, body);

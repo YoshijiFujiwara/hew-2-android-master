@@ -64,7 +64,7 @@ public class InProgressFragment extends BaseFragment {
         FloatingActionButton fab = activity.findViewById(R.id.fab);
         fab.setOnClickListener((v) -> createSession());
 
-        listView = getActivity().findViewById(R.id.listView_in_progress);
+        listView = activity.findViewById(R.id.listView_in_progress);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

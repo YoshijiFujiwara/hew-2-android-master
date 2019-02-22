@@ -96,7 +96,7 @@ public class WaitingPaymentFragment extends BaseFragment {
                         list -> {
                             mSwipeRefreshLayout.setRefreshing(false);
                             if (activity != null) {
-                                ListView listView = getActivity().findViewById(R.id.listView_waitingPay);
+                                ListView listView = activity.findViewById(R.id.listView_waitingPay);
                                 updateList(list.data, listView);
                             }
                         },  // 成功時

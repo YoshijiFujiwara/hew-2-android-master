@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.api.GroupDetail;
@@ -111,34 +112,15 @@ public class GroupFragment extends BaseFragment {
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             switch (view.getId()) {
                 case R.id.delete_group:
-                    ApiService service = Util.getService();
-                    Completable token = service.deleteGroup(LoginUser.getToken(), adapter.getList().get(position).id);
-                    cd.add(token.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .unsubscribeOn(Schedulers.io())
-                            .subscribe(
-                                    () -> {
-                                        if (activity != null) {
-                                            fetchList();
-                                            final Snackbar snackbar = Snackbar.make(getView(), "グループを削除しました", Snackbar.LENGTH_LONG);
-                                            snackbar.getView().setBackgroundColor(Color.BLACK);
-                                            snackbar.setActionTextColor(Color.WHITE);
-                                            snackbar.show();
-                                        }
-                                    }, // 終了時
-                                    (throwable) -> {
-                                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                        if (activity != null && !cd.isDisposed()) {
-                                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
-                                                //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
-                                                final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているデフォルト設定があるので、削除できません", Snackbar.LENGTH_LONG);
-                                                snackbar.getView().setBackgroundColor(Color.BLACK);
-                                                snackbar.setActionTextColor(Color.WHITE);
-                                                snackbar.show();
-                                            }
-                                        }
-                                    }
-                            ));
+                    new MaterialDialog.Builder(activity)
+                            .title("グループ削除")
+                            .content(adapter.getList().get(position).name+ "を削除しますか？")
+                            .positiveText("OK")
+                            .onPositive((dialog, which) -> {
+                                deleteGroup(adapter.getList().get(position).id);
+                            })
+                            .negativeText("キャンセル")
+                            .show();
                     break;
                 default:
                     // メンバ編集画面へグループIDを渡す
@@ -217,6 +199,37 @@ public class GroupFragment extends BaseFragment {
         {
             gridView.setAdapter(adapter);
         }
+    }
+
+    private void deleteGroup(int id){
+        ApiService service = Util.getService();
+        Completable token = service.deleteGroup(LoginUser.getToken(), id);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if (activity != null) {
+                                fetchList();
+                                final Snackbar snackbar = Snackbar.make(getView(), "グループを削除しました", Snackbar.LENGTH_LONG);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
+                            }
+                        }, // 終了時
+                        (throwable) -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
+                                    //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
+                                    final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているデフォルト設定があるので、削除できません", Snackbar.LENGTH_LONG);
+                                    snackbar.getView().setBackgroundColor(Color.BLACK);
+                                    snackbar.setActionTextColor(Color.WHITE);
+                                    snackbar.show();
+                                }
+                            }
+                        }
+                ));
     }
 
 }

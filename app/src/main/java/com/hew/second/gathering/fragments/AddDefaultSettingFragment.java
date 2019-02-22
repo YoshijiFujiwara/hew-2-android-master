@@ -148,7 +148,6 @@ public class AddDefaultSettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 // データ保存
-               Util.setLoading(true,activity);
                createDefault();
             }
         });
@@ -167,7 +166,7 @@ public class AddDefaultSettingFragment extends BaseFragment {
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-        body.put("group_id", String.valueOf(spinner.getSelectedItemId()));
+        body.put("group_id", String.valueOf(groupList.get((int)spinner.getSelectedItemPosition()).id));
 //        body.put("", String.valueOf(mRadioGroup.getCheckedRadioButtonId()));
 
         Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(), body);

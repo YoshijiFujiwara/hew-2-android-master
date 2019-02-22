@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.activities.AddDefaultSettingActivity;
 import com.hew.second.gathering.activities.EditDefaultSettingActivity;
@@ -121,32 +122,16 @@ public class DefaultSettingFragment extends BaseFragment {
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             switch (view.getId()) {
                 case R.id.delete_default:
-                    ApiService service = Util.getService();
-                    Completable token = service.deleteDefaultSetting(LoginUser.getToken(), adapter.getList().get(position).id);
-                    cd.add(token.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .unsubscribeOn(Schedulers.io())
-                            .subscribe(
-                                    () -> {
-                                        if (activity != null) {
-                                            fetchList();
-                                            final Snackbar snackbar = Snackbar.make(getView(), "デフォルトを削除しました", Snackbar.LENGTH_LONG);
-                                            snackbar.getView().setBackgroundColor(Color.BLACK);
-                                            snackbar.setActionTextColor(Color.WHITE);
-                                            snackbar.show();
-                                        }
-                                    }, // 終了時
-                                    (throwable) -> {
-                                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                        if (activity != null && !cd.isDisposed()) {
-                                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                                startActivity(intent);
-                                            }
-                                        }
-                                    }
-                            ));
+                    new MaterialDialog.Builder(activity)
+                            .title("デフォルト設定削除")
+                            .content(adapter.getList().get(position).name+ "を削除しますか？")
+                            .positiveText("OK")
+                            .onPositive((dialog, which) -> {
+                                deleteDefault(adapter.getList().get(position).id);
+                            })
+                            .negativeText("キャンセル")
+                            .show();
+                    break;
                 default:
                     // 編集画面にデフォルトIDを渡す
                     Intent intent = new Intent(activity.getApplication(), EditDefaultSettingActivity.class);
@@ -193,7 +178,7 @@ public class DefaultSettingFragment extends BaseFragment {
 
     private void updateList(List<DefaultSetting> data) {
         // ListView生成
-        GridView gridView = getActivity().findViewById(R.id.gridView_default);
+        GridView gridView = activity.findViewById(R.id.gridView_default);
         ar.clear();
         for (DefaultSetting m : data) {
             ar.add(new DefaultSettingAdapter.Data(m.id, m.name));
@@ -203,6 +188,36 @@ public class DefaultSettingFragment extends BaseFragment {
             // ListViewにadapterをセット
             gridView.setAdapter(adapter);
         }
+    }
+
+    private void deleteDefault(int id){
+        ApiService service = Util.getService();
+        Completable token = service.deleteDefaultSetting(LoginUser.getToken(), id);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if (activity != null) {
+                                fetchList();
+                                final Snackbar snackbar = Snackbar.make(getView(), "デフォルトを削除しました", Snackbar.LENGTH_LONG);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
+                            }
+                        }, // 終了時
+                        (throwable) -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
+
     }
 
 }
