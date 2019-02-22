@@ -10,7 +10,17 @@ import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
 
-public class StarttimeFragment extends Fragment {
+public class StartTimeFragment extends Fragment {
+
+    public static StartTimeFragment newInstance() {
+        
+        Bundle args = new Bundle();
+        
+        StartTimeFragment fragment = new StartTimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

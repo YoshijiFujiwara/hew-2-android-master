@@ -29,7 +29,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class InProgressFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class InProgressFragment extends Fragment {
 
     public static InProgressFragment newInstance() {
         return new InProgressFragment();
@@ -41,26 +41,17 @@ public class InProgressFragment extends Fragment implements AdapterView.OnItemCl
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-//        ListView listView = getActivity().findViewById(R.id.listView_in_progress);
-////        ListViewのクリックイベント処理
-//        listView.setOnItemClickListener(this);
-
         return inflater.inflate(R.layout.fragment_in_progress,container,false);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
-    }
 
     @Override
     public void onResume() {
         super.onResume();
         ListView listView = getActivity().findViewById(R.id.listView_in_progress);
         updateSessionList(listView);
-        listView.setOnItemClickListener(this);
+
     }
 
     public void updateSessionList(ListView listView) {
@@ -76,8 +67,17 @@ public class InProgressFragment extends Fragment implements AdapterView.OnItemCl
                         list -> {
 //                          表示
                             updateList(list.data,listView);
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                                選択した位置のデータをIntentに付加予定
 
-//
+                                Intent intent = new Intent(getActivity(), EventProcessMainTestActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+
+
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -102,11 +102,5 @@ public class InProgressFragment extends Fragment implements AdapterView.OnItemCl
 
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), EventProcessMainTestActivity.class);
 
-        startActivity(intent);
-
-    }
 }

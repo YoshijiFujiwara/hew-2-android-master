@@ -10,12 +10,21 @@ import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
 
-public class EventProcessMainFragment extends Fragment {
+public class EventFinishFragment extends Fragment {
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.event_process_main,container,false);
+    public EventFinishFragment() {
     }
 
 
+    public static EventFinishFragment newInstance() {
+        return new EventFinishFragment();
+    }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_event_finish,container,false);
+
+        return view;
+    }
 }
