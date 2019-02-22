@@ -26,4 +26,9 @@ public class StartActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        // 戻れない
+    }
 }

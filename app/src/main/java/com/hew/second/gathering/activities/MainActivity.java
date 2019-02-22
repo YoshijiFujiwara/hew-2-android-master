@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -37,6 +38,7 @@ import com.hew.second.gathering.fragments.SessionMainFragment;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 
 //import com.hew.second.gathering.fragments.EventFragment;
@@ -72,31 +74,36 @@ public class MainActivity extends BaseActivity
                 .subscribe(
                         list -> {
                             profile(list.data);
-                            if (savedInstanceState == null) {
-                                // FragmentManagerのインスタンス生成
-                                FragmentManager fragmentManager = getSupportFragmentManager();
-                                // FragmentTransactionのインスタンスを取得
-                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                // インスタンスに対して張り付け方を指定する
-                                fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
-                                // 張り付けを実行
-                                fragmentTransaction.commit();
-                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
                         }
                 ));
+
+        if (savedInstanceState == null) {
+            // FragmentManagerのインスタンス生成
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            // FragmentTransactionのインスタンスを取得
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            // インスタンスに対して張り付け方を指定する
+            fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+            // 張り付けを実行
+            fragmentTransaction.commit();
+        }
 
 
     }
 
     private void profile(Profile data) {
         //ユーザー情報表示
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
-        TextView user_name = (TextView) header.findViewById(R.id.user_name);
-        TextView user_email = (TextView) header.findViewById(R.id.user_email);
+        TextView user_name = header.findViewById(R.id.user_name);
+        TextView user_email =  header.findViewById(R.id.user_email);
         user_name.setText(data.username);
         user_email.setText(data.email);
     }
@@ -214,13 +221,17 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_session_main) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, SessionMainFragment.newInstance());
                 fragmentTransaction.commit();
             }
-
+        } else if (id == R.id.nav_guest) {
+            mHandler.post(() -> {
+                Intent intent = new Intent(getApplication(), GuestActivity.class);
+                startActivity(intent);
+            });
         } else if (id == R.id.nav_finish) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {

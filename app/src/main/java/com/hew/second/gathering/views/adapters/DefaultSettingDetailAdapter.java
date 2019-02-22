@@ -5,38 +5,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.api.DefaultSetting;
+import com.hew.second.gathering.api.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DefaultSettingAdapter extends BaseAdapter {
+public class DefaultSettingDetailAdapter extends BaseAdapter {
 
     private List<Data> list;
 
     static class ViewHolder {
-        TextView name;
-        TextView deleteButton;
+        Spinner name;
+
     }
     static public class Data {
         public Data(int id, String name) {
             this.id = id;
             this.name = name;
         }
-
         public int id;
         public String name;
-
     }
 
-    public DefaultSettingAdapter(Data[] names){
+    public DefaultSettingDetailAdapter(Data[] names){
         list = Arrays.asList(names);
     }
-    public DefaultSettingAdapter(ArrayList<Data> names){
+    public DefaultSettingDetailAdapter(ArrayList<Data> names){
         list = names;
     }
 
@@ -47,19 +46,15 @@ public class DefaultSettingAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.default_cell, parent, false);
+                    .inflate(android.R.layout.simple_spinner_item, parent, false);
             holder = new ViewHolder();
-            holder.name = convertView.findViewById(R.id.default_name);
-            holder.deleteButton= convertView.findViewById(R.id.delete_default);
+            holder.name = convertView.findViewById(R.id.group_spinner);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(list.get(position).name);
-        holder.deleteButton.setOnClickListener((view) -> {
-            ((GridView) parent).performItemClick(view, position, R.id.delete_default);
-        });
+//        holder.name.set(list.get(position).name);
 
         return convertView;
     }
@@ -73,7 +68,7 @@ public class DefaultSettingAdapter extends BaseAdapter {
     public Object getItem(int position) {
         return position;
     }
-    public List<DefaultSettingAdapter.Data> getList(){
+    public List<Data> getList(){
         return list;
     }
     @Override

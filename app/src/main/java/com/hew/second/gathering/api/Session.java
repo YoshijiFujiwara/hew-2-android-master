@@ -1,11 +1,14 @@
 package com.hew.second.gathering.api;
 
+import org.parceler.Parcel;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * セッションの情報
  */
+@Parcel
 public class Session implements Serializable {
     public int id;
     public String name;
