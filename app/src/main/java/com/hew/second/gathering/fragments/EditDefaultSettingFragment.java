@@ -201,7 +201,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
         Spinner spinner = activity.findViewById(R.id.group_spinner);
-        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
+//        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
 //        mRadioGroup.setOnCheckedChangeListener((RadioGroup.OnCheckedChangeListener) this);
 
         // 選択されているRadioButonのIDを取得する
@@ -220,13 +220,14 @@ public class EditDefaultSettingFragment extends BaseFragment {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
         Spinner spinner = activity.findViewById(R.id.group_spinner);
-        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
+//        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
 
         HashMap<String, String> body = new HashMap<>();
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-        body.put("group", spinner.getSelectedItem().toString());
+        String strGroup = String.valueOf(spinner.getSelectedItemId());
+//        body.put("group.id", strGroup..toString());
 //        body.put("", mRadioGroup.getCheckedRadioButtonId().toString());
 
         Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(LoginUser.getToken(), defaultSettingId, body);
