@@ -64,7 +64,6 @@ import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 public class EditDefaultSettingFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     int defaultSettingId = -1;
-    ArrayList<GroupAdapter.Data> ar = new ArrayList<GroupAdapter.Data>();
     GroupAdapter adapter = null;
     private List<Group> groupList = new ArrayList<>();
     private Spinner spinner = null;
@@ -151,7 +150,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -250,8 +249,9 @@ public class EditDefaultSettingFragment extends BaseFragment {
                                 Intent intent = new Intent();
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                     intent.putExtra(SNACK_MESSAGE, "デフォルトの変更はありません。");
-                                } else {
-                                    intent.putExtra(SNACK_MESSAGE, "デフォルトの更新に失敗しました。");
+                                } else if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent2 = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent2);
                                 }
                                 activity.setResult(RESULT_OK, intent);
                                 activity.finish();

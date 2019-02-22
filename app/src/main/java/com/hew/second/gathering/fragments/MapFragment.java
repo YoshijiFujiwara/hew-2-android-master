@@ -99,7 +99,7 @@ import static com.hew.second.gathering.activities.BaseActivity.INTENT_SHOP_DETAI
 
 
 @RuntimePermissions
-public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener,
+public class MapFragment extends SessionBaseFragment implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener,
         GoogleMap.OnMyLocationButtonClickListener {
 
     // Fused Location Provider API.
@@ -189,6 +189,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
             Intent intent = new Intent(activity, ShopDetailActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(position)));
+            if( activity.session != null){
+                bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(activity.session));
+            }
             intent.putExtras(bundle);
             startActivityForResult(intent, INTENT_SHOP_DETAIL);
         });
@@ -231,6 +234,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
                     Intent intent = new Intent(activity, ShopDetailActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(i)));
+                    if( activity.session != null){
+                        bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(activity.session));
+                    }
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -403,7 +409,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
                                 shopList = new ArrayList<>(list.results.shop);
                                 ArrayList<Shop> data = new ArrayList<>(list.results.shop);
                                 adapter = new ShopListAdapter(data);
-                                listView.setAdapter(adapter);
+                                if(listView != null){
+                                    listView.setAdapter(adapter);
+                                }
 
                                 for (Shop s : shopList) {
                                     // マーカー設定
@@ -421,7 +429,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);

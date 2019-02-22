@@ -175,4 +175,8 @@ public interface ApiService {
     @GET("api/groups/{group}/users/can_add")
     Observable<FriendList> getAddableToGroupFriendList(@Header("Authorization") String authorization, @Path("group") int groupId);
 
+    @GET("api/sessions/{session}/users/can_add")
+    Observable<FriendList> getAddableToSessionFriendList(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+
 }

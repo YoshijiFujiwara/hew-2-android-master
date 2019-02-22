@@ -99,6 +99,23 @@ public class ApplyingFragment extends BaseFragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
+
+                List<Friend> filteredItems;
+                // フィルター処理
+                if (s.isEmpty()) {
+                    filteredItems = new ArrayList<>(ar);
+                } else {
+                    filteredItems = new ArrayList<>();
+                    for (Friend item : ar) {
+                        if (item.unique_id.toLowerCase().contains(s.toLowerCase()) || item.username.toLowerCase().contains(s.toLowerCase())) { // テキストがqueryを含めば検索にHITさせる
+                            filteredItems.add(item);
+                        }
+                    }
+                }
+                // adapterの更新処理
+                adapter.clear();
+                adapter.addAll(filteredItems);
+                adapter.notifyDataSetChanged();
                 return false;
             }
 
@@ -157,7 +174,7 @@ public class ApplyingFragment extends BaseFragment {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             mSwipeRefreshLayout.setRefreshing(false);
-                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 // ログインアクティビティへ遷移
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
@@ -169,11 +186,13 @@ public class ApplyingFragment extends BaseFragment {
     private void updateList(List<Friend> data) {
         // ListView生成
         listView = activity.findViewById(R.id.member_list_applying);
-        ArrayList<Friend> list = new ArrayList<>(data);
-        ar = new ArrayList<>(data);
-        adapter = new MemberAdapter(list);
-        // ListViewにadapterをセット
-        listView.setAdapter(adapter);
+        if(listView != null){
+            ArrayList<Friend> list = new ArrayList<>(data);
+            ar = new ArrayList<>(data);
+            adapter = new MemberAdapter(list);
+            // ListViewにadapterをセット
+            listView.setAdapter(adapter);
+        }
     }
 
     private void deleteFriendRequest(int id){
@@ -194,7 +213,7 @@ public class ApplyingFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 // ログインアクティビティへ遷移
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);

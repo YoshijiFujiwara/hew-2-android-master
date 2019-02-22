@@ -84,7 +84,6 @@ public class GuestJoinedSessionFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
@@ -95,6 +94,7 @@ public class GuestJoinedSessionFragment extends BaseFragment {
     }
 
     private void fetchList() {
+        mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         HpApiService hpService = HpHttp.getService();
         Observable<SessionList> sessionList = service.getGuestSessionAllowList(LoginUser.getToken());
@@ -124,7 +124,7 @@ public class GuestJoinedSessionFragment extends BaseFragment {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             mSwipeRefreshLayout.setRefreshing(false);
                             if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
@@ -152,8 +152,9 @@ public class GuestJoinedSessionFragment extends BaseFragment {
         }
         shopList = new ArrayList<>(shopSession);
         adapter = new GuestSessionAdapter(list, shopSession);
-        // ListViewにadapterをセット
-        listView.setAdapter(adapter);
+        if(listView != null){
+            listView.setAdapter(adapter);
+        }
     }
 
 }

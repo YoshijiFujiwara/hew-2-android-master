@@ -80,7 +80,7 @@ public class AddMemberActivity extends BaseActivity {
                                         snackbar.getView().setBackgroundColor(Color.BLACK);
                                         snackbar.setActionTextColor(Color.WHITE);
                                         snackbar.show();
-                                    } else if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                    } else if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                         Intent intent = new Intent(getApplication(), LoginActivity.class);
                                         startActivity(intent);
                                     }
@@ -132,7 +132,6 @@ public class AddMemberActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
     @Override
@@ -141,6 +140,7 @@ public class AddMemberActivity extends BaseActivity {
         return true;
     }
     private void fetchList() {
+        mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<FriendList> token = service.getAddableFriendList(LoginUser.getToken());
         cd.add(token.subscribeOn(Schedulers.io())
@@ -155,7 +155,7 @@ public class AddMemberActivity extends BaseActivity {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             // ログインアクティビティへ遷移
                             if (!cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     Intent intent = new Intent(getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
@@ -170,8 +170,10 @@ public class AddMemberActivity extends BaseActivity {
         // 検索用リスト
         ar = new ArrayList<>(list);
         adapter = new MemberAdapter(list);
-        // ListViewにadapterをセット
-        listView.setAdapter(adapter);
+        if(listView != null){
+            // ListViewにadapterをセット
+            listView.setAdapter(adapter);
+        }
     }
 
 }

@@ -24,6 +24,7 @@ import com.hew.second.gathering.SelectedSession;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.JWT;
+import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.hotpepper.Shop;
@@ -46,11 +47,13 @@ import retrofit2.HttpException;
 public class ShopDetailActivity extends BaseActivity {
 
     Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_detail);
         Shop shop = Parcels.unwrap(getIntent().getParcelableExtra("SHOP_DETAIL"));
+        Session session = Parcels.unwrap(getIntent().getParcelableExtra("SESSION_DETAIL"));
         setTitle("店舗詳細");
 
         intent = new Intent();
@@ -92,11 +95,10 @@ public class ShopDetailActivity extends BaseActivity {
 
         Button submit = findViewById(R.id.button_submit);
         submit.setOnClickListener((l) -> {
-            int id = SelectedSession.getSharedSessionId(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
-            if (id != -1) {
-                updateSession(id, shop.id);
+            if (session != null) {
+                updateSession(session, shop);
             } else {
-                createSession(shop.id);
+                createSession(shop);
             }
         });
         Button back = findViewById(R.id.button_back);
@@ -111,23 +113,24 @@ public class ShopDetailActivity extends BaseActivity {
         return true;
     }
 
-    private void createSession(String shop_id) {
+    private void createSession(Shop shop) {
 
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", "新規セッション");
-        body.put("shop_id", shop_id);
+        body.put("shop_id", shop.id);
         Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
         cd.add(session.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         (list) -> {
-                            //セッションID格納
-                            SelectedSession.setSessionId(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data.id);
-                            SelectedSession.setSessionDetail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
                             //遷移
                             intent.putExtra(SNACK_MESSAGE, "セッションを作成しました。");
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
+                            bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(list.data));
+                            intent.putExtras(bundle);
                             setResult(RESULT_OK, intent);
                             finish();
 
@@ -135,7 +138,7 @@ public class ShopDetailActivity extends BaseActivity {
                         (throwable) -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (!cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     Intent intent = new Intent(getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
@@ -143,21 +146,22 @@ public class ShopDetailActivity extends BaseActivity {
                         }));
     }
 
-    private void updateSession(int id, String shop_id) {
+    private void updateSession(Session session, Shop shop) {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
-        body.put("shop_id", shop_id);
-        Observable<SessionDetail> session = service.updateSession(LoginUser.getToken(),id, body);
-        cd.add(session.subscribeOn(Schedulers.io())
+        body.put("shop_id", shop.id);
+        Observable<SessionDetail> sessionDetail = service.updateSession(LoginUser.getToken(), session.id, body);
+        cd.add(sessionDetail.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         (list) -> {
-                            //セッションID格納
-                            SelectedSession.setSessionId(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data.id);
-                            SelectedSession.setSessionDetail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
                             //遷移
                             intent.putExtra(SNACK_MESSAGE, "セッションを更新しました。");
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
+                            bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(list.data));
+                            intent.putExtras(bundle);
                             setResult(RESULT_OK, intent);
                             finish();
 
@@ -165,7 +169,7 @@ public class ShopDetailActivity extends BaseActivity {
                         (throwable) -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (!cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     Intent intent = new Intent(getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }

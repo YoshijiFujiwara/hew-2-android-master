@@ -133,7 +133,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
                         (throwable) -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (!cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     Intent intent = new Intent(getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
@@ -160,7 +160,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
                         (throwable) -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (!cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     Intent intent = new Intent(getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }

@@ -56,4 +56,9 @@ public class EditDefaultSettingActivity extends BaseActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+    @Override
+    public boolean onSupportNavigateUp(){
+        onBackPressed();
+        return true;
+    }
 }

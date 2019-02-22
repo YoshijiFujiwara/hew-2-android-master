@@ -122,7 +122,7 @@ public class EditGroupFragment extends BaseFragment {
                                     }, // 終了時
                                     (throwable) -> {
                                         Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                        if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                        if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                             Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                             startActivity(intent);
                                         }
@@ -169,8 +169,10 @@ public class EditGroupFragment extends BaseFragment {
         ArrayList<GroupUser> ar = new ArrayList<>(gdi.users);
         adapter = new GroupMemberAdapter(ar);
 
-        // ListViewにadapterをセット
-        gridView.setAdapter(adapter);
+        if(gridView != null){
+            // ListViewにadapterをセット
+            gridView.setAdapter(adapter);
+        }
     }
 
     public void saveGroupName() {
@@ -197,8 +199,9 @@ public class EditGroupFragment extends BaseFragment {
                                 Intent intent = new Intent();
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                     intent.putExtra(SNACK_MESSAGE, "グループ名の変更はありません。");
-                                } else {
-                                    intent.putExtra(SNACK_MESSAGE, "グループ名の更新に失敗しました。");
+                                } else if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent2 = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent2);
                                 }
                                 activity.setResult(RESULT_OK, intent);
                                 activity.finish();

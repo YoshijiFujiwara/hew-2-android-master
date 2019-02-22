@@ -61,14 +61,15 @@ public class EditGroupActivity extends BaseActivity {
         // データ保存
         try{
             if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditGroupFragment){
-                @NonNull EditGroupFragment fragment = (EditGroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-                fragment.saveGroupName();
+                EditGroupFragment fragment = (EditGroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                if(fragment != null){
+                    fragment.saveGroupName();
+                } else {
+                    finish();
+                }
             }
         }catch (Exception e){
             Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
-            Intent intent = new Intent();
-            intent.putExtra(SNACK_MESSAGE,"更新に失敗しました。");
-            setResult(RESULT_OK, intent);
             finish();
         }
         //super.onBackPressed();

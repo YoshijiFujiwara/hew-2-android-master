@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.hew.second.gathering.api.Util;
 
+import icepick.Icepick;
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -22,6 +23,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         Intent i = getIntent();
         String message = i.getStringExtra(SNACK_MESSAGE);
         if(message != null) {
@@ -55,5 +57,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                 snackbar.show();
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 }

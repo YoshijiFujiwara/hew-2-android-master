@@ -12,10 +12,12 @@ public class Shop {
     public String lng;
     public String logo_image;
     public String address;
+
     public Genre genre;
     public Url urls;
     public Photo photo;
     public Budget budget;
+
 
     @Parcel
     public static class Budget{

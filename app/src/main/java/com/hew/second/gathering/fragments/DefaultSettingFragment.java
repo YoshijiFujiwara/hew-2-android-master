@@ -140,7 +140,7 @@ public class DefaultSettingFragment extends BaseFragment {
                                         Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                                         if (activity != null && !cd.isDisposed()) {
                                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                                 startActivity(intent);
                                             }
@@ -158,16 +158,16 @@ public class DefaultSettingFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
     private void createDefault() {
-        Intent intent = new Intent(getActivity().getApplication(), AddDefaultSettingActivity.class);
+        Intent intent = new Intent(activity.getApplication(), AddDefaultSettingActivity.class);
         startActivity(intent);
     }
 
     private void fetchList() {
+        mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<DefaultSettingList> token = service.getDefaultSettingList(LoginUser.getToken());
         cd.add(token.subscribeOn(Schedulers.io())
@@ -182,7 +182,8 @@ public class DefaultSettingFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -198,8 +199,10 @@ public class DefaultSettingFragment extends BaseFragment {
             ar.add(new DefaultSettingAdapter.Data(m.id, m.name));
         }
         adapter = new DefaultSettingAdapter(ar);
-        // ListViewにadapterをセット
-        gridView.setAdapter(adapter);
+        if(gridView != null) {
+            // ListViewにadapterをセット
+            gridView.setAdapter(adapter);
+        }
     }
 
 }

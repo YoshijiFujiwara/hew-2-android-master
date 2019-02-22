@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
 // お店に予約の電話
-public class ReservationPhoneFragment extends Fragment {
+public class ReservationPhoneFragment extends SessionBaseFragment {
 
 
 
@@ -23,6 +23,7 @@ public class ReservationPhoneFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_reservation_phone,container,false);
+        view =  inflater.inflate(R.layout.fragment_reservation_phone,container,false);
+        return view;
     }
 }

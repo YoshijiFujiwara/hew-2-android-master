@@ -68,7 +68,7 @@ public class PendingFragment extends BaseFragment {
         view = inflater.inflate(R.layout.fragment_pending, container, false);
         return view;
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -82,7 +82,7 @@ public class PendingFragment extends BaseFragment {
         listView = activity.findViewById(R.id.member_list_pending);
         // 申請受諾
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            if(view.getId() == R.id.member_delete) {
+            if (view.getId() == R.id.member_delete) {
                 new MaterialDialog.Builder(activity)
                         .title("友達申請")
                         .content(ar.get(position).username + "さんからの友達申請を断りますか？")
@@ -92,7 +92,7 @@ public class PendingFragment extends BaseFragment {
                         })
                         .negativeText("キャンセル")
                         .show();
-            } else{
+            } else {
                 new MaterialDialog.Builder(activity)
                         .title("友達申請")
                         .content(ar.get(position).username + "さんと友達になりますか？")
@@ -114,6 +114,23 @@ public class PendingFragment extends BaseFragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
+
+                List<Friend> filteredItems;
+                // フィルター処理
+                if (s.isEmpty()) {
+                    filteredItems = new ArrayList<>(ar);
+                } else {
+                    filteredItems = new ArrayList<>();
+                    for (Friend item : ar) {
+                        if (item.unique_id.toLowerCase().contains(s.toLowerCase()) || item.username.toLowerCase().contains(s.toLowerCase())) { // テキストがqueryを含めば検索にHITさせる
+                            filteredItems.add(item);
+                        }
+                    }
+                }
+                // adapterの更新処理
+                adapter.clear();
+                adapter.addAll(filteredItems);
+                adapter.notifyDataSetChanged();
                 return false;
             }
 
@@ -163,15 +180,15 @@ public class PendingFragment extends BaseFragment {
                 .subscribe(
                         list -> {
                             mSwipeRefreshLayout.setRefreshing(false);
-                            if(activity != null){
+                            if (activity != null) {
                                 updateList(list.data);
                             }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             mSwipeRefreshLayout.setRefreshing(false);
-                            if(activity != null && !cd.isDisposed()){
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
@@ -184,13 +201,16 @@ public class PendingFragment extends BaseFragment {
     private void updateList(List<Friend> data) {
         // ListView生成
         listView = activity.findViewById(R.id.member_list_pending);
-        ArrayList<Friend> list = new ArrayList<>(data);
-        ar = new ArrayList<>(data);
-        adapter = new MemberAdapter(list);
-        // ListViewにadapterをセット
-        listView.setAdapter(adapter);
+        if (listView != null) {
+            ArrayList<Friend> list = new ArrayList<>(data);
+            ar = new ArrayList<>(data);
+            adapter = new MemberAdapter(list);
+            // ListViewにadapterをセット
+            listView.setAdapter(adapter);
+        }
     }
-    private void permitFriend(int id){
+
+    private void permitFriend(int id) {
         ApiService service = Util.getService();
         HashMap<String, Integer> body = new HashMap<>();
         body.put("user_id", id);
@@ -200,7 +220,7 @@ public class PendingFragment extends BaseFragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         () -> {
-                            if( activity != null ){
+                            if (activity != null) {
                                 final Snackbar sbYes = Snackbar.make(view, "友達になりました！", Snackbar.LENGTH_SHORT);
                                 sbYes.getView().setBackgroundColor(Color.BLACK);
                                 sbYes.setActionTextColor(Color.WHITE);
@@ -211,10 +231,11 @@ public class PendingFragment extends BaseFragment {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
+
                                 }
                             }
                         }
@@ -231,7 +252,7 @@ public class PendingFragment extends BaseFragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         () -> {
-                            if(activity != null) {
+                            if (activity != null) {
                                 final Snackbar sbNo = Snackbar.make(view, "申請を拒否しました。", Snackbar.LENGTH_SHORT);
                                 sbNo.getView().setBackgroundColor(Color.BLACK);
                                 sbNo.setActionTextColor(Color.WHITE);
@@ -241,9 +262,9 @@ public class PendingFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if(activity != null && !cd.isDisposed()) {
+                            if (activity != null && !cd.isDisposed()) {
                                 mSwipeRefreshLayout.setRefreshing(false);
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);

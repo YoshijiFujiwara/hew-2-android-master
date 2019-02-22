@@ -13,7 +13,7 @@
     <item
         android:id="@+id/navigation_now"
         android:icon="@drawable/ic_now"
-        android:title="@string/title_now" />
+        android:title="セッション" />
     <item
         android:id="@+id/navigation_group"
         android:icon="@drawable/ic_group"

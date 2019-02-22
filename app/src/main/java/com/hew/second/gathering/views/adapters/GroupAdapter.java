@@ -8,6 +8,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.User;
 
 import java.util.ArrayList;
@@ -16,29 +17,19 @@ import java.util.List;
 
 public class GroupAdapter extends BaseAdapter {
 
-    private List<Data> list;
+    private List<Group> list;
 
     static class ViewHolder {
         TextView name;
         TextView detail;
         TextView deleteButton;
     }
-    static public class Data {
-        public Data(int id, String name, String detail) {
-            this.id = id;
-            this.name = name;
-            this.detail = detail;
-        }
-        public int id;
-        public String name;
-        public String detail;
-    }
 
-    public GroupAdapter(Data[] names){
+    public GroupAdapter(Group[] names){
         list = Arrays.asList(names);
     }
-    public GroupAdapter(ArrayList<Data> names){
-        list = names;
+    public GroupAdapter(ArrayList<Group> names){
+        list = new ArrayList<>(names);
     }
 
     @Override
@@ -59,7 +50,7 @@ public class GroupAdapter extends BaseAdapter {
         }
 
         holder.name.setText(list.get(position).name);
-        holder.detail.setText(list.get(position).detail);
+        holder.detail.setText(list.get(position).users.size() + "名");
         holder.deleteButton.setOnClickListener((view) -> {
             ((GridView) parent).performItemClick(view, position, R.id.delete_group);
         });
@@ -76,7 +67,7 @@ public class GroupAdapter extends BaseAdapter {
     public Object getItem(int position) {
         return position;
     }
-    public List<Data> getList(){
+    public List<Group> getList(){
         return list;
     }
     @Override

@@ -44,7 +44,7 @@ import retrofit2.HttpException;
 import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_GROUP;
 
 public class GroupFragment extends BaseFragment {
-    ArrayList<GroupAdapter.Data> ar = new ArrayList<GroupAdapter.Data>();
+    ArrayList<Group> ar = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     GroupAdapter adapter = null;
 
@@ -152,7 +152,6 @@ public class GroupFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
@@ -174,7 +173,7 @@ public class GroupFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -183,6 +182,7 @@ public class GroupFragment extends BaseFragment {
     }
 
     private void fetchList() {
+        mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<GroupList> token = service.getGroupList(LoginUser.getToken());
         cd.add(token.subscribeOn(Schedulers.io())
@@ -197,7 +197,8 @@ public class GroupFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -209,12 +210,13 @@ public class GroupFragment extends BaseFragment {
         // ListView生成
         GridView gridView = activity.findViewById(R.id.gridView_group);
         ar.clear();
-        for (Group m : data) {
-            ar.add(new GroupAdapter.Data(m.id, m.name, m.users.size() + "名"));
-        }
+        ar.addAll(data);
         adapter = new GroupAdapter(ar);
         // ListViewにadapterをセット
-        gridView.setAdapter(adapter);
+        if(gridView != null)
+        {
+            gridView.setAdapter(adapter);
+        }
     }
 
 }

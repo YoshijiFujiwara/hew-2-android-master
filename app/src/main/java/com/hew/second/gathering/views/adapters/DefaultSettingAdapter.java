@@ -37,7 +37,7 @@ public class DefaultSettingAdapter extends BaseAdapter {
         list = Arrays.asList(names);
     }
     public DefaultSettingAdapter(ArrayList<Data> names){
-        list = names;
+        list = new ArrayList<>(names);
     }
 
     @Override

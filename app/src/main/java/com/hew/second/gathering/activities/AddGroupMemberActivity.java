@@ -88,6 +88,9 @@ public class AddGroupMemberActivity extends BaseActivity {
                                     snackbar.getView().setBackgroundColor(Color.BLACK);
                                     snackbar.setActionTextColor(Color.WHITE);
                                     snackbar.show();
+                                } else if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                    startActivity(intent);
                                 }
                             }));
         });
@@ -159,7 +162,7 @@ public class AddGroupMemberActivity extends BaseActivity {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             // ログインアクティビティへ遷移
-                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -173,8 +176,10 @@ public class AddGroupMemberActivity extends BaseActivity {
         // 検索用リスト
         ar = new ArrayList<>(list);
         adapter = new MemberAdapter(list);
-        // ListViewにadapterをセット
-        listView.setAdapter(adapter);
+        if(listView != null){
+            // ListViewにadapterをセット
+            listView.setAdapter(adapter);
+        }
     }
 
 }

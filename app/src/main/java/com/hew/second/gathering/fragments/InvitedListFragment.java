@@ -17,6 +17,7 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.SelectedSession;
 import com.hew.second.gathering.activities.AddMemberActivity;
+import com.hew.second.gathering.activities.EventProcessMainActivity;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
@@ -72,7 +73,7 @@ public class InvitedListFragment extends BaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        int id = SelectedSession.getSharedSessionId(activity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+        int id = ((EventProcessMainActivity)activity).session.id;
         if (id == -1) {
             return;
         }
@@ -101,10 +102,12 @@ public class InvitedListFragment extends BaseFragment {
     private void updateList(List<Friend> data) {
         // ListView生成
         listView = activity.findViewById(R.id.member_list_invited);
-        ArrayList<Friend> list = new ArrayList<>(data);
-        ar = new ArrayList<>(data);
-        adapter = new MemberAdapter(list);
-        // ListViewにadapterをセット
-        listView.setAdapter(adapter);
+        if(listView != null) {
+            ArrayList<Friend> list = new ArrayList<>(data);
+            ar = new ArrayList<>(data);
+            adapter = new MemberAdapter(list);
+            // ListViewにadapterをセット
+            listView.setAdapter(adapter);
+        }
     }
 }

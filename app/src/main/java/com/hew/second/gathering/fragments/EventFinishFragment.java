@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
 
-public class EventFinishFragment extends Fragment {
+public class EventFinishFragment extends BaseFragment {
+
+    // TODO:画面全般組む
 
     public EventFinishFragment() {
     }
@@ -23,7 +25,7 @@ public class EventFinishFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_event_finish,container,false);
+        view = inflater.inflate(R.layout.fragment_event_finish,container,false);
 
         return view;
     }
