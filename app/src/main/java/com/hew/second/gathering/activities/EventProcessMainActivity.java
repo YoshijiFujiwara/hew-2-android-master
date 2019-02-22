@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.fragments.EventFinishFragment;
-import com.hew.second.gathering.fragments.MemberSendFragment;
 import com.hew.second.gathering.fragments.ReservationPhoneFragment;
 import com.hew.second.gathering.fragments.StartTimeFragment;
 
@@ -74,8 +73,8 @@ public class EventProcessMainActivity extends AppCompatActivity {
                     FragmentManager fragmentManager = getSupportFragmentManager();
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    fragmentTransaction.replace(R.id.eip_container, MemberSendFragment.newInstance());
+//                      Memberへ招待送信　打ち切り画面
+//                    fragmentTransaction.replace(R.id.eip_container, InviteFragment.newInstance());
 
                     fragmentTransaction.commit();
 

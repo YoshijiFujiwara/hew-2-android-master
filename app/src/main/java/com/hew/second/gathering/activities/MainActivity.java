@@ -106,6 +106,14 @@ public class MainActivity extends BaseActivity
             fragmentTransaction.commit();
         }
 
+//
+
+
+    }
+//      試しにonResume
+    @Override
+    protected void onResume() {
+        super.onResume();
 //        BottomNavigationの各位置での呼び出し
 //        BottomNavigation id取得
         BottomNavigationView bnv = findViewById(R.id.navigation);
@@ -161,8 +169,6 @@ public class MainActivity extends BaseActivity
                 return false;
             }
         });
-
-
 
     }
 
