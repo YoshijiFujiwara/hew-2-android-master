@@ -266,8 +266,7 @@ public class MainActivity extends BaseActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-<<<<<<< HEAD
+    
     private void sendTokenToServer() {
         FirebaseInstanceId.getInstance().getInstanceId()
             .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -293,21 +292,22 @@ public class MainActivity extends BaseActivity
         HashMap<String, String> body = new HashMap<>();
         body.put("device_token", deviceToken);
         token.subscribeOn(Schedulers.io())
-            .flatMap(result -> {
-                LoginUser.setToken(result.access_token);
-                return service.storeDeviceToken(LoginUser.getToken(), body);
-            })
-            .observeOn(AndroidSchedulers.mainThread())
-            .unsubscribeOn(Schedulers.io())
-            .subscribe(
-                (list) -> {
-                    Log.d("api", "デバイストークンの送信完了");
-                }, // 終了時
-                (throwable) -> {
-                    Log.d("api", "デバイストークンの送信失敗");
-                    Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                });
-=======
+                .flatMap(result -> {
+                    LoginUser.setToken(result.access_token);
+                    return service.storeDeviceToken(LoginUser.getToken(), body);
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        (list) -> {
+                            Log.d("api", "デバイストークンの送信完了");
+                        }, // 終了時
+                        (throwable) -> {
+                            Log.d("api", "デバイストークンの送信失敗");
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // fragmentからの呼びだしの場合
@@ -331,6 +331,5 @@ public class MainActivity extends BaseActivity
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
->>>>>>> develop
     }
 }
