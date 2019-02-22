@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.activities.AddDefaultSettingActivity;
 import com.hew.second.gathering.activities.AddGroupMemberActivity;
 import com.hew.second.gathering.activities.EditDefaultSettingActivity;
 import com.hew.second.gathering.activities.EditGroupActivity;
@@ -227,7 +228,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
         body.put("group_id", String.valueOf(spinner.getSelectedItemId()));
-//        body.put("", mRadioGroup.getCheckedRadioButtonId().toString());
+//        body.put("", String.valueOf(mRadioGroup.getCheckedRadioButtonId()));
 
         Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(LoginUser.getToken(), defaultSettingId, body);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -237,6 +238,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
                         list -> {
                             if (activity != null) {
                                 Intent intent = new Intent();
+//                                Intent intent = new Intent(activity.getApplication(), MainActivity.class);
                                 intent.putExtra(SNACK_MESSAGE, "デフォルトを更新しました。");
                                 activity.setResult(RESULT_OK, intent);
                                 activity.finish();

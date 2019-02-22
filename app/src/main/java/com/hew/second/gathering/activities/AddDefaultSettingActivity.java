@@ -50,30 +50,4 @@ public class AddDefaultSettingActivity extends BaseActivity {
         return super.dispatchTouchEvent(ev);
     }
 
-//    @Override
-//    public boolean onSupportNavigateUp(){
-//        onBackPressed();
-//        return true;
-//    }
-//
-//    @Override
-//    public void onBackPressed(){
-//        // データ保存
-//        Util.setLoading(true,this);
-//        try{
-//            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditDefaultSettingFragment){
-//                @NonNull EditDefaultSettingFragment fragment = (EditDefaultSettingFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-//                fragment.saveDefaultSettingName();
-//            }
-//        }catch (Exception e){
-//            Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
-//            Util.setLoading(false,this);
-//            Intent intent = new Intent();
-//            intent.putExtra(SNACK_MESSAGE,"更新に失敗しました。");
-//            setResult(RESULT_OK, intent);
-//            finish();
-//        }
-//        super.onBackPressed();
-//    }
-
 }
