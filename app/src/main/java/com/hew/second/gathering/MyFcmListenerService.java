@@ -20,7 +20,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
     private final static String TAG = MyFcmListenerService.class.getSimpleName();
 
     @Override
-    public void onMessageReceived(RemoteMessage message){
+    public void onMessageReceived(RemoteMessage message){ // FCMメッセージを受信したときに呼び出される
         String from = message.getFrom();
         Map data = message.getData();
 

@@ -28,6 +28,12 @@ public interface ApiService {
     @POST("api/auth/me")
     Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
 
+    /**
+     * push通知用のデバイスIDのやりとり系API
+     */
+    @POST("api/device_token")
+    Observable<DeviceTokenDetail> storeDeviceToken(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
     /*
      * 友達系API
      */

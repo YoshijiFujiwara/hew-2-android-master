@@ -16,11 +16,19 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
@@ -34,8 +42,11 @@ import com.hew.second.gathering.fragments.InviteFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
 import com.hew.second.gathering.fragments.SessionFragment;
 
+import java.util.HashMap;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 
 //import com.hew.second.gathering.fragments.EventFragment;
@@ -48,6 +59,9 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // デバイストークンとログインuserを結びつけて送信する
+        sendTokenToServer();
+        
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -235,5 +249,46 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void sendTokenToServer() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+            .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if (!task.isSuccessful()) {
+                        Log.w("tag", "getInstanceId failed", task.getException());
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+
+                    postToken(token);
+                }
+            });
+    }
+
+    private void postToken(String deviceToken) {
+        // 取得したデバイストークンを、サーバーに投げる
+        ApiService service = Util.getService();
+        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
+        HashMap<String, String> body = new HashMap<>();
+        body.put("device_token", deviceToken);
+        token.subscribeOn(Schedulers.io())
+            .flatMap(result -> {
+                LoginUser.setToken(result.access_token);
+                return service.storeDeviceToken(LoginUser.getToken(), body);
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .unsubscribeOn(Schedulers.io())
+            .subscribe(
+                (list) -> {
+                    Log.d("api", "デバイストークンの送信完了");
+                }, // 終了時
+                (throwable) -> {
+                    Log.d("api", "デバイストークンの送信失敗");
+                    Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                });
     }
 }
