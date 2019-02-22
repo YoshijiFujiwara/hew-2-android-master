@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.activities.EventProcessMainActivity;
+import com.hew.second.gathering.activities.EventProcessMainTestActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionList;
@@ -29,7 +29,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class InProgressFragment extends Fragment {
+public class InProgressFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     public static InProgressFragment newInstance() {
         return new InProgressFragment();
@@ -41,6 +41,11 @@ public class InProgressFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+//        ListView listView = getActivity().findViewById(R.id.listView_in_progress);
+////        ListViewのクリックイベント処理
+//        listView.setOnItemClickListener(this);
+
         return inflater.inflate(R.layout.fragment_in_progress,container,false);
     }
 
@@ -53,10 +58,12 @@ public class InProgressFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateSessionList();
+        ListView listView = getActivity().findViewById(R.id.listView_in_progress);
+        updateSessionList(listView);
+        listView.setOnItemClickListener(this);
     }
 
-    public void updateSessionList() {
+    public void updateSessionList(ListView listView) {
 
         ApiService service = Util.getService();
         Observable<SessionList> sessionList;
@@ -68,39 +75,9 @@ public class InProgressFragment extends Fragment {
                 .subscribe(
                         list -> {
 //                          表示
-                            List<Session> i = list.data;
-                            ListView listView = getActivity().findViewById(R.id.listView_in_progress);
                             updateList(list.data,listView);
 
-//                            ListViewのクリックイベント処理
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Bundle bundle = new Bundle();
-                                    Fragment fragment = new EventProcessMainFragment();
-//                                    押された場所のデータを格納予定
-//                                  List<Session> sessions = (List<Session>) list.data.get(position);
-//                                  bundle.putParcelable("session", Parcels.wrap(sessions));
-//                                  fragment.setArguments(bundle);
-
-//                                  Activity呼び出しの場合
-                                    try {
-                                        Intent intent = new Intent(getActivity(), EventProcessMainActivity.class);
-                                        startActivity(intent);
-
-                                    } catch (Exception e) {
-                                        Log.d("intent","失敗");
-                                    }
-
-//                                    Fragment呼び出しの場合
-//                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                                    fragmentTransaction.replace(R.id.drawer_layout,fragment);
-//                                    fragmentTransaction.addToBackStack(null);
-//                                    fragmentTransaction.commit();
-
-                                }
-                            });
+//
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -113,7 +90,7 @@ public class InProgressFragment extends Fragment {
 
 
         ArrayList<Session> sessionArrayList = new ArrayList<>();
-//      開始時刻がセットされて終了時刻が？？？
+//      開始時刻がセットされて終了時刻がNULL
         for (Session sl : data) {
             if (sl.start_time != null && sl.end_time == null) {
                 sessionArrayList.add(sl);
@@ -122,6 +99,14 @@ public class InProgressFragment extends Fragment {
 
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
         listView.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), EventProcessMainTestActivity.class);
+
+        startActivity(intent);
 
     }
 }

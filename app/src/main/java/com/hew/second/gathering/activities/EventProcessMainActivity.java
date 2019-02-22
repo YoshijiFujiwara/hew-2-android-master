@@ -16,7 +16,7 @@ public class EventProcessMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.id.event_process_main);
+        setContentView(R.id.activity_test);
 
         List<Session> sessions = Parcels.unwrap(getIntent().getParcelableExtra("sessions"));
     }
