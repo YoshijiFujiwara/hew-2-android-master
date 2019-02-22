@@ -12,10 +12,8 @@
         android:layout_width="374dp"
         android:layout_height="63dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:background="#FFEB99"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -28,19 +26,20 @@
             android:layout_height="29dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            app:srcCompat="@drawable/ic_location"
-             />
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_location" />
 
         <TextView
             android:id="@+id/textView5"
-            android:layout_width="78dp"
-            android:layout_height="31dp"
+            android:layout_width="73dp"
+            android:layout_height="22dp"
             android:layout_alignBottom="@+id/imageView"
-            android:layout_marginStart="7dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginBottom="3dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2dp"
             android:layout_toEndOf="@+id/imageView"
             android:layout_toRightOf="@+id/imageView"
             android:text="TEST1" />
@@ -52,10 +51,10 @@
             android:layout_below="@+id/imageView"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
+            android:layout_marginStart="9dp"
+            android:layout_marginLeft="9dp"
             android:layout_marginTop="3dp"
-            app:srcCompat="@drawable/ic_time" />
+            android:src="@drawable/ic_time" />
 
         <TextView
             android:id="@+id/textView6"
@@ -65,12 +64,12 @@
             android:layout_alignEnd="@+id/textView5"
             android:layout_alignRight="@+id/textView5"
             android:layout_alignBottom="@+id/imageView2"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="-81dp"
-            android:layout_marginRight="-81dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="-77dp"
+            android:layout_marginRight="-77dp"
+            android:layout_marginBottom="4dp"
             android:layout_toEndOf="@+id/imageView2"
             android:layout_toRightOf="@+id/imageView2"
             android:text="9999年99年99日99:99～" />
@@ -82,19 +81,19 @@
             android:layout_alignStart="@+id/textView6"
             android:layout_alignLeft="@+id/textView6"
             android:layout_alignBottom="@+id/imageView2"
-            android:layout_marginStart="176dp"
-            android:layout_marginLeft="176dp"
-            android:layout_marginBottom="4dp"
-            app:srcCompat="@drawable/ic_people" />
+            android:layout_marginStart="150dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginBottom="0dp"
+            android:src="@drawable/ic_people" />
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView6"
-            android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginBottom="4dp"
             android:layout_toEndOf="@+id/imageView6"
             android:layout_toRightOf="@+id/imageView6"
             android:text="●人" />
@@ -105,10 +104,11 @@
         android:id="@+id/textView8"
         android:layout_width="258dp"
         android:layout_height="29dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="TEST1に電話します"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        tools:layout_editor_absoluteX="16dp"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -119,6 +119,8 @@
         android:layout_marginRight="25dp"
         android:layout_marginBottom="15dp"
         android:text="確定"
+        android:textColor="@color/colorAccent"
+        android:background="@color/colorAccentDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -130,6 +132,8 @@
         android:layout_marginLeft="25dp"
         android:layout_marginBottom="15dp"
         android:text="キャンセル"
+        android:textColor="@color/colorAccent"
+        android:background="@color/colorAccentDark"
         android:drawable="@drawable/button_corner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -138,12 +142,15 @@
         android:id="@+id/imageView4"
         android:layout_width="284dp"
         android:layout_height="299dp"
+        android:layout_marginStart="63dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
 
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="63dp"
-        app:srcCompat="@drawable/ic_phone"
+        app:srcCompat="@drawable/ic_color_phone"
         tools:ignore="MissingConstraints" />
 </android.support.constraint.ConstraintLayout>

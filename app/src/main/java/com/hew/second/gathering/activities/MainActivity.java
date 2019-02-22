@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,14 +19,11 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
@@ -37,12 +35,12 @@ import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
-import com.hew.second.gathering.fragments.SessionMainFragment;
 import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
 import com.hew.second.gathering.fragments.SessionFragment;
+import com.hew.second.gathering.fragments.SessionMainFragment;
 
 import java.util.HashMap;
 
@@ -50,6 +48,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
+
 
 //import com.hew.second.gathering.fragments.EventFragment;
 
@@ -107,6 +106,69 @@ public class MainActivity extends BaseActivity
             fragmentTransaction.commit();
         }
 
+//
+
+
+    }
+//      試しにonResume
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        BottomNavigationの各位置での呼び出し
+//        BottomNavigation id取得
+        BottomNavigationView bnv = findViewById(R.id.navigation);
+        bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+
+                if (id == R.id.navigation_home) {
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
+
+                } else if (id == R.id.navigation_member) {
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
+
+                }else if (id == R.id.navigation_now) {
+//                    ちょっと分からないです
+
+                }else if (id == R.id.navigation_group) {
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if(fragmentManager != null){
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
+
+                }else if (id == R.id.navigation_default) {
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if(fragmentManager != null){
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
+                }
+
+                return false;
+            }
+        });
 
     }
 
@@ -187,24 +249,17 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
                 fragmentTransaction.commit();
             }
-        } else if (id == R.id.nav_group) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
-                fragmentTransaction.commit();
-            }
-        } else if (id == R.id.nav_member) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
-                fragmentTransaction.commit();
-            }
-
-        } else if (id == R.id.nav_session) {
+        }
+//        else if (id == R.id.nav_member) {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            if (fragmentManager != null) {
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
+//                fragmentTransaction.commit();
+//            }
+//      }
+         else if (id == R.id.nav_session) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -251,16 +306,7 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.commit();
             }
 
-        } else if (id == R.id.nav_default) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
-                fragmentTransaction.commit();
-            }
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

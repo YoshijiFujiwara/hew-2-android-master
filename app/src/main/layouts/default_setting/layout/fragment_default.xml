@@ -63,9 +63,9 @@
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/search_member_hint_text"
-            android:queryHint="@string/search_member_hint_text"
-            app:defaultQueryHint="@string/search_member_hint_text"
+            android:hint="@string/search_default_hint_text"
+            android:queryHint="@string/search_default_hint_text"
+            app:defaultQueryHint="@string/search_default_hint_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

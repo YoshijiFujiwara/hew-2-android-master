@@ -1,0 +1,3078 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="5" by="lint 3.3.1">
+
+    <issue
+        id="CallNeedsPermission"
+        message="Trying to access permission-protected method directly">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\MapFragment.java"
+            line="342"/>
+    </issue>
+
+    <issue
+        id="ApplySharedPref"
+        message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background">
+        <location
+            file="src\main\java\com\hew\second\gathering\SelectedSession.java"
+            line="50"/>
+    </issue>
+
+    <issue
+        id="CheckResult"
+        message="The result of `subscribe` is not used">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\BudgetActualFragment.java"
+            line="188"/>
+    </issue>
+
+    <issue
+        id="CheckResult"
+        message="The result of `subscribe` is not used">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\BudgetEstimateFragment.java"
+            line="163"/>
+    </issue>
+
+    <issue
+        id="CheckResult"
+        message="The result of `subscribe` is not used">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\BudgetFragment.java"
+            line="107"/>
+    </issue>
+
+    <issue
+        id="CheckResult"
+        message="The result of `subscribe` is not used">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\HistoryFragment.java"
+            line="61"/>
+    </issue>
+
+    <issue
+        id="CheckResult"
+        message="The result of `subscribe` is not used">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\InProgressFragment.java"
+            line="65"/>
+    </issue>
+
+    <issue
+        id="CheckResult"
+        message="The result of `subscribe` is not used">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\SessionMainFragment.java"
+            line="111"/>
+    </issue>
+
+    <issue
+        id="CheckResult"
+        message="The result of `subscribe` is not used">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\WaitingPaymentFragment.java"
+            line="73"/>
+    </issue>
+
+    <issue
+        id="MissingConstraints"
+        message="This view is not constrained vertically: at runtime it will jump to the top unless you add a vertical constraint">
+        <location
+            file="src\main\layouts\member\layout\fragment_friend.xml"
+            line="89"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\SessionMainFragment.java"
+            line="147"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\BudgetActualListAdapter.java"
+            line="36"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\BudgetEstimateListAdapter.java"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="StateListReachable"
+        message="This item is unreachable because a previous item (item #1) is a more general match than this one">
+        <location
+            file="src\main\res\drawable\button_corner.xml"
+            line="6"/>
+        <location
+            file="src\main\res\drawable\button_corner.xml"
+            line="3"/>
+    </issue>
+
+    <issue
+        id="UnknownIdInLayout"
+        message="The id &quot;`member_unique_name`&quot; is not referring to any views in this layout">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="81"/>
+    </issue>
+
+    <issue
+        id="UnknownIdInLayout"
+        message="The id &quot;`member_unique_name`&quot; is not referring to any views in this layout">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="104"/>
+    </issue>
+
+    <issue
+        id="ExtraText"
+        message="Unexpected text found in layout file: &quot;android: padding = &quot;18dp&quot;&#xA;    android: shape = &quot;rectangle&quot; >&quot;">
+        <location
+            file="src\main\res\drawable-v21\button_style.xml"
+            line="3"/>
+    </issue>
+
+    <issue
+        id="ExtraText"
+        message="Unexpected text found in layout file: &quot;android: padding = &quot;18dp&quot;&#xA;    android: shape = &quot;rectangle&quot; >&quot;">
+        <location
+            file="src\main\res\drawable-v21\text_style.xml"
+            line="3"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="23"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="56"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="72"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\session\layout\fragment_session_cell.xml"
+            line="72"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\budget\layout\listview_actual_row.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\budget\layout\listview_actual_row.xml"
+            line="25"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\budget\layout\listview_actual_row.xml"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\budget\layout\listview_estimate_row.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes">
+        <location
+            file="src\main\layouts\budget\layout\listview_estimate_row.xml"
+            line="25"/>
+    </issue>
+
+    <issue
+        id="PxUsage"
+        message="Avoid using `&quot;px&quot;` as units; use `&quot;dp&quot;` instead">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="18"/>
+    </issue>
+
+    <issue
+        id="AllowBackup"
+        message="On SDK version 23 and up, your app data will be automatically backed up and restored on app install. Consider adding the attribute `android:fullBackupContent` to specify an `@xml` resource which configures which files to backup. More info: https://developer.android.com/training/backup/autosyncapi.html">
+        <location
+            file="src\main\AndroidManifest.xml"
+            line="19"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v21`) is unnecessary; `minSdkVersion` is 21. Merge all the resources in this folder into `drawable`.">
+        <location
+            file="src\main\res\drawable-v21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v21`) is unnecessary; `minSdkVersion` is 21. Merge all the resources in this folder into `values`.">
+        <location
+            file="src\main\res\values-v21"/>
+    </issue>
+
+    <issue
+        id="ViewHolder"
+        message="Unconditional layout inflation from view adapter: Should use View Holder pattern (use recycled view passed into this method as the second parameter) for smoother scrolling">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\BudgetActualListAdapter.java"
+            line="36"/>
+    </issue>
+
+    <issue
+        id="ViewHolder"
+        message="Unconditional layout inflation from view adapter: Should use View Holder pattern (use recycled view passed into this method as the second parameter) for smoother scrolling">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\BudgetEstimateListAdapter.java"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/colorPrimary` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="src\main\layouts\main\layout\header_nav_drawer.xml"
+            line="6"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/colorPrimary` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="src\main\layouts\main\layout\nav_header_member.xml"
+            line="6"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.activity_add_member` appears to be unused">
+        <location
+            file="src\main\layouts\member\layout\activity_add_member.xml"
+            line="2"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.transparent_bg` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="9"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.colorPurple` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="14"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.colorSemiPurple` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.colorGray` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="18"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.fab_color_pressed` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="20"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.fab_color_shadow` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="21"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.colorShadow` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="22"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.btn_default_light_normal` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.btn_default_light_pressed` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="28"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.btn_send_normal` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="29"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.btn_send_pressed` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="30"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.btn_context_menu_normal` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="31"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.btn_context_menu_text_red` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="33"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.text_like_counter` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.sp_s` appears to be unused">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.sp_m` appears to be unused">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.sp_l` appears to be unused">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="14"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.px_s` appears to be unused">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="16"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.px_m` appears to be unused">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="18"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.dp_s` appears to be unused">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="20"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.dp_m` appears to be unused">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="22"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.dp_l` appears to be unused">
+        <location
+            file="src\main\res\values\dimens.xml"
+            line="24"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.fragment_session_main2` appears to be unused">
+        <location
+            file="src\main\res\layout\fragment_session_main2.xml"
+            line="2"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.header_nav_drawer` appears to be unused">
+        <location
+            file="src\main\layouts\main\layout\header_nav_drawer.xml"
+            line="2"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_account_circle_black_24dp` appears to be unused">
+        <location
+            file="src\main\layouts\res\drawable\ic_account_circle_black_24dp.xml"
+            line="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.ic_group_background` appears to be unused">
+        <location
+            file="src\main\res\values\ic_group_background.xml"
+            line="3"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.mipmap.ic_group_round` appears to be unused">
+        <location
+            file="src\main\res\mipmap-anydpi-v26\ic_group_round.xml"
+            line="2"/>
+        <location
+            file="src\main\res\mipmap-hdpi\ic_group_round.png"/>
+        <location
+            file="src\main\res\mipmap-mdpi\ic_group_round.png"/>
+        <location
+            file="src\main\res\mipmap-xhdpi\ic_group_round.png"/>
+        <location
+            file="src\main\res\mipmap-xxhdpi\ic_group_round.png"/>
+        <location
+            file="src\main\res\mipmap-xxxhdpi\ic_group_round.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_shopping_basket` appears to be unused">
+        <location
+            file="src\main\layouts\res\drawable\ic_shopping_basket.xml"
+            line="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.images0` appears to be unused">
+        <location
+            file="src\main\res\drawable-v21\images0.jpg"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.side_nav_bar` appears to be unused">
+        <location
+            file="src\main\res\drawable\side_nav_bar.xml"
+            line="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.name_hint_text` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="9"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.title_activity_login` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="11"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.title_ing` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.title_activity_default_setting` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="19"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.title` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="20"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.title_bottom_member` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="24"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.shop_name` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="26"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.location_name` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.time` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="28"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.count_member` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="29"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.event_name` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="30"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.next` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="32"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.default_name` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="33"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.username` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prompt_email` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="37"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prompt_password` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="38"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.action_sign_in` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="39"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.action_sign_in_short` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="40"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_invalid_email` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="41"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_invalid_password` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="42"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_incorrect_password` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="43"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_field_required` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="44"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.permission_rationale` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="45"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.hello_blank_fragment` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="50"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.title_activity_gurunavi_maps` appears to be unused">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="54"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="24"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="36"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="19"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="32"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="45"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="58"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="23"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="110"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\budget\layout\fragment_budget_actual.xml"
+            line="24"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\budget\layout\fragment_budget_estimate.xml"
+            line="23"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="23"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="110"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\group\layout\fragment_edit_group.xml"
+            line="23"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="134"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="53"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="106"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="135"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="164"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="9"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="13"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\login\layout\activity_start.xml"
+            line="9"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\login\layout\activity_start.xml"
+            line="20"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\login\layout\activity_start.xml"
+            line="69"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\default_cell.xml"
+            line="39"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="38"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="62"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="85"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="108"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="32"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="90"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="26"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="48"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="78"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="25"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="48"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="78"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="137"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\session\layout\fragment_session_cell.xml"
+            line="49"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="25"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="49"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="75"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\group_cell.xml"
+            line="39"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\group_member_cell.xml"
+            line="52"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\member_cell.xml"
+            line="36"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\session_cell.xml"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\session_cell.xml"
+            line="55"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\session_cell.xml"
+            line="73"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\session_cell.xml"
+            line="91"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src\main\layouts\cell\layout\shop_cell.xml"
+            line="36"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;">
+        <location
+            file="src\main\layouts\cell\layout\default_cell.xml"
+            line="71"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;">
+        <location
+            file="src\main\layouts\cell\layout\group_cell.xml"
+            line="90"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;">
+        <location
+            file="src\main\layouts\cell\layout\group_member_cell.xml"
+            line="26"/>
+    </issue>
+
+    <issue
+        id="LabelFor"
+        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`">
+        <location
+            file="src\main\layouts\group\layout\fragment_edit_group.xml"
+            line="23"/>
+    </issue>
+
+    <issue
+        id="LabelFor"
+        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="134"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Number formatting does not take into account locale settings. Consider using `String.format` instead.">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\BudgetActualFragment.java"
+            line="66"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\BudgetActualListAdapter.java"
+            line="45"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Number formatting does not take into account locale settings. Consider using `String.format` instead.">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\BudgetActualListAdapter.java"
+            line="45"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Number formatting does not take into account locale settings. Consider using `String.format` instead.">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\BudgetEstimateFragment.java"
+            line="68"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\BudgetEstimateListAdapter.java"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Number formatting does not take into account locale settings. Consider using `String.format` instead.">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\BudgetEstimateListAdapter.java"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\GuestSessionAdapter.java"
+            line="64"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\GuestSessionAdapter.java"
+            line="65"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\activities\GuestSessionDetailActivity.java"
+            line="60"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\activities\GuestSessionDetailActivity.java"
+            line="62"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\views\adapters\SessionAdapter.java"
+            line="56"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\SessionMainFragment.java"
+            line="71"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\SessionMainFragment.java"
+            line="71"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\SessionMainFragment.java"
+            line="72"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src\main\java\com\hew\second\gathering\fragments\SessionMainFragment.java"
+            line="73"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="18"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="91"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="122"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="150"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="179"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="189"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="201"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="214"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="227"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;参加する&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="242"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;やめておく&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\guest\layout\activity_guest_session_detail.xml"
+            line="254"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;メールアドレス&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;パスワード&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="39"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;ログイン&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="53"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;アカウントを持っていませんか？こちらから登録できます&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="64"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;パスワードを忘れた&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="75"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TOP&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="10"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;セッション&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="14"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;予算&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="18"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;セッションのメイン(仮)&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="22"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;ゲスト（仮）&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Finish&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="31"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Setting&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;メンバー管理&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="41"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;アカウント設定&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="53"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;ログアウト&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\activity_main_drawer.xml"
+            line="60"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="46"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="57"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="67"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="77"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="87"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="97"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="107"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="117"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="127"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;このお店にする&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="140"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;戻る&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\activity_shop_detail.xml"
+            line="151"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;メールアドレス&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="22"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;ユーザーネーム&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;パスワード&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="48"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;パスワード(確認用)&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="61"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;登録&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="76"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;すでにアカウントをお持ちですか？ログインする&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="87"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;計画を立てる？&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_start.xml"
+            line="39"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;今から飲む？&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\login\layout\activity_start.xml"
+            line="59"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;メンバー設定&quot;, should use `@string` resource">
+        <location
+            file="src\main\res\menu\bottom_navigation.xml"
+            line="12"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\default_cell.xml"
+            line="58"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="126"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="144"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="160"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\event_cell.xml"
+            line="176"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;デフォルト名&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;デフォルト名入力&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;店検索&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="48"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;現在地から&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="77"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;特定の地点から&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="90"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;開始時刻&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="102"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;ex) 30&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="119"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;分後に開始&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="131"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;グループ&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="146"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;デフォルト設定&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="174"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;総額&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\fragment_budget_actual.xml"
+            line="32"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;実費を更新&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\fragment_budget_actual.xml"
+            line="62"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;予算額&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\fragment_budget_estimate.xml"
+            line="31"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;予算更新&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\fragment_budget_estimate.xml"
+            line="58"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;デフォルト名&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;デフォルト名入力&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;店検索&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="48"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;現在地から&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="77"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;特定の地点から&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="90"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;開始時刻&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="102"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;ex) 30&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="119"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;分後に開始&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="131"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;グループ&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="146"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;デフォルト設定&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="174"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Name&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\group\layout\fragment_edit_group.xml"
+            line="31"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;セッションを終了&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="94"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;参加&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;拒否&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="28"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;イベント&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="55"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;あほの坂田&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="71"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;店名&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="112"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;〒９９９－９９９９&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="124"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;住所&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="136"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;詳細&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="148"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;更新&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_map.xml"
+            line="53"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;データがありませんでした。&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_map.xml"
+            line="94"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TEST1&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="46"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;9999年99年99日99:99～&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="76"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;●人&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="100"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;メンバーを招待します&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="109"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;確定&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="121"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;キャンセル&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="132"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TEST1&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="46"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;9999年99年99日99:99～&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="76"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;●人&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="100"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TEST1に電話します&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="109"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;確定&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="121"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;キャンセル&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="132"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;飲み放題&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="79"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;食べ放題&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="88"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;コースあり&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="97"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;個室あり&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="105"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;駐車場あり&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="114"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;ランチあり&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="123"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;中心からの距離&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="145"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;m&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="154"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;＾&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\search_place\layout\fragment_search_shop.xml"
+            line="183"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;●人&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\session\layout\fragment_session_cell.xml"
+            line="43"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;イベント名&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\session\layout\fragment_session_cell.xml"
+            line="70"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;2019/47/45&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\session\layout\fragment_session_cell.xml"
+            line="88"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TEST1&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="47"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;9999年99年99日99:99～&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="73"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;●人&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="97"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;開始時刻を選択してください&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="107"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;確定&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="119"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;キャンセル&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="130"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\group_cell.xml"
+            line="58"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\group_cell.xml"
+            line="77"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\group_member_cell.xml"
+            line="71"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;uuid&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\group_member_cell.xml"
+            line="90"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\listview_actual_row.xml"
+            line="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\listview_actual_row.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\listview_actual_row.xml"
+            line="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\listview_estimate_row.xml"
+            line="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\budget\layout\listview_estimate_row.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\member_cell.xml"
+            line="55"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\member_cell.xml"
+            line="70"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\session_cell.xml"
+            line="109"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\session_cell.xml"
+            line="127"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\session_cell.xml"
+            line="142"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\session_cell.xml"
+            line="157"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\shop_cell.xml"
+            line="54"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\shop_cell.xml"
+            line="68"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;TextView&quot;, should use `@string` resource">
+        <location
+            file="src\main\layouts\cell\layout\shop_cell.xml"
+            line="78"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingLeft` you should probably also define `paddingRight` for right-to-left symmetry">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="30"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:drawableLeft` with `android:drawableStart=&quot;@drawable/ic_email&quot;` to better support right-to-left layouts">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="31"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:drawableLeft` with `android:drawableStart=&quot;@drawable/ic_lock&quot;` to better support right-to-left layouts">
+        <location
+            file="src\main\layouts\login\layout\activity_login.xml"
+            line="43"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:drawableLeft` with `android:drawableStart=&quot;@drawable/ic_email&quot;` to better support right-to-left layouts">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="26"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:drawableLeft` with `android:drawableStart=&quot;@drawable/ic_tag_faces&quot;` to better support right-to-left layouts">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="39"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:drawableLeft` with `android:drawableStart=&quot;@drawable/ic_lock&quot;` to better support right-to-left layouts">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="52"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:drawableLeft` with `android:drawableStart=&quot;@drawable/ic_lock&quot;` to better support right-to-left layouts">
+        <location
+            file="src\main\layouts\login\layout\activity_sign_up.xml"
+            line="65"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\login\layout\activity_start.xml"
+            line="38"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="99"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="130"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_add_default.xml"
+            line="143"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="99"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="130"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\default_setting\layout\fragment_edit_default.xml"
+            line="143"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\group\layout\fragment_edit_group.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\group\layout\fragment_edit_group.xml"
+            line="40"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\main\layout\fragment_event.xml"
+            line="34"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:paddingLeft` with `android:paddingStart=&quot;10dp&quot;` to better support right-to-left layouts">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="30"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="75"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentRight`; already defining `layout_alignParentEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="77"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="79"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_event_finish.xml"
+            line="82"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\member\layout\fragment_friend.xml"
+            line="80"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\group\layout\fragment_group.xml"
+            line="84"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="26"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="81"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="83"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="95"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="98"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="108"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="111"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="120"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="123"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignLeft`; already defining `layout_alignStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="131"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="134"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentRight`; already defining `layout_alignParentEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="143"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_invitation.xml"
+            line="146"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="31"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="33"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="42"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="45"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="54"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="56"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignRight`; already defining `layout_alignEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="66"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="69"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="72"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="75"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignLeft`; already defining `layout_alignStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="83"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="86"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="96"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="99"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="119"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_member_send.xml"
+            line="130"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="30"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="32"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="42"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="45"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="54"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="56"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignRight`; already defining `layout_alignEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="66"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="69"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="72"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="75"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignLeft`; already defining `layout_alignStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="83"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="86"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="96"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="99"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="119"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_reservation_phone.xml"
+            line="130"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignParentRight` with `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts">
+        <location
+            file="src\main\layouts\session\layout\fragment_session_cell.xml"
+            line="54"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignParentLeft`; already defining `layout_alignParentStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="30"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="32"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="42"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="46"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignRight`; already defining `layout_alignEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="63"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="66"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="69"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="72"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_alignLeft`; already defining `layout_alignStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="80"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="83"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="93"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_toRightOf`; already defining `layout_toEndOf` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="96"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="117"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\other\layout\fragment_starttime.xml"
+            line="128"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 28">
+        <location
+            file="src\main\layouts\cell\layout\member_cell.xml"
+            line="28"/>
+    </issue>
+
+</issues>

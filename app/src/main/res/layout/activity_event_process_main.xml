@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/event_process"
+    tools:context=".activities.EventProcessMainActivity">
+
+    <android.support.v4.widget.DrawerLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/eip_parent_container">
+        <include
+            layout="@layout/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <include
+            layout="@layout/event_in_process"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            />
+        </FrameLayout>
+    </android.support.v4.widget.DrawerLayout>
+
+</android.support.constraint.ConstraintLayout>

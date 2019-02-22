@@ -55,12 +55,14 @@
 
     <RadioGroup
         android:id="@+id/RadioGroup"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
+        android:checkedButton="@+id/present_location"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/textView6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,27 +70,30 @@
 
         <RadioButton
             android:id="@+id/present_location"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/text_style"
+            android:background="@drawable/radio_button"
+            android:button="@null"
+            android:checked="true"
             android:ems="10"
-            android:padding="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:text="現在地から"
-            android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textSize="14sp" />
+            android:textAlignment="center"
+            android:textSize="15.5sp" />
 
         <RadioButton
             android:id="@+id/specific_location"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/text_style"
+            android:background="@drawable/radio_button"
+            android:button="@null"
             android:ems="10"
-            android:padding="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:text="特定の地点から"
-            android:textSize="14sp" />
+            android:textAlignment="center"
+            android:textSize="15.5sp" />
     </RadioGroup>
 
     <TextView
@@ -117,7 +122,7 @@
         android:background="@drawable/text_style"
         android:ems="10"
         android:hint="ex) 30"
-        android:inputType="textPersonName|time"
+        android:inputType="time"
         android:padding="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -153,12 +158,13 @@
 
     <Spinner
         android:id="@+id/group_spinner"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
 
         android:background="@drawable/text_style"
+        android:spinnerMode="dialog"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 

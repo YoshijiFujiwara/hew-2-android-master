@@ -9,8 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
-
+// お店に予約の電話
 public class ReservationPhoneFragment extends Fragment {
+
+
+
+    public static  ReservationPhoneFragment newInstance() {
+        Bundle args = new Bundle();
+        ReservationPhoneFragment fragment = new ReservationPhoneFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

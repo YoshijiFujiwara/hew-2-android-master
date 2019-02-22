@@ -26,7 +26,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-//
+//セッション一覧履歴
 public class HistoryFragment extends Fragment {
 
     public HistoryFragment() {
@@ -38,6 +38,7 @@ public class HistoryFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_history,container,false);
     }
     @Override
@@ -77,6 +78,7 @@ public class HistoryFragment extends Fragment {
 
     public void updateList(List<Session> data) {
 
+        int paidcheck = 0;
         ListView listView = getActivity().findViewById(R.id.listView_history);
 
         ArrayList<Session> sessionArrayList = new ArrayList<>();
@@ -85,14 +87,15 @@ public class HistoryFragment extends Fragment {
 //            開始時刻　終了時刻セットなおかつ
             if (sl.start_time != null && sl.end_time != null ) {
                 for (int i = 0; i < sl.users.size(); i++) {
-//                    支払っていたら
-                    if (sl.users.get(i) != null)   {
-                        sessionArrayList.add(sl);
+                    if (sl.users.get(i).paid == 1 )   {
+                        paidcheck++;
                     }
                 }
-
+                if (paidcheck == sl.users.size()) {
+                    sessionArrayList.add(sl);
+                }
+                paidcheck = 0;
             }
-
         }
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
         listView.setAdapter(adapter);

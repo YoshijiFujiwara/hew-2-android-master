@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navi_boto_main"
+        android:icon="@drawable/ic_restaurant"
+        android:title="@string/title_bottom_main" />
+
+    <item
+        android:id="@+id/navi_botto_budget"
+        android:icon="@drawable/ic_attach_money"
+        android:title="@string/title_bottom_budget" />
+    <item
+        android:id="@+id/navi_botto_reservation"
+        android:icon="@drawable/ic_phone"
+        android:title="@string/title_bottom_reservation" />
+    <item
+        android:id="@+id/navi_botto_member"
+        android:icon="@drawable/ic_people"
+        android:title="@string/title_bottom_member" />
+    <item
+        android:id="@+id/navi_botto_time"
+        android:icon="@drawable/ic_time"
+        android:title="@string/title_bottom_time" />
+
+</menu>
