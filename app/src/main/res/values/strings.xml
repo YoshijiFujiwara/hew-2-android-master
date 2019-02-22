@@ -19,6 +19,11 @@
     <string name="title_default">デフォルト設定</string>
     <string name="title_activity_default_setting">DefaultSetting</string>
     <string name="title">タイトル</string>
+    <string name="title_bottom_main">メイン</string>
+    <string name="title_bottom_budget">予算</string>
+    <string name="title_bottom_reservation">予約</string>
+    <string name="title_bottom_member">メンバー</string>
+    <string name="title_bottom_time">時間設定</string>
     <string name="shop_name">店名</string>
     <string name="location_name">店位置</string>
     <string name="time">時間</string>

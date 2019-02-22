@@ -10,10 +10,21 @@ import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
 
-public class StarttimeFragment extends Fragment {
+public class EventFinishFragment extends Fragment {
+
+    public EventFinishFragment() {
+    }
+
+
+    public static EventFinishFragment newInstance() {
+        return new EventFinishFragment();
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_starttime,container,false);
+
+        View view = inflater.inflate(R.layout.fragment_event_finish,container,false);
+
+        return view;
     }
 }
