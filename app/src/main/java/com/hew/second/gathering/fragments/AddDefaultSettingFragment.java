@@ -203,7 +203,7 @@ public class AddDefaultSettingFragment extends BaseFragment {
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-        body.put("group.name", spinner.getSelectedItem().toString());
+        body.put("group_id", String.valueOf(spinner.getSelectedItemId()));
 
         Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(), body);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -212,9 +212,13 @@ public class AddDefaultSettingFragment extends BaseFragment {
                 .subscribe(
                         list -> {
                             if (activity != null) {
-                                Intent intent = new Intent(activity.getApplication(), AddDefaultSettingActivity.class);
-                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
-                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
+                                Intent intent = new Intent();
+                                intent.putExtra(SNACK_MESSAGE, "デフォルトを更新しました。");
+                                activity.setResult(RESULT_OK, intent);
+                                activity.finish();
+//                                Intent intent = new Intent(activity.getApplication(), DefaultSettingFragment.class);
+//                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
+//                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
                             }
                         },  // 成功時
                         throwable -> {

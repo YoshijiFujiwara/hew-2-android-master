@@ -13,7 +13,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="30dp"
-        android:paddingBottom="10dp"
+        android:paddingBottom="20dp"
         app:cardCornerRadius="6dp"
         app:cardElevation="10dp">
 
