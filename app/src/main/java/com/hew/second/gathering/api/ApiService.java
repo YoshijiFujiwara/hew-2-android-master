@@ -28,6 +28,12 @@ public interface ApiService {
     @POST("api/auth/me")
     Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
 
+    /**
+     * push通知用のデバイスIDのやりとり系API
+     */
+    @POST("api/device_token")
+    Observable<DeviceTokenDetail> storeDeviceToken(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
     /*
      * 友達系API
      */
@@ -99,6 +105,12 @@ public interface ApiService {
 
     @DELETE("api/sessions/{session}")
     Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+    /*
+     * セッションユーザー系API
+     */
+    @GET("api/sessions/{session}/users")
+    Observable<FriendList> getSessionUserList(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     /*
      * デフォルト設定系API

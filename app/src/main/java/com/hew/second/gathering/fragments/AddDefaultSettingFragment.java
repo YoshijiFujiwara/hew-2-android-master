@@ -155,42 +155,6 @@ public class AddDefaultSettingFragment extends BaseFragment {
         });
 
     }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        fetchList();
-//    }
-//
-//    private void fetchList() {
-//        ApiService service = Util.getService();
-//        Observable<DefaultSettingDetail> token = service.getDefaultSettingDetail(LoginUser.getToken(), defaultSettingId);
-//        cd.add(token.subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(
-//                        list -> {
-//                            if (activity != null) {
-//                                updateList(list.data);
-//                            }
-//                        },  // 成功時
-//                        throwable -> {
-//                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                            if (activity != null && !cd.isDisposed()) {
-//                                activity.finish();
-//                            }
-//                        }
-//                ));
-//    }
-
-    private void updateList(DefaultSetting gdi) {
-        EditText defaultName = activity.findViewById(R.id.default_input);
-        EditText startTime = activity.findViewById(R.id.start_time);
-
-        defaultName.setText(gdi.name);
-        startTime.setText(gdi.timer);
-    }
-
 
     public void createDefault() {
         ApiService service = Util.getService();
@@ -198,12 +162,14 @@ public class AddDefaultSettingFragment extends BaseFragment {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
         Spinner spinner = activity.findViewById(R.id.group_spinner);
+//        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
 
         HashMap<String, String> body = new HashMap<>();
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-        body.put("group", spinner.getSelectedItem().toString());
+        body.put("group_id", String.valueOf(spinner.getSelectedItemId()));
+//        body.put("", String.valueOf(mRadioGroup.getCheckedRadioButtonId()));
 
         Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(), body);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -212,9 +178,13 @@ public class AddDefaultSettingFragment extends BaseFragment {
                 .subscribe(
                         list -> {
                             if (activity != null) {
-                                Intent intent = new Intent(activity.getApplication(), AddDefaultSettingActivity.class);
-                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
-                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
+                                Intent intent = new Intent();
+                                intent.putExtra(SNACK_MESSAGE, "デフォルトを更新しました。");
+                                activity.setResult(RESULT_OK, intent);
+                                activity.finish();
+//                                Intent intent = new Intent(activity.getApplication(), .class);
+//                                intent.putExtra("DEFAULTSETTING_ID", list.data.id);
+//                                startActivityForResult(intent, INTENT_EDIT_DEFAULT);
                             }
                         },  // 成功時
                         throwable -> {

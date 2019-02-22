@@ -1,5 +1,6 @@
 package com.hew.second.gathering.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.SelectedSession;
+import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.InviteFragmentPagerAdapter;
 
 public class InviteFragment extends BaseFragment {
@@ -38,5 +42,8 @@ public class InviteFragment extends BaseFragment {
         viewPager.setAdapter(adapter);
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        Session session = SelectedSession.getSessionDetail(activity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+        activity.setTitle(session.name);
     }
 }
