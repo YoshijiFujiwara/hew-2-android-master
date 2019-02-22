@@ -84,8 +84,13 @@ public class InProgressFragment extends Fragment {
 //                                  fragment.setArguments(bundle);
 
 //                                  Activity呼び出しの場合
-                                  Intent intent = new Intent(getActivity(), EventProcessMainActivity.class);
-                                  startActivity(intent);
+                                    try {
+                                        Intent intent = new Intent(getActivity(), EventProcessMainActivity.class);
+                                        startActivity(intent);
+
+                                    } catch (Exception e) {
+                                        Log.d("intent","失敗");
+                                    }
 
 //                                    Fragment呼び出しの場合
 //                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
