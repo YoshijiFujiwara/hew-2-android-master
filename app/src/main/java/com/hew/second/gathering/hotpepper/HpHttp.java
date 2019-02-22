@@ -37,7 +37,7 @@ public class HpHttp {
         return httpClient;
     }
 
-    protected static Retrofit getRetrofit() {
+    public static Retrofit getRetrofit() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

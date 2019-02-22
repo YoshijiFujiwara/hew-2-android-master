@@ -48,6 +48,12 @@ public class AddGroupMemberActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group_member);
 
+        // Backボタンを有効にする
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
         Intent beforeIntent = getIntent();
         groupId = beforeIntent.getIntExtra("GROUP_ID", -1);
 
@@ -132,6 +138,11 @@ public class AddGroupMemberActivity extends BaseActivity {
         super.onResume();
         fetchList();
     }
+    @Override
+    public boolean onSupportNavigateUp(){
+        onBackPressed();
+        return true;
+    }
 
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
@@ -148,8 +159,10 @@ public class AddGroupMemberActivity extends BaseActivity {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             // ログインアクティビティへ遷移
-                            Intent intent = new Intent(getApplication(), LoginActivity.class);
-                            startActivity(intent);
+                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
                         }
                 ));
     }

@@ -3,6 +3,8 @@ package com.hew.second.gathering.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -48,11 +50,14 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 //import com.hew.second.gathering.fragments.EventFragment;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +66,8 @@ public class MainActivity extends BaseActivity
 
         // デバイストークンとログインuserを結びつけて送信する
         sendTokenToServer();
-        
+        mHandler = new Handler();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -81,55 +87,61 @@ public class MainActivity extends BaseActivity
                 .subscribe(
                         list -> {
                             profile(list.data);
-                            if(savedInstanceState == null) {
-                                // FragmentManagerのインスタンス生成
-                                FragmentManager fragmentManager = getSupportFragmentManager();
-                                // FragmentTransactionのインスタンスを取得
-                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                // インスタンスに対して張り付け方を指定する
-                                fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
-                                // 張り付けを実行
-                                fragmentTransaction.commit();
-                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
                         }
                 ));
+
+        if (savedInstanceState == null) {
+            // FragmentManagerのインスタンス生成
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            // FragmentTransactionのインスタンスを取得
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            // インスタンスに対して張り付け方を指定する
+            fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+            // 張り付けを実行
+            fragmentTransaction.commit();
+        }
 
 
     }
 
     private void profile(Profile data) {
         //ユーザー情報表示
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View header=navigationView.getHeaderView(0);
-        TextView user_name = (TextView)header.findViewById(R.id.user_name);
-        TextView user_email = (TextView)header.findViewById(R.id.user_email);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+        TextView user_name = header.findViewById(R.id.user_name);
+        TextView user_email =  header.findViewById(R.id.user_email);
         user_name.setText(data.username);
         user_email.setText(data.email);
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        try{
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof MemberFragment){
+        try {
+            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof MemberFragment) {
                 MemberFragment fragment = (MemberFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment){
+            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment) {
                 GroupFragment fragment = (GroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditShopFragment){
+            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditShopFragment) {
                 EditShopFragment fragment = (EditShopFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
         }
         return super.dispatchTouchEvent(ev);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -178,7 +190,7 @@ public class MainActivity extends BaseActivity
             }
         } else if (id == R.id.nav_group) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
@@ -186,16 +198,16 @@ public class MainActivity extends BaseActivity
             }
         } else if (id == R.id.nav_member) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
                 fragmentTransaction.commit();
             }
 
-        }else if (id == R.id.nav_session) {
+        } else if (id == R.id.nav_session) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
@@ -211,7 +223,7 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_budget) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, BudgetFragment.newInstance());
@@ -220,25 +232,29 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_session_main) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, SessionMainFragment.newInstance());
                 fragmentTransaction.commit();
             }
-
+        } else if (id == R.id.nav_guest) {
+            mHandler.post(() -> {
+                Intent intent = new Intent(getApplication(), GuestActivity.class);
+                startActivity(intent);
+            });
         } else if (id == R.id.nav_finish) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, InviteFragment.newInstance());
                 fragmentTransaction.commit();
             }
 
-        } else if (id == R.id.nav_default){
+        } else if (id == R.id.nav_default) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager != null){
+            if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
@@ -251,6 +267,7 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
+<<<<<<< HEAD
     private void sendTokenToServer() {
         FirebaseInstanceId.getInstance().getInstanceId()
             .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -290,5 +307,30 @@ public class MainActivity extends BaseActivity
                     Log.d("api", "デバイストークンの送信失敗");
                     Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                 });
+=======
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // fragmentからの呼びだしの場合
+        switch (requestCode & 0xffff) {
+            //店検索から戻ってきた場合
+            case (INTENT_SHOP_DETAIL):
+                if (resultCode == RESULT_OK) {
+                    mHandler.post(() -> {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        if (fragmentManager != null) {
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.replace(R.id.container, SessionMainFragment.newInstance());
+                            fragmentTransaction.commit();
+                        }
+
+                    });
+                }
+                break;
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+>>>>>>> develop
     }
 }

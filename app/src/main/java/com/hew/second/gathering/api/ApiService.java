@@ -61,6 +61,9 @@ public interface ApiService {
     @DELETE("api/friends/{friend}")
     Completable deleteFriend(@Header("Authorization") String authorization, @Path("friend") int userId);
 
+    @PUT("api/friends/{friend}/cancel_invitation")
+    Completable cancelFriendInvitation(@Header("Authorization") String authorization, @Path("friend") int userId);
+
     /*
      * グループ系API
      */
@@ -110,10 +113,19 @@ public interface ApiService {
     Observable<DefaultSettingList> getDefaultSettingList(@Header("Authorization") String authorization);
 
     @GET("api/default_settings/{default_setting}")
-    Observable<DefaultSettingDetail> getDefaultSettingDetail(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting);
+    Observable<DefaultSettingDetail> getDefaultSettingDetail(@Header("Authorization") String authorization, @Path("default_setting") int defaultSettingId);
 
     @PUT("api/default_settings/{default_setting}")
-    Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("defaultSetting") int default_setting, @Body HashMap<String, String> body);
+    Observable<DefaultSettingDetail> updateDefaultSettingName(@Header("Authorization") String authorization, @Path("default_setting") int defaultSettingId, @Body HashMap<String, String> body);
+
+    @POST("api/default_settings")
+    Observable<DefaultSettingDetail> createDefaultSetting(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
+    @DELETE("api/default_settings/{default_setting}")
+    Completable deleteDefaultSetting(@Header("Authorization") String authorization, @Path("default_setting") int defaultSettingId);
+
+    @POST("api/search/forward_by_username")
+    Observable<FriendList> searchAddableFriendList(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 
     /**
      * 属性系API
@@ -135,6 +147,20 @@ public interface ApiService {
 
 
     /*
+     * ゲスト系API
+     */
+    @GET("api/guest/sessions")
+    Observable<SessionList> getGuestSessionList(@Header("Authorization") String authorization);
+    @GET("api/guest/sessions/wait")
+    Observable<SessionList> getGuestSessionWaitList(@Header("Authorization") String authorization);
+    @GET("api/guest/sessions/allow")
+    Observable<SessionList> getGuestSessionAllowList(@Header("Authorization") String authorization);
+    @PUT("api/guest/sessions/{session}")
+    Observable<SessionDetail> updateGuestSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
+    @GET("api/guest/sessions/{session}")
+    Observable<SessionDetail> getGuestSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+    /*
      * ユーザー検索系API
      */
     @GET("api/search/can_add_friend_users")
@@ -142,6 +168,5 @@ public interface ApiService {
 
     @GET("api/groups/{group}/users/can_add")
     Observable<FriendList> getAddableToGroupFriendList(@Header("Authorization") String authorization, @Path("group") int groupId);
-
 
 }

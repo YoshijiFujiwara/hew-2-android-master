@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gathering</string>
+    <string name="app_name">ホイッスル</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -44,6 +44,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_edit_group">EditGroupActivity</string>
+    <string name="title_activity_edit_defaultSetting">EditDefaultSettingActivity</string>
     <string name="cross">×</string>
     <string name="title_activity_gurunavi_maps">Map</string>
     <string name="invite_end">招待を打ち切る</string>
