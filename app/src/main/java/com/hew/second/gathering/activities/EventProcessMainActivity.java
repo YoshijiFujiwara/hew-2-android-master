@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.fragments.EventFinishFragment;
-import com.hew.second.gathering.fragments.MemberSendFragment;
 import com.hew.second.gathering.fragments.ReservationPhoneFragment;
 import com.hew.second.gathering.fragments.StartTimeFragment;
 
@@ -19,7 +18,8 @@ public class EventProcessMainActivity extends AppCompatActivity {
 //    activity_event_process_main.xml
 //      |→FrameLayout(id :eip_parent_container)
 //      | include → event_in_process.xml(FrameLayout id :eip_container)
-//
+//      BottomNavigationの挙動が停止状態で各画面（Fragment」）呼び出し可能
+//        |→ViewPager＋TabLayout＋Fragmentを呼び出すはアプリが落ちる？？？
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +74,8 @@ public class EventProcessMainActivity extends AppCompatActivity {
                     FragmentManager fragmentManager = getSupportFragmentManager();
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    fragmentTransaction.replace(R.id.eip_container, MemberSendFragment.newInstance());
+//                      Memberへ招待送信　打ち切り画面
+//                    fragmentTransaction.replace(R.id.eip_container, InviteFragment.newInstance());
 
                     fragmentTransaction.commit();
 
