@@ -1,5 +1,6 @@
 package com.hew.second.gathering.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.activities.EventProcessMainActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionList;
@@ -82,8 +84,8 @@ public class InProgressFragment extends Fragment {
 //                                  fragment.setArguments(bundle);
 
 //                                  Activity呼び出しの場合
-//                                  Intent intent = new Intent(getActivity(), EventProcessMainActivity.class);
-//                                  startActivity(intent);
+                                  Intent intent = new Intent(getActivity(), EventProcessMainActivity.class);
+                                  startActivity(intent);
 
 //                                    Fragment呼び出しの場合
 //                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

@@ -11,7 +11,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class EventProcessMain extends AppCompatActivity {
+public class EventProcessMainActivity extends AppCompatActivity {
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
