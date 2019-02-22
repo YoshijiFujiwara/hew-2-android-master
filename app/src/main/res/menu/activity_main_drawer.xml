@@ -16,7 +16,7 @@
         <item
             android:id="@+id/nav_guest"
             android:icon="@drawable/ic_menu_share"
-            android:title="ゲスト（仮）" />
+            android:title="ゲストセッション" />
     </group>
 
 

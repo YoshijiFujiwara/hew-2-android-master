@@ -24,6 +24,7 @@ import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
 import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
@@ -34,8 +35,9 @@ import java.util.HashMap;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
-public class BudgetEstimateFragment extends BudgetFragment {
+public class BudgetEstimateFragment extends SessionBaseFragment {
 
     EditText budget_estimate_tv;
     ListView budget_estimate_lv;
@@ -55,12 +57,11 @@ public class BudgetEstimateFragment extends BudgetFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        FragmentActivity fragmentActivity = getActivity();
+        FragmentActivity fragmentActivity = activity;
         if (fragmentActivity != null) {
             View view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
 
-            Session session = SelectedSession.getSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
-//            Log.v("sessionname", session.name);
+            Session session = activity.session;
 
             // 予算額があれば、セットする
             budget_estimate_tv = (EditText) view.findViewById(R.id.budget_estimate_tv);
@@ -159,39 +160,35 @@ public class BudgetEstimateFragment extends BudgetFragment {
 
     private void updateBudget(FragmentActivity fragmentActivity, Session session, String budgetText) {
         ApiService service = Util.getService();
-        Observable<JWT> token = service.getRefreshToken(LoginUser.getToken());
-        token.subscribeOn(Schedulers.io())
-            .flatMap(result -> {
-                LoginUser.setToken(result.access_token);
-                HashMap<String, String> body = new HashMap<>();
-                body.put("name", session.name);
-                body.put("shop_id", session.shop_id);
-                body.put("budget", budgetText);
-                body.put("actual", Integer.toString(session.actual));
-                body.put("start_time", session.start_time);
-                body.put("end_time", session.end_time);
-                // sharedPreferenceからセッションIDを取得する
-                return service.updateSession(LoginUser.getToken(),
-                        SelectedSession.getSharedSessionId(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)),
-                        body
-                        );
-            })
-            .observeOn(AndroidSchedulers.mainThread())
-            .unsubscribeOn(Schedulers.io())
-            .subscribe(
-                    list -> {
-                        Util.setLoading(false, fragmentActivity);
-                        Log.v("sessioninfo", list.data.name);
+        HashMap<String, String> body = new HashMap<>();
+        body.put("name", session.name);
+        body.put("shop_id", session.shop_id);
+        body.put("budget", budgetText);
+        body.put("actual", Integer.toString(session.actual));
+        body.put("start_time", session.start_time);
+        body.put("end_time", session.end_time);
+        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), activity.session.id, body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Log.v("sessioninfo", list.data.name);
+                            if(activity != null){
+                                activity.session = list.data;
+                            }
 
-                        // sharedPreferenceにsessionの詳細情報を渡す
-                        SelectedSession.setSessionDetail(fragmentActivity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE), list.data);
-                        Toast.makeText(fragmentActivity, "予算を更新しました", Toast.LENGTH_LONG).show();
-
-                    },  // 成功時
-                    throwable -> {
-                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                        Toast.makeText(fragmentActivity, "予算の更新に失敗しました", Toast.LENGTH_LONG).show();
-                    }
-            );
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
     }
 }

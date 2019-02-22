@@ -34,6 +34,7 @@ import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
@@ -147,11 +148,8 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
 
                 } else if (id == R.id.navi_botto_budget) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
-
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                      予算計算画面呼び出し予定
-//                    fragmentTransaction.replace(R.id.event_process_container, BudgetFragment.newInstance());
-
+                    fragmentTransaction.replace(R.id.eip_container, BudgetFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_reservation) {
@@ -210,9 +208,15 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         int id = item.getItemId();
 
         if (id == R.id.nav_top) {
+            Intent intent = new Intent(getApplication(), MainActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_session) {
-
+            Intent intent = new Intent(getApplication(), MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("FRAGMENT", "SESSION");
+            intent.putExtras(bundle);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             // ログイン情報初期化

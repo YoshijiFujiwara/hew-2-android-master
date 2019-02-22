@@ -28,10 +28,13 @@ import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
+import com.hew.second.gathering.fragments.EventFinishFragment;
 import com.hew.second.gathering.fragments.EventFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
 import com.hew.second.gathering.fragments.SessionFragment;
+
+import org.parceler.Parcels;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -141,20 +144,27 @@ public class MainActivity extends BaseActivity
             return true;
         });
 
-        if (savedInstanceState == null) {
-            // FragmentManagerのインスタンス生成
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            // FragmentTransactionのインスタンスを取得
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            // インスタンスに対して張り付け方を指定する
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        if(bundle != null)
+        {
+            // 投げられた値で初期画面分岐
+            String fragment = bundle.getString("FRAGMENT");
+            if (fragment == null) {
+                fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+            } else if (fragment.equals("SESSION")) {
+                fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
+            } else {
+                fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+            }
+        } else {
             fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
-            // 張り付けを実行
-            fragmentTransaction.commit();
         }
-
-//
-
-
+        fragmentTransaction.commit();
     }
 
     //      試しにonResume
