@@ -148,7 +148,7 @@ public class DefaultSettingFragment extends BaseFragment {
                                     }
                             ));
                 default:
-                    // メンバ編集画面へグループIDを渡す
+                    // 編集画面にデフォルトIDを渡す
                     Intent intent = new Intent(activity.getApplication(), EditDefaultSettingActivity.class);
                     intent.putExtra("DEFAULTSETTING_ID", ar.get(position).id);
                     startActivityForResult(intent, INTENT_EDIT_DEFAULT);
