@@ -200,11 +200,18 @@ public class EditDefaultSettingFragment extends BaseFragment {
     private void updateList(DefaultSetting gdi) {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
-        Spinner spinner = getActivity().findViewById(R.id.group_spinner);
+        Spinner spinner = activity.findViewById(R.id.group_spinner);
+        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
+//        mRadioGroup.setOnCheckedChangeListener((RadioGroup.OnCheckedChangeListener) this);
+
+        // 選択されているRadioButonのIDを取得する
+        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
+//        int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
         defaultName.setText(gdi.name);
         startTime.setText(gdi.timer);
         spinner.setSelection(gdi.group.id);
+//        mRadioGroup.check(R.id.specific_location);
     }
 
     public void saveDefaultSettingName() {
