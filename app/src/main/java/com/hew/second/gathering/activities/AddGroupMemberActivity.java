@@ -159,8 +159,10 @@ public class AddGroupMemberActivity extends BaseActivity {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             // ログインアクティビティへ遷移
-                            Intent intent = new Intent(getApplication(), LoginActivity.class);
-                            startActivity(intent);
+                            if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
                         }
                 ));
     }

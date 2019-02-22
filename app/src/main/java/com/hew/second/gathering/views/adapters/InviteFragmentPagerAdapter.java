@@ -11,7 +11,7 @@ import com.hew.second.gathering.fragments.InviteOneByOneFragment;
 import com.hew.second.gathering.fragments.InvitedListFragment;
 
 public class InviteFragmentPagerAdapter extends FragmentPagerAdapter {
-    protected CharSequence[] tabTitles = {"招待済み", "1人1人招待","グループに招待"};
+    protected CharSequence[] tabTitles = {"招待済み", "1人1人招待","グループを招待"};
 
     public InviteFragmentPagerAdapter(FragmentManager fm) {
         super(fm);

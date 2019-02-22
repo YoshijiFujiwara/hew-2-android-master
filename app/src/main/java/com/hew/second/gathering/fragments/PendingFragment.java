@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
@@ -81,79 +82,29 @@ public class PendingFragment extends BaseFragment {
         listView = activity.findViewById(R.id.member_list_pending);
         // 申請受諾
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            final Snackbar snackbar = Snackbar.make(view, "友達になりますか？", Snackbar.LENGTH_LONG);
-            snackbar.getView().setBackgroundColor(Color.BLACK);
-            snackbar.setActionTextColor(Color.WHITE);
-            HashMap<String, Integer> body = new HashMap<>();
-            body.put("user_id", adapter.getList().get(position).id);
-            snackbar.setAction("Yes", (v) -> {
-                ApiService service = Util.getService();
-                Completable friendList = service.permitFriendRequest(LoginUser.getToken(), body);
-                cd.add(friendList.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .unsubscribeOn(Schedulers.io())
-                        .subscribe(
-                                () -> {
-                                    if( activity != null ){
-                                        final Snackbar sbYes = Snackbar.make(view, "友達になりました！", Snackbar.LENGTH_SHORT);
-                                        sbYes.getView().setBackgroundColor(Color.BLACK);
-                                        sbYes.setActionTextColor(Color.WHITE);
-                                        sbYes.show();
-                                    }
-                                },  // 成功時
-                                throwable -> {
-                                    Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                    mSwipeRefreshLayout.setRefreshing(false);
-                                    if (activity != null && !cd.isDisposed()) {
-                                        if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                            // ログインアクティビティへ遷移
-                                            Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                            startActivity(intent);
-                                        }
-                                    }
-                                }
-                        ));
-            });
-            snackbar.show();
+            if(view.getId() == R.id.member_delete) {
+                new MaterialDialog.Builder(activity)
+                        .title("友達申請")
+                        .content(ar.get(position).username + "さんからの友達申請を断りますか？")
+                        .positiveText("OK")
+                        .onPositive((dialog, which) -> {
+                            rejectFriend(ar.get(position).id);
+                        })
+                        .negativeText("キャンセル")
+                        .show();
+            } else{
+                new MaterialDialog.Builder(activity)
+                        .title("友達申請")
+                        .content(ar.get(position).username + "さんと友達になりますか？")
+                        .positiveText("OK")
+                        .onPositive((dialog, which) -> {
+                            permitFriend(ar.get(position).id);
+                        })
+                        .negativeText("キャンセル")
+                        .show();
+            }
         });
         // 申請拒否
-        listView.setOnItemLongClickListener((parent, view, position, id) -> {
-            final Snackbar snackbar = Snackbar.make(view, "申請を拒否しますか？", Snackbar.LENGTH_LONG);
-            snackbar.setAction("Yes", (v) -> {
-                ApiService service = Util.getService();
-                HashMap<String, Integer> body = new HashMap<>();
-                body.put("user_id", adapter.getList().get(position).id);
-                Completable friendList = service.rejectFriendRequest(LoginUser.getToken(), body);
-                cd.add(friendList.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .unsubscribeOn(Schedulers.io())
-                        .subscribe(
-                                () -> {
-                                    if(activity != null) {
-                                        fetchList();
-                                        final Snackbar sbNo = Snackbar.make(view, "申請を拒否しました。", Snackbar.LENGTH_SHORT);
-                                        sbNo.getView().setBackgroundColor(Color.BLACK);
-                                        sbNo.setActionTextColor(Color.WHITE);
-                                        sbNo.show();
-                                    }
-                                },  // 成功時
-                                throwable -> {
-                                    Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                    if(activity != null && !cd.isDisposed()) {
-                                        mSwipeRefreshLayout.setRefreshing(false);
-                                        if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                            // ログインアクティビティへ遷移
-                                            Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                            startActivity(intent);
-                                        }
-                                    }
-                                }
-                        ));
-
-            });
-            snackbar.show();
-            return true;
-        });
 
         SearchView searchView = activity.findViewById(R.id.searchView_pending);
         searchView.setOnClickListener((v) -> {
@@ -192,7 +143,6 @@ public class PendingFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefreshLayout.setRefreshing(false);
         fetchList();
     }
 
@@ -203,6 +153,7 @@ public class PendingFragment extends BaseFragment {
     }
 
     private void fetchList() {
+        mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<FriendList> friendList;
         friendList = service.getPendedFriendList(LoginUser.getToken());
@@ -211,8 +162,8 @@ public class PendingFragment extends BaseFragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
+                            mSwipeRefreshLayout.setRefreshing(false);
                             if(activity != null){
-                                mSwipeRefreshLayout.setRefreshing(false);
                                 updateList(list.data);
                             }
                         },  // 成功時
@@ -238,6 +189,68 @@ public class PendingFragment extends BaseFragment {
         adapter = new MemberAdapter(list);
         // ListViewにadapterをセット
         listView.setAdapter(adapter);
+    }
+    private void permitFriend(int id){
+        ApiService service = Util.getService();
+        HashMap<String, Integer> body = new HashMap<>();
+        body.put("user_id", id);
+        Completable friendList = service.permitFriendRequest(LoginUser.getToken(), body);
+        cd.add(friendList.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if( activity != null ){
+                                final Snackbar sbYes = Snackbar.make(view, "友達になりました！", Snackbar.LENGTH_SHORT);
+                                sbYes.getView().setBackgroundColor(Color.BLACK);
+                                sbYes.setActionTextColor(Color.WHITE);
+                                sbYes.show();
+                                fetchList();
+                            }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
+    }
+
+    private void rejectFriend(int id) {
+        ApiService service = Util.getService();
+        HashMap<String, Integer> body = new HashMap<>();
+        body.put("user_id", id);
+        Completable friendList = service.rejectFriendRequest(LoginUser.getToken(), body);
+        cd.add(friendList.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if(activity != null) {
+                                final Snackbar sbNo = Snackbar.make(view, "申請を拒否しました。", Snackbar.LENGTH_SHORT);
+                                sbNo.getView().setBackgroundColor(Color.BLACK);
+                                sbNo.setActionTextColor(Color.WHITE);
+                                sbNo.show();
+                                fetchList();
+                            }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if(activity != null && !cd.isDisposed()) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
     }
 
 }

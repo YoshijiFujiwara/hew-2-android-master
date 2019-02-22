@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.MainActivity">
+
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
             style="@style/BudgetTabLayout"
@@ -25,5 +26,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
 
 </android.support.constraint.ConstraintLayout>

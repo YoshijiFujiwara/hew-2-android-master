@@ -4,6 +4,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
@@ -20,6 +22,7 @@ public class MemberAdapter extends BaseAdapter {
     static public class ViewHolder {
         TextView userName;
         TextView uniqueName;
+        TextView deleteButton;
     }
     protected MemberAdapter(){
         list = null;
@@ -42,6 +45,7 @@ public class MemberAdapter extends BaseAdapter {
             holder = new GroupMemberAdapter.ViewHolder();
             holder.userName = convertView.findViewById(R.id.member_name);
             holder.uniqueName = convertView.findViewById(R.id.member_unique_name);
+            holder.deleteButton = convertView.findViewById(R.id.member_delete);
             convertView.setTag(holder);
         } else {
             holder = (GroupMemberAdapter.ViewHolder) convertView.getTag();
@@ -49,6 +53,9 @@ public class MemberAdapter extends BaseAdapter {
 
         holder.userName.setText(list.get(position).username);
         holder.uniqueName.setText(list.get(position).unique_id);
+        holder.deleteButton.setOnClickListener((view) -> {
+            ((ListView) parent).performItemClick(view, position, R.id.member_delete);
+        });
 
         return convertView;
     }

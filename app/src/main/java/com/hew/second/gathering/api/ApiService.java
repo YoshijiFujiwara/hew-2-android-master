@@ -28,6 +28,12 @@ public interface ApiService {
     @POST("api/auth/me")
     Observable<ProfileDetail> getProfile(@Header("Authorization") String authorization);
 
+    /**
+     * push通知用のデバイスIDのやりとり系API
+     */
+    @POST("api/device_token")
+    Observable<DeviceTokenDetail> storeDeviceToken(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
     /*
      * 友達系API
      */
@@ -54,6 +60,9 @@ public interface ApiService {
 
     @DELETE("api/friends/{friend}")
     Completable deleteFriend(@Header("Authorization") String authorization, @Path("friend") int userId);
+
+    @PUT("api/friends/{friend}/cancel_invitation")
+    Completable cancelFriendInvitation(@Header("Authorization") String authorization, @Path("friend") int userId);
 
     /*
      * グループ系API
@@ -98,6 +107,12 @@ public interface ApiService {
     Completable deleteSession(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     /*
+     * セッションユーザー系API
+     */
+    @GET("api/sessions/{session}/users")
+    Observable<FriendList> getSessionUserList(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+    /*
      * デフォルト設定系API
      */
     @GET("api/default_settings")
@@ -136,6 +151,20 @@ public interface ApiService {
     @DELETE("api/attributes/{attribute}")
     Completable deleteAttribute(@Header("Authorization") String authorization, @Path("attribute") int attributeId);
 
+
+    /*
+     * ゲスト系API
+     */
+    @GET("api/guest/sessions")
+    Observable<SessionList> getGuestSessionList(@Header("Authorization") String authorization);
+    @GET("api/guest/sessions/wait")
+    Observable<SessionList> getGuestSessionWaitList(@Header("Authorization") String authorization);
+    @GET("api/guest/sessions/allow")
+    Observable<SessionList> getGuestSessionAllowList(@Header("Authorization") String authorization);
+    @PUT("api/guest/sessions/{session}")
+    Observable<SessionDetail> updateGuestSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
+    @GET("api/guest/sessions/{session}")
+    Observable<SessionDetail> getGuestSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     /*
      * ユーザー検索系API
