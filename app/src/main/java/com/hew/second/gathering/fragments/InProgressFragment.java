@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.activities.EventProcessMainTestActivity;
+import com.hew.second.gathering.activities.EventProcessMainActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionList;
@@ -72,7 +72,7 @@ public class InProgressFragment extends Fragment {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                                選択した位置のデータをIntentに付加予定
 
-                                Intent intent = new Intent(getActivity(), EventProcessMainTestActivity.class);
+                                Intent intent = new Intent(getActivity(), EventProcessMainActivity.class);
                                 startActivity(intent);
                             }
                         });

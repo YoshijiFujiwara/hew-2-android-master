@@ -14,12 +14,16 @@ import com.hew.second.gathering.fragments.MemberSendFragment;
 import com.hew.second.gathering.fragments.ReservationPhoneFragment;
 import com.hew.second.gathering.fragments.StartTimeFragment;
 
-public class EventProcessMainTestActivity extends AppCompatActivity {
-
+public class EventProcessMainActivity extends AppCompatActivity {
+//セッション詳細画面
+//    activity_event_process_main.xml
+//      |→FrameLayout(id :eip_parent_container)
+//      | include → event_in_process.xml(FrameLayout id :eip_container)
+//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_process_main_test);
+        setContentView(R.layout.activity_event_process_main);
 
         BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
 
@@ -52,8 +56,8 @@ public class EventProcessMainTestActivity extends AppCompatActivity {
                     FragmentManager fragmentManager = getSupportFragmentManager();
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//                    fragmentTransaction.replace(R.id.eip_container, Bud.newInstance());
+//                      予算計算画面呼び出し予定
+//                    fragmentTransaction.replace(R.id.event_process_container, BudgetFragment.newInstance());
 
                     fragmentTransaction.commit();
 

@@ -84,16 +84,16 @@
             android:layout_marginStart="150dp"
             android:layout_marginLeft="150dp"
             android:layout_marginBottom="0dp"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal" />
+            android:src="@drawable/ic_people" />
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView6"
-            android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginBottom="4dp"
             android:layout_toEndOf="@+id/imageView6"
             android:layout_toRightOf="@+id/imageView6"
             android:text="●人" />
@@ -104,10 +104,11 @@
         android:id="@+id/textView8"
         android:layout_width="258dp"
         android:layout_height="29dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="TEST1に電話します"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        tools:layout_editor_absoluteX="16dp"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -118,6 +119,8 @@
         android:layout_marginRight="25dp"
         android:layout_marginBottom="15dp"
         android:text="確定"
+        android:textColor="@color/colorAccent"
+        android:background="@color/colorAccentDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -129,6 +132,8 @@
         android:layout_marginLeft="25dp"
         android:layout_marginBottom="15dp"
         android:text="キャンセル"
+        android:textColor="@color/colorAccent"
+        android:background="@color/colorAccentDark"
         android:drawable="@drawable/button_corner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -146,6 +151,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_phone"
+        app:srcCompat="@drawable/ic_color_phone"
         tools:ignore="MissingConstraints" />
 </android.support.constraint.ConstraintLayout>
