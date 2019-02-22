@@ -226,8 +226,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
-        String strGroup = String.valueOf(spinner.getSelectedItemId());
-//        body.put("group.id", strGroup..toString());
+        body.put("group.name", spinner.getSelectedItem().toString());
 //        body.put("", mRadioGroup.getCheckedRadioButtonId().toString());
 
         Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(LoginUser.getToken(), defaultSettingId, body);
