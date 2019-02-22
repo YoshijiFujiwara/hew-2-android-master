@@ -7,15 +7,9 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_ing"
+        android:id="@+id/navigation_member"
         android:icon="@drawable/ic_work"
         android:title="メンバー設定" />
-    <!--<item-->
-        <!--android:id="@+id/navigation_member"-->
-        <!--android:icon="@drawable/ic_menu_gallery"-->
-        <!--android:title="メンバー設定"-->
-        <!--/>-->
-
     <item
         android:id="@+id/navigation_now"
         android:icon="@drawable/ic_now"

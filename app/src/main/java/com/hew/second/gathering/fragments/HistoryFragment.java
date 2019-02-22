@@ -26,7 +26,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-//
+//セッション一覧履歴
 public class HistoryFragment extends Fragment {
 
     public HistoryFragment() {
@@ -38,6 +38,7 @@ public class HistoryFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_history,container,false);
     }
     @Override

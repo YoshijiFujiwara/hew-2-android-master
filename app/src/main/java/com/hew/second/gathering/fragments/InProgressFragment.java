@@ -28,7 +28,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
+//セッション一覧進行中のセッション
 public class InProgressFragment extends Fragment {
 
     public static InProgressFragment newInstance() {

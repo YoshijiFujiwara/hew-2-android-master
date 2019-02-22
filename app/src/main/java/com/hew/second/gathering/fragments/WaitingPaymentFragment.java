@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.hew.second.gathering.R.layout;
 
-//支払い待ち
+//セッション一覧支払い待ち
 public class WaitingPaymentFragment extends Fragment  {
 
 

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
-
+//　開始時刻設定
 public class StartTimeFragment extends Fragment {
 
     public static StartTimeFragment newInstance() {
@@ -20,10 +20,13 @@ public class StartTimeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-    
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_starttime,container,false);
     }
 }

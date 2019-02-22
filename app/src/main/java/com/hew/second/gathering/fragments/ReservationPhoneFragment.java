@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
-
+// お店に予約の電話
 public class ReservationPhoneFragment extends Fragment {
 
 
