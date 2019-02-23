@@ -47,6 +47,7 @@ import com.hew.second.gathering.fragments.SessionFragment;
 import com.hew.second.gathering.fragments.StartTimeFragment;
 import com.hew.second.gathering.hotpepper.Shop;
 
+import org.parceler.Parcel;
 import org.parceler.Parcels;
 
 import java.util.HashMap;
@@ -68,7 +69,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
     Handler mHandler = null;
     @State
     public Session session = null;
-    // @State
     public Shop shop = null;
 
     @Override
@@ -87,50 +87,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_event);
         navigationView.setNavigationItemSelectedListener(this);
-
-        ApiService service = Util.getService();
-        Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
-        cd.add(profile.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            profile(list.data);
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                Intent intent = new Intent(getApplication(), LoginActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                ));
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        if(bundle != null)
-        {
-            // セッション情報取得
-            this.session = Parcels.unwrap(getIntent().getParcelableExtra("SESSION_DETAIL"));
-            this.shop = Parcels.unwrap(getIntent().getParcelableExtra("SHOP_DETAIL"));
-
-            // 投げられた値で初期画面分岐
-            String fragment = bundle.getString("FRAGMENT");
-            if (fragment == null) {
-                fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
-            } else if (fragment.equals("SHOP")) {
-                fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
-            } else {
-                fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
-            }
-        } else {
-            fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
-        }
-        fragmentTransaction.commit();
 
         BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
         //ボトムバー選択時
@@ -175,6 +131,50 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
     @Override
     public void onResume(){
         super.onResume();
+        ApiService service = Util.getService();
+        Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
+        cd.add(profile.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            profile(list.data);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        if(bundle != null)
+        {
+            // セッション情報取得
+            this.session = Parcels.unwrap(getIntent().getParcelableExtra("SESSION_DETAIL"));
+            this.shop = Parcels.unwrap(getIntent().getParcelableExtra("SHOP_DETAIL"));
+
+            // 投げられた値で初期画面分岐
+            String fragment = bundle.getString("FRAGMENT");
+            if (fragment == null) {
+                fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
+            } else if (fragment.equals("SHOP")) {
+                fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
+            } else {
+                fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
+            }
+        } else {
+            fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
+        }
+        fragmentTransaction.commit();
+
         // セッション未作成の場合非表示
         BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
         if(session == null){
