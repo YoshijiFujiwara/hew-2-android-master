@@ -106,8 +106,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                         }
                 ));
 
-        BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
@@ -134,7 +132,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         }
         fragmentTransaction.commit();
 
-
+        BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
         //ボトムバー選択時
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -173,6 +171,17 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                 return true;
             }
         });
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        // セッション未作成の場合非表示
+        BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
+        if(session == null){
+            bnv.setVisibility(View.GONE);
+        } else {
+            bnv.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

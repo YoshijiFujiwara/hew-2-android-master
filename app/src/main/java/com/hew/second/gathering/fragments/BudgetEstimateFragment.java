@@ -55,7 +55,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
         FragmentActivity fragmentActivity = activity;
         if (fragmentActivity != null) {
-            View view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
+            view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
 
             Session session = activity.session;
 

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
@@ -93,7 +94,15 @@ public class GuestSessionDetailActivity extends BaseActivity {
         if(status.equals("WAIT")){
             allow.setOnClickListener((l) -> {
                 // 参加する
-                joinSession(session.id);
+                new MaterialDialog.Builder(this)
+                        .title("ゲストセッション")
+                        .content(session.name+ "に参加しますか？")
+                        .positiveText("OK")
+                        .onPositive((dialog, which) -> {
+                            joinSession(session.id);
+                        })
+                        .negativeText("キャンセル")
+                        .show();
             });
         } else {
             allow.setText("参加済みです");
@@ -102,7 +111,15 @@ public class GuestSessionDetailActivity extends BaseActivity {
         Button deny = findViewById(R.id.button_deny);
         deny.setOnClickListener((l) -> {
             // 参加しない
-            denySession(session.id);
+            new MaterialDialog.Builder(this)
+                    .title("ゲストセッション")
+                    .content(session.name+ "への参加を断りますか？")
+                    .positiveText("OK")
+                    .onPositive((dialog, which) -> {
+                        denySession(session.id);
+                    })
+                    .negativeText("キャンセル")
+                    .show();
         });
     }
 

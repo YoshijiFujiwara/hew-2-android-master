@@ -61,8 +61,12 @@ public class GuestSessionAdapter extends BaseAdapter {
 
         holder.title.setText(list.get(position).name);
         holder.shop_name.setText(shopList.get(position).name);
-        holder.time.setText(list.get(position).start_time + "〜");
-        holder.count_member.setText(list.get(position).users.size() + "名");
+        if(list.get(position).start_time == null){
+            holder.time.setText("未定");
+        }else{
+            holder.time.setText(list.get(position).start_time + "〜");
+        }
+        holder.count_member.setText(list.get(position).users.size() + 1 + "名");
 
         if (shopList != null) {
             Picasso.get()

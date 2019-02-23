@@ -47,7 +47,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
         FragmentActivity fragmentActivity = activity;
         if (fragmentActivity != null) {
-            View view = inflater.inflate(R.layout.fragment_budget_actual, container, false);
+            view = inflater.inflate(R.layout.fragment_budget_actual, container, false);
 
             Session session = activity.session;
             Log.v("sessoinActualNAME", session.name);
