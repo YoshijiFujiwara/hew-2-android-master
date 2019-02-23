@@ -1,6 +1,5 @@
 package com.hew.second.gathering.hotpepper;
 
-import com.hew.second.gathering.api.TokenRefreshAuthenticator;
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -10,9 +9,9 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HpHttp {
+public class GurunaviHttp {
     private static Retrofit retrofit = null;
-    private static HpApiService service = null;
+    private static GurunaviApiService service = null;
 
     private static OkHttpClient.Builder httpClient = null;
 
@@ -43,7 +42,7 @@ public class HpHttp {
             retrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl("https://webservice.recruit.co.jp/hotpepper/")
+                    .baseUrl("https://api.gnavi.co.jp/")
                     .client(getHttpClient().build())
                     .build();
         }
@@ -52,9 +51,9 @@ public class HpHttp {
     }
 
 
-    public static HpApiService getService() {
+    public static GurunaviApiService getService() {
         if (service == null) {
-            service = getRetrofit().create(HpApiService.class);
+            service = getRetrofit().create(GurunaviApiService.class);
         }
 
         return service;
