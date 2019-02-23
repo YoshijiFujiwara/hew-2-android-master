@@ -1,10 +1,13 @@
 package com.hew.second.gathering.api;
 
+import org.parceler.Parcel;
+
 import java.io.Serializable;
 
 /**
  * ユーザーの基本情報
  */
+@Parcel
 public class User implements Serializable {
     public int id;
     public String unique_id;

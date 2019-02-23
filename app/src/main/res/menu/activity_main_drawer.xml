@@ -2,52 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
     <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_top"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="TOP" />
-        <!--<item-->
-            <!--android:id="@+id/nav_session_progress"-->
-            <!--android:icon="@drawable/ic_shopping_basket"-->
-            <!--android:title="進行中のセッション"-->
-            <!--/>-->
         <item
             android:id="@+id/nav_session"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="セッション" />
+
         <item
-            android:id="@+id/nav_budget"
+            android:id="@+id/nav_guest"
             android:icon="@drawable/ic_menu_share"
-            android:title="予算" />
-        <item
-            android:id="@+id/nav_session_main"
-            android:icon="@drawable/ic_menu_share"
-            android:title="セッションのメイン(仮)" />
-        <item
-            android:id="@+id/nav_finish"
-            android:icon="@drawable/ic_menu_send"
-            android:title="Finish" />
+            android:title="ゲストセッション" />
     </group>
 
 
     <item android:title="Setting">
         <menu>
             <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_member"
-                    android:icon="@drawable/ic_menu_gallery"
-                    android:title="メンバー管理" />
-                <item
-                    android:id="@+id/nav_group"
-                    android:icon="@drawable/ic_menu_camera"
-                    android:title="グループ管理" />
-                <item
-                    android:id="@+id/nav_default"
-                    android:icon="@drawable/ic_default"
-                    android:title="デフォルト設定" />
                 <item
                     android:id="@+id/nav_config"
                     android:icon="@drawable/ic_menu_manage"

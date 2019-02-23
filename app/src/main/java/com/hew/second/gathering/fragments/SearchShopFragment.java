@@ -53,11 +53,8 @@ import retrofit2.HttpException;
 
 import static com.hew.second.gathering.activities.BaseActivity.INTENT_EDIT_GROUP;
 
-public class SearchShopFragment extends BaseFragment {
-    ArrayList<GroupAdapter.Data> ar = new ArrayList<GroupAdapter.Data>();
+public class SearchShopFragment extends SessionBaseFragment {
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
-    GroupAdapter adapter = null;
-    private CompositeDisposable cd = new CompositeDisposable();
     private List<Genre> genreList = new ArrayList<>();
     private Spinner spinner = null;
 
@@ -174,7 +171,7 @@ public class SearchShopFragment extends BaseFragment {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);

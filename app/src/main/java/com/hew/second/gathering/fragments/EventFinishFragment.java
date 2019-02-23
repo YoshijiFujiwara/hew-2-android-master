@@ -10,10 +10,23 @@ import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
 
-public class ReservationPhoneFragmnet extends Fragment {
+public class EventFinishFragment extends BaseFragment {
+
+    // TODO:画面全般組む
+
+    public EventFinishFragment() {
+    }
+
+
+    public static EventFinishFragment newInstance() {
+        return new EventFinishFragment();
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_reservation_phone,container,false);
+
+        view = inflater.inflate(R.layout.fragment_event_finish,container,false);
+
+        return view;
     }
 }

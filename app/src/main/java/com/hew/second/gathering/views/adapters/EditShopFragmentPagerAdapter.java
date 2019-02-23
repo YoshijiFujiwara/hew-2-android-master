@@ -11,7 +11,7 @@ import com.hew.second.gathering.fragments.PendingFragment;
 import com.hew.second.gathering.fragments.SearchShopFragment;
 
 public class EditShopFragmentPagerAdapter extends FragmentPagerAdapter {
-    protected CharSequence[] tabTitles = {"検索条件", "マップ"};
+    protected CharSequence[] tabTitles = {"マップ", "検索条件"};
 
     public EditShopFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -26,9 +26,9 @@ public class EditShopFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return SearchShopFragment.newInstance();
-            case 1:
                 return MapFragment.newInstance();
+            case 1:
+                return SearchShopFragment.newInstance();
             default:
                 return MapFragment.newInstance();
         }

@@ -34,7 +34,13 @@ public class TokenRefreshAuthenticator implements Authenticator {
             // 認証失敗の場合に3回再認証
             Observable<JWT> token = Util.getService().getToken(LoginUser.getEmail(null), LoginUser.getPassword(null));
             LoginUser.setToken(token.blockingFirst().access_token);
-            return response.request().newBuilder().build();
+            return response.request()
+                    .newBuilder()
+                    .header("Accept", "application/json")
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", LoginUser.getToken())
+                    .method(response.request().method(), response.request().body())
+                    .build();
         }
         return null;
 

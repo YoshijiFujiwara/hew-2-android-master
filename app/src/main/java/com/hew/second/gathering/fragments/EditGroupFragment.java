@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.GridView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.activities.AddGroupMemberActivity;
 import com.hew.second.gathering.activities.LoginActivity;
@@ -105,29 +106,15 @@ public class EditGroupFragment extends BaseFragment {
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             switch (view.getId()) {
                 case R.id.delete_group_member:
-                    ApiService service = Util.getService();
-                    Completable token = service.deleteGroupUser(LoginUser.getToken(), groupId, adapter.getList().get(position).id);
-                    cd.add(token.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .unsubscribeOn(Schedulers.io())
-                            .subscribe(
-                                    () -> {
-                                        if (activity != null) {
-                                            fetchList();
-                                            final Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.content), "メンバーを削除しました", Snackbar.LENGTH_LONG);
-                                            snackbar.getView().setBackgroundColor(Color.BLACK);
-                                            snackbar.setActionTextColor(Color.WHITE);
-                                            snackbar.show();
-                                        }
-                                    }, // 終了時
-                                    (throwable) -> {
-                                        Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                        if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                            Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                            startActivity(intent);
-                                        }
-                                    }
-                            ));
+                    new MaterialDialog.Builder(activity)
+                            .title("メンバー削除")
+                            .content(adapter.getList().get(position).username+ "をグループから削除しますか？")
+                            .positiveText("OK")
+                            .onPositive((dialog, which) -> {
+                                deleteGroupMember(adapter.getList().get(position).id);
+                            })
+                            .negativeText("キャンセル")
+                            .show();
                     break;
             }
         });
@@ -169,8 +156,10 @@ public class EditGroupFragment extends BaseFragment {
         ArrayList<GroupUser> ar = new ArrayList<>(gdi.users);
         adapter = new GroupMemberAdapter(ar);
 
-        // ListViewにadapterをセット
-        gridView.setAdapter(adapter);
+        if(gridView != null){
+            // ListViewにadapterをセット
+            gridView.setAdapter(adapter);
+        }
     }
 
     public void saveGroupName() {
@@ -197,11 +186,38 @@ public class EditGroupFragment extends BaseFragment {
                                 Intent intent = new Intent();
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                     intent.putExtra(SNACK_MESSAGE, "グループ名の変更はありません。");
-                                } else {
-                                    intent.putExtra(SNACK_MESSAGE, "グループ名の更新に失敗しました。");
+                                } else if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent2 = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent2);
                                 }
                                 activity.setResult(RESULT_OK, intent);
                                 activity.finish();
+                            }
+                        }
+                ));
+    }
+
+    private void deleteGroupMember(int id){
+        ApiService service = Util.getService();
+        Completable token = service.deleteGroupUser(LoginUser.getToken(), groupId, id);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if (activity != null) {
+                                fetchList();
+                                final Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.content), "メンバーを削除しました", Snackbar.LENGTH_LONG);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
+                            }
+                        }, // 終了時
+                        (throwable) -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                startActivity(intent);
                             }
                         }
                 ));

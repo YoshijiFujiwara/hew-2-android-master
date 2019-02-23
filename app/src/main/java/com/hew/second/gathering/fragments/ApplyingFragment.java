@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
@@ -76,42 +77,19 @@ public class ApplyingFragment extends BaseFragment {
 
         listView = activity.findViewById(R.id.member_list_applying);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            // リストから要素を削除
-            Friend deleteFriend = adapter.getList().get(position);
-            ar.remove(deleteFriend);
-            updateList(ar);
-            final Snackbar snackbar = Snackbar.make(getView(), "申請を取り消しました。", Snackbar.LENGTH_LONG);
-            snackbar.getView().setBackgroundColor(Color.BLACK);
-            snackbar.setActionTextColor(Color.WHITE);
-            snackbar.setAction("元に戻す", (v) -> {
-                snackbar.dismiss();
-            });
-            snackbar.addCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    if (event != DISMISS_EVENT_MANUAL) {
-                        ApiService service = Util.getService();
-                        Completable friendList = service.deleteFriend(LoginUser.getToken(), deleteFriend.id);
-                        cd.add(friendList.subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .unsubscribeOn(Schedulers.io())
-                                .subscribe(
-                                        () -> {
-                                        },  // 成功時
-                                        throwable -> {
-                                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
-                                                // ログインアクティビティへ遷移
-                                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                                startActivity(intent);
-                                            }
-                                        }
-                                ));
-                    }
-                }
-            });
-            snackbar.show();
+            if(view.getId() == R.id.member_delete) {
+                new MaterialDialog.Builder(activity)
+                        .title("友達申請")
+                        .content(ar.get(position).username + "さんへの友達申請をやめますか？")
+                        .positiveText("OK")
+                        .onPositive((dialog, which) -> {
+                            deleteFriendRequest(ar.get(position).id);
+                        })
+                        .negativeText("キャンセル")
+                        .show();
+            }
         });
+
 
         SearchView searchView = activity.findViewById(R.id.searchView_applying);
         searchView.setOnClickListener((v) -> {
@@ -121,6 +99,23 @@ public class ApplyingFragment extends BaseFragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
+
+                List<Friend> filteredItems;
+                // フィルター処理
+                if (s.isEmpty()) {
+                    filteredItems = new ArrayList<>(ar);
+                } else {
+                    filteredItems = new ArrayList<>();
+                    for (Friend item : ar) {
+                        if (item.unique_id.toLowerCase().contains(s.toLowerCase()) || item.username.toLowerCase().contains(s.toLowerCase())) { // テキストがqueryを含めば検索にHITさせる
+                            filteredItems.add(item);
+                        }
+                    }
+                }
+                // adapterの更新処理
+                adapter.clear();
+                adapter.addAll(filteredItems);
+                adapter.notifyDataSetChanged();
                 return false;
             }
 
@@ -150,7 +145,6 @@ public class ApplyingFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefreshLayout.setRefreshing(true);
         fetchList();
     }
 
@@ -162,6 +156,7 @@ public class ApplyingFragment extends BaseFragment {
 
 
     private void fetchList() {
+        mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<FriendList> friendList;
         friendList = service.getApplyingFriendList(LoginUser.getToken());
@@ -179,7 +174,7 @@ public class ApplyingFragment extends BaseFragment {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             mSwipeRefreshLayout.setRefreshing(false);
-                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 // ログインアクティビティへ遷移
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
@@ -191,11 +186,40 @@ public class ApplyingFragment extends BaseFragment {
     private void updateList(List<Friend> data) {
         // ListView生成
         listView = activity.findViewById(R.id.member_list_applying);
-        ArrayList<Friend> list = new ArrayList<>(data);
-        ar = new ArrayList<>(data);
-        adapter = new MemberAdapter(list);
-        // ListViewにadapterをセット
-        listView.setAdapter(adapter);
+        if(listView != null){
+            ArrayList<Friend> list = new ArrayList<>(data);
+            ar = new ArrayList<>(data);
+            adapter = new MemberAdapter(list);
+            // ListViewにadapterをセット
+            listView.setAdapter(adapter);
+        }
+    }
+
+    private void deleteFriendRequest(int id){
+        ApiService service = Util.getService();
+        Completable friendList = service.cancelFriendInvitation(LoginUser.getToken(), id);
+        cd.add(friendList.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if (activity != null) {
+                                final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "友達申請を取り消しました。", Snackbar.LENGTH_SHORT);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
+                                fetchList();
+                            }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                // ログインアクティビティへ遷移
+                                Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
     }
 
 }

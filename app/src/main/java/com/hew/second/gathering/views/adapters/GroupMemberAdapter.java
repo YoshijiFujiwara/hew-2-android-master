@@ -8,6 +8,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.GroupUser;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ public class GroupMemberAdapter extends BaseAdapter {
         list = Arrays.asList(names);
     }
     public GroupMemberAdapter(ArrayList<GroupUser> names){
-        list = names;
+        list = new ArrayList<>(names);
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -58,6 +59,14 @@ public class GroupMemberAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return position;
+    }
+
+
+    public void clear(){
+        list.clear();
+    }
+    public void addAll(List<GroupUser> friends){
+        list.addAll(friends);
     }
 
     @Override

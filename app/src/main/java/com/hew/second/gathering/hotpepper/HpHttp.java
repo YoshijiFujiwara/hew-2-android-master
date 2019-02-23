@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HpHttp {
     private static Retrofit retrofit = null;
     private static HpApiService service = null;
+
     private static OkHttpClient.Builder httpClient = null;
 
     protected static OkHttpClient.Builder getHttpClient() {
@@ -49,6 +50,7 @@ public class HpHttp {
 
         return retrofit;
     }
+
 
     public static HpApiService getService() {
         if (service == null) {

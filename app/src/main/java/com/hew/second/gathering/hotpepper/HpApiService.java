@@ -21,4 +21,5 @@ public interface HpApiService {
 
     @GET("genre/v1/?key=372039502fb1977e&format=json")
     Observable<GenreResult> getGenreList();
+
 }

@@ -9,11 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hew.second.gathering.R;
+//　開始時刻設定
+public class StartTimeFragment extends SessionBaseFragment {
 
-public class StarttimeFragment extends Fragment {
+    public static StartTimeFragment newInstance() {
+        Bundle args = new Bundle();
+        StartTimeFragment fragment = new StartTimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_starttime,container,false);
+
+        view = inflater.inflate(R.layout.fragment_starttime,container,false);
+        return view;
     }
 }

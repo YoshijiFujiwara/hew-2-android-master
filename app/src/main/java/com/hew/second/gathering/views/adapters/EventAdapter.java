@@ -44,7 +44,7 @@ public class EventAdapter extends BaseAdapter {
         list = Arrays.asList(names);
     }
     public EventAdapter(ArrayList<Data> names){
-        list = names;
+        list = new ArrayList<>(names);
     }
 
     @Override

@@ -12,10 +12,12 @@ import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SessionAdapter extends BaseAdapter {
 
-    private Session list[];
+    private List<Session> list;
     private int usersList;
 
     public static class ViewHolder {
@@ -27,10 +29,10 @@ public class SessionAdapter extends BaseAdapter {
         String emdDate;
     }
     public SessionAdapter(Session[] data) {
-        list = data;
+        list =  Arrays.asList(data);
     }
     public SessionAdapter(ArrayList<Session> data) {
-        list = data.toArray(new Session[0]);
+        list = new ArrayList<>(data);
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -51,14 +53,13 @@ public class SessionAdapter extends BaseAdapter {
             holder = (SessionAdapter.ViewHolder)convertView.getTag();
 
         }
-        holder.sessionName.setText(list[position].name);
-        holder.sessionDate.setText(list[position].start_time);
-        holder.sessionPeople.setText(String.valueOf(list[position].users.size()) + "人");
-        ArrayList<SessionUser> sessionUserList = (ArrayList<SessionUser>) list[position].users;
+        holder.sessionName.setText(list.get(position).name);
+        holder.sessionDate.setText(list.get(position).start_time);
+        holder.sessionPeople.setText(String.valueOf(list.get(position).users.size()) + "人");
+        ArrayList<SessionUser> sessionUserList = (ArrayList<SessionUser>) list.get(position).users;
 
-        for (int i = 0; i < list[position].users.size(); i++) {
-
-            if (list[position].users.get(i).paid != 1) {
+        for (int i = 0; i < list.get(position).users.size(); i++) {
+            if (list.get(position).users.get(i).paid != 1) {
                 holder.sessionImage.setImageResource(R.drawable.ic_warning);
             }
 
@@ -71,7 +72,7 @@ public class SessionAdapter extends BaseAdapter {
     @Override
 
     public int getCount() {
-        return list.length;
+        return list.size();
     }
 
     @Override

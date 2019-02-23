@@ -33,7 +33,7 @@ public class SessionFragment extends BaseFragment {
         viewPager = view.findViewById(R.id.session_viewpager_id);
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;

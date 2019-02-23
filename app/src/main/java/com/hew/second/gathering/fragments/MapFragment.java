@@ -87,13 +87,19 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.RuntimePermissions;
 import retrofit2.HttpException;
 import retrofit2.Retrofit;
 
 import static com.hew.second.gathering.activities.BaseActivity.INTENT_SHOP_DETAIL;
 
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener,
+@RuntimePermissions
+public class MapFragment extends SessionBaseFragment implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener,
         GoogleMap.OnMyLocationButtonClickListener {
 
     // Fused Location Provider API.
@@ -151,9 +157,17 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
 
     }
 
+    // リクエストを受け取る
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MapFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        MapFragmentPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
 
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -175,8 +189,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
             Intent intent = new Intent(activity, ShopDetailActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(position)));
+            if( activity.session != null){
+                bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(activity.session));
+            }
             intent.putExtras(bundle);
-            startActivityForResult(intent,INTENT_SHOP_DETAIL);
+            startActivityForResult(intent, INTENT_SHOP_DETAIL);
         });
 
         Button button = activity.findViewById(R.id.search_refresh);
@@ -217,6 +234,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
                     Intent intent = new Intent(activity, ShopDetailActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(i)));
+                    if( activity.session != null){
+                        bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(activity.session));
+                    }
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -249,8 +269,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     }
 
     // FusedLocationApiによるlocation updatesをリクエスト
-    private void startLocationUpdates() {
+    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    protected void startLocationUpdates() {
         // Begin by checking if the device has the necessary location settings.
+        if(locationSettingsRequest == null){
+            return;
+        }
         settingsClient.checkLocationSettings(locationSettingsRequest)
                 .addOnSuccessListener(activity,
                         new OnSuccessListener<LocationSettingsResponse>() {
@@ -385,7 +409,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
                                 shopList = new ArrayList<>(list.results.shop);
                                 ArrayList<Shop> data = new ArrayList<>(list.results.shop);
                                 adapter = new ShopListAdapter(data);
-                                listView.setAdapter(adapter);
+                                if(listView != null){
+                                    listView.setAdapter(adapter);
+                                }
 
                                 for (Shop s : shopList) {
                                     // マーカー設定
@@ -403,7 +429,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 401) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
@@ -411,5 +437,15 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
                             }
                         }
                 ));
+    }
+
+    @OnPermissionDenied(Manifest.permission.ACCESS_FINE_LOCATION)
+    void showDeniedForCamera() {
+        Toast.makeText(activity, "現在地が取得できません", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnNeverAskAgain(Manifest.permission.ACCESS_FINE_LOCATION)
+    void showNeverAskForCamera() {
+        Toast.makeText(activity, "現在地が取得できません", Toast.LENGTH_SHORT).show();
     }
 }

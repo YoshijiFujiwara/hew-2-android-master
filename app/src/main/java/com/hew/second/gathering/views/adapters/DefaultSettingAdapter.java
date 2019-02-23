@@ -16,10 +16,11 @@ import java.util.List;
 
 public class DefaultSettingAdapter extends BaseAdapter {
 
-    private Data[] list;
+    private List<Data> list;
 
     static class ViewHolder {
         TextView name;
+        TextView deleteButton;
     }
     static public class Data {
         public Data(int id, String name) {
@@ -27,23 +28,16 @@ public class DefaultSettingAdapter extends BaseAdapter {
             this.name = name;
         }
 
-        public int getId() {
-            return id;
-        }
+        public int id;
+        public String name;
 
-        public String getName() {
-            return name;
-        }
-
-        int id;
-        String name;
     }
 
     public DefaultSettingAdapter(Data[] names){
-        list = names;
+        list = Arrays.asList(names);
     }
     public DefaultSettingAdapter(ArrayList<Data> names){
-        list = names.toArray(new Data[0]);
+        list = new ArrayList<>(names);
     }
 
     @Override
@@ -56,26 +50,32 @@ public class DefaultSettingAdapter extends BaseAdapter {
                     .inflate(R.layout.default_cell, parent, false);
             holder = new ViewHolder();
             holder.name = convertView.findViewById(R.id.default_name);
+            holder.deleteButton= convertView.findViewById(R.id.delete_default);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(list[position].name);
+        holder.name.setText(list.get(position).name);
+        holder.deleteButton.setOnClickListener((view) -> {
+            ((GridView) parent).performItemClick(view, position, R.id.delete_default);
+        });
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return list.length;
+        return list.size();
     }
 
     @Override
     public Object getItem(int position) {
         return position;
     }
-
+    public List<DefaultSettingAdapter.Data> getList(){
+        return list;
+    }
     @Override
     public long getItemId(int position) {
         return position;

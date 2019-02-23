@@ -3,6 +3,7 @@ package com.hew.second.gathering.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -25,19 +26,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
-public class EditShopFragment extends BaseFragment {
+public class EditShopFragment extends SessionBaseFragment {
     private static final String MESSAGE = "message";
-
-    public static EditShopFragment newInstance(String message) {
-        EditShopFragment fragment = new EditShopFragment();
-
-        Bundle args = new Bundle();
-        args.putString(MESSAGE, message);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
     public static EditShopFragment newInstance() {
         EditShopFragment fragment = new EditShopFragment();
 
@@ -68,6 +58,10 @@ public class EditShopFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(activity.session == null){
+            BottomNavigationView bnv = activity.findViewById(R.id.eip_bottom_navigation);
+            bnv.setVisibility(View.GONE);
+        }
     }
 
     public void removeFocus() {

@@ -2,8 +2,8 @@ package com.hew.second.gathering.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.views.adapters.InviteFragmentPagerAdapter;
 
-public class InviteFragment extends BaseFragment {
+public class InviteFragment extends SessionBaseFragment {
 
     public static InviteFragment newInstance() {
         return new InviteFragment();
@@ -38,5 +38,12 @@ public class InviteFragment extends BaseFragment {
         viewPager.setAdapter(adapter);
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        activity.setTitle(activity.session.name);
+    }
+
+    public void removeFocus() {
+        SearchView searchView = activity.findViewById(R.id.searchView_invite_one);
+        searchView.clearFocus();
     }
 }

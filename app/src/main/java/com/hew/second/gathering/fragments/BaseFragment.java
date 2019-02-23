@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.hew.second.gathering.R;
 
+import icepick.Icepick;
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BaseFragment extends Fragment {
@@ -45,5 +46,15 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroyView(){
         view = null;
         super.onDestroyView();
+    }
+
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
+    }
+
+    @Override public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 }
