@@ -178,5 +178,10 @@ public interface ApiService {
     @GET("api/sessions/{session}/users/can_add")
     Observable<FriendList> getAddableToSessionFriendList(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
+//    /*
+//     * ユーザープロフィール系API
+//     */
+    @PUT("api/profile/update")
+    Observable<ProfileUserDetail> updateProfileUser(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 
 }
