@@ -108,17 +108,20 @@ public class StartTimeFragment extends SessionBaseFragment {
         private Calendar calendar = Calendar.getInstance();
 
         public DateSetHandler(TextView textView) {
-
             this.textView = textView;
-
         }
 //      日付が選択された時の処理
+//       Calender.set(第１,第２)
+//       第１引数 指定したいカレンダーフィールド
+//       第２引数 指定されたカレンダーフィールドに設定したい値
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+
+//          値格納予定
 
             CharSequence text = DateFormat.format("yyyy/MM/dd,E",calendar);
             textView.setText(text);
