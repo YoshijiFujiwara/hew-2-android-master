@@ -10,7 +10,7 @@ public class DefaultSetting {
     public User manager; // このデフォルト設定を管理するひと
     public String name; // このデフォルト設定の名前
     public String timer; // Time型かなにかを入れたいから、型を間違えている気がします（'01:00;00'などをいれれたら良い）
-    public boolean current_location_flag;
+    public String current_location_flag;
     public String latitude;
     public String longitude;
     public Group group;

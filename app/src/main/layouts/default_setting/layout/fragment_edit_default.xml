@@ -69,12 +69,11 @@
         app:layout_constraintTop_toBottomOf="@+id/textView5">
 
         <RadioButton
-            android:id="@+id/present_location"
+            android:id="@+id/current_location"
             android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_button"
             android:button="@null"
-            android:checked="true"
             android:ems="10"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
