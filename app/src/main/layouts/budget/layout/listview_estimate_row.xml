@@ -21,7 +21,31 @@
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/budgetEstimateListInfo"
+        android:id="@+id/budgetEstimateListCost"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:layout_weight="1"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/budgetEstimateListPlusMinus"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:layout_weight="1"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/budgetEstimateListAttribute"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

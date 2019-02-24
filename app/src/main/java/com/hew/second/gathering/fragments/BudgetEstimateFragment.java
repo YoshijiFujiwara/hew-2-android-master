@@ -94,12 +94,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
     private void updateBudget(FragmentActivity fragmentActivity, Session session, String budgetText) {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
-        body.put("name", session.name);
-        body.put("shop_id", session.shop_id);
         body.put("budget", budgetText);
-        body.put("actual", Integer.toString(session.actual));
-        body.put("start_time", session.start_time);
-        body.put("end_time", session.end_time);
         Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), activity.session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -129,6 +124,8 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         // 予算額から、支払い予定額を計算する
         ArrayList<String> nameArray = new ArrayList<>();
         ArrayList<Integer> costArray = new ArrayList<>();
+        ArrayList<Integer> plusMinusArray = new ArrayList<>();
+        ArrayList<String> attributeArray = new ArrayList<>();
 
         // 実額から、支払い金額を計算する
         if (activity.session.budget != 0) {
@@ -142,27 +139,37 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             managerCost = sum / (activity.session.users.size() + 1);
 
             // 幹事情報をまずセットする
-            nameArray.add(activity.session.manager.username + "(幹事)");
+            nameArray.add(activity.session.manager.username);
             costArray.add(managerCost);
+            plusMinusArray.add(0);
+            attributeArray.add("幹事");
             for (int i = 0; i < activity.session.users.size(); i++) {
                 nameArray.add(activity.session.users.get(i).username);
                 costArray.add(managerCost + activity.session.users.get(i).plus_minus);
+                plusMinusArray.add(activity.session.users.get(i).plus_minus);
+                attributeArray.add(activity.session.users.get(i).attribute_name);
             }
 
         } else {
             // 幹事情報をまずセットする
-            nameArray.add(activity.session.manager.username + "(幹事)");
+            nameArray.add(activity.session.manager.username);
             costArray.add(0);
+            plusMinusArray.add(0);
+            attributeArray.add("幹事");
             // session情報から,usernameのリストを生成
             for (int i = 0; i < activity.session.users.size(); i++) {
                 nameArray.add(activity.session.users.get(i).username);
                 costArray.add(0);
+                plusMinusArray.add(activity.session.users.get(i).plus_minus);
+                attributeArray.add(activity.session.users.get(i).attribute_name);
             }
         }
 
         String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-        Integer[] infoParams = costArray.toArray(new Integer[costArray.size()]);
-        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, infoParams);
+        Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
+        Integer[] plusMinusParams = costArray.toArray(new Integer[costArray.size()]);
+        String[] attributeNameParams = nameArray.toArray(new String[nameArray.size()]);
+        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams);
         budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
         budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
     }
