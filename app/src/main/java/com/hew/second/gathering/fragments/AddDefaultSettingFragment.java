@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.hew.second.gathering.LogUtil;
@@ -106,7 +107,7 @@ public class AddDefaultSettingFragment extends BaseFragment {
                 inputMethodMgr.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
-//        RadioGroup mRadioGroup = getActivity().findViewById(R.id.RadioGroup);
+        RadioGroup mRadioGroup = getActivity().findViewById(R.id.RadioGroup);
 //        mRadioGroup.setOnCheckedChangeListener(this);
 //
 //        // 選択されているRadioButonのIDを取得する
@@ -160,14 +161,14 @@ public class AddDefaultSettingFragment extends BaseFragment {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
         Spinner spinner = activity.findViewById(R.id.group_spinner);
-//        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
+        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
 
         HashMap<String, String> body = new HashMap<>();
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
         body.put("group_id", String.valueOf(groupList.get((int)spinner.getSelectedItemPosition()).id));
-//        body.put("", String.valueOf(mRadioGroup.getCheckedRadioButtonId()));
+        body.put("current_location_flag", String.valueOf(mRadioGroup.getCheckedRadioButtonId()));
 
         Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(), body);
         cd.add(token.subscribeOn(Schedulers.io())
