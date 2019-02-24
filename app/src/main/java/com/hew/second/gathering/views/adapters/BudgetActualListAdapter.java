@@ -2,11 +2,15 @@ package com.hew.second.gathering.views.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Animatable;
+import android.media.Image;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.R;
@@ -38,15 +42,13 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         //this code gets references to objects in the listview_actual_row.xml file
         TextView nameTextField = (TextView) rowView.findViewById(R.id.budgetActualUsername);
         TextView infoTextField = (TextView) rowView.findViewById(R.id.budgetActualListInfo);
-        TextView paidTextField = (TextView) rowView.findViewById(R.id.budgetActualListPaid);
+        ImageView paidImageView = (ImageView) rowView.findViewById(R.id.budgetActualListPaid);
 
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
         infoTextField.setText(costArray[position].toString() + "円");
         if (paidArray[position] == true) {
-            paidTextField.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_green, 0, 0, 0);
-        } else {
-            paidTextField.setText("");
+            ((Animatable) paidImageView.getDrawable()).start();
         }
 
         return rowView;

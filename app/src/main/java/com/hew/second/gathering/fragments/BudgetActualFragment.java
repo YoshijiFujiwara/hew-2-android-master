@@ -1,6 +1,8 @@
 package com.hew.second.gathering.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -150,7 +153,6 @@ public class BudgetActualFragment extends SessionBaseFragment {
                 BudgetActualListAdapter budgetActualListAdapter2 = new BudgetActualListAdapter(fragmentActivity, nameParams2, costParams2, paidParam2);
                 budget_actual_lv.setAdapter(budgetActualListAdapter2);
             });
-
             return view;
         }
         return null;

@@ -165,26 +165,26 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         body.put("end_time", session.end_time);
         Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), activity.session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            Log.v("sessioninfo", list.data.name);
-                            if(activity != null){
-                                activity.session = list.data;
-                            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .unsubscribeOn(Schedulers.io())
+            .subscribe(
+                list -> {
+                    Log.v("sessioninfo", list.data.name);
+                    if(activity != null){
+                        activity.session = list.data;
+                    }
 
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                    // ログインアクティビティへ遷移
-                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                    startActivity(intent);
-                                }
-                            }
+                },  // 成功時
+                throwable -> {
+                    Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                    if (activity != null && !cd.isDisposed()) {
+                        if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                            // ログインアクティビティへ遷移
+                            Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                            startActivity(intent);
                         }
-                ));
+                    }
+                }
+            ));
     }
 }
