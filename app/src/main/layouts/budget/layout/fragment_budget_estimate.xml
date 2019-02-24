@@ -2,10 +2,11 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/まｒぎｎ"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.BudgetEstimateFragment"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    tools:context=".fragments.BudgetEstimateFragment">
 
     <LinearLayout
         android:id="@+id/budget_estimate_upper"
@@ -47,7 +48,7 @@
         <ListView
             android:id="@+id/budget_estimate_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="260dp" />
     </android.support.v7.widget.CardView>
 
     <Button

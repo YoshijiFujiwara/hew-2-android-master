@@ -112,6 +112,9 @@ public interface ApiService {
     @GET("api/sessions/{session}/users")
     Observable<FriendList> getSessionUserList(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
+    @PUT("api/sessions/{session}/users/{user}")
+    Observable<SessionUserDetail> updateSessionUser(@Header("Authorization") String authorization, @Path("session") int sessionId, @Path("user") int userId, @Body HashMap<String, String> body);
+
     @PUT("api/sessions/{session}/users/{user}/switch_paid")
     Observable<SessionUserDetail> sessionUserSwitchPaid(@Header("Authorization") String authorization, @Path("session") int sessionId, @Path("user") int userId);
 

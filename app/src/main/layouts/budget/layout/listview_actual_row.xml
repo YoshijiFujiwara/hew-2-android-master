@@ -8,7 +8,6 @@
     android:paddingBottom="5dp"
     android:orientation="horizontal">
 
-
         <TextView
             android:id="@+id/budgetActualUsername"
             android:layout_width="50dp"
@@ -31,8 +30,8 @@
 
         <ImageView
             android:id="@+id/budgetActualListPaid"
-            android:layout_height="50dp"
-            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_width="30dp"
             android:layout_marginTop="4dp"
             android:layout_gravity="center"
             android:visibility="visible"
