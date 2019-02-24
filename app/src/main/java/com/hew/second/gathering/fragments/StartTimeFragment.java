@@ -25,17 +25,27 @@ public class StartTimeFragment extends SessionBaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+//
         TextView startDateText = getActivity().findViewById(R.id.start_date);
         TextView startTimeText = getActivity().findViewById(R.id.start_timer);
         TextView endDateText = getActivity().findViewById(R.id.end_date);
         TextView endTimeText = getActivity().findViewById(R.id.end_timer);
 
-//        DatePickerDialogFragment test = new DatePickerDialogFragment();
-        
+
         view = inflater.inflate(R.layout.fragment_starttime,container,false);
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
+
+        if (savedInstanceState == null) {
+
+            DatePickerDialogFragment datePicker = new DatePickerDialogFragment();
+        datePicker.show(getFragmentManager(), "datePicker");
+
+        }
+    }
 }
