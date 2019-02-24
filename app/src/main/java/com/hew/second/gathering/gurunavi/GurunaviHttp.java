@@ -1,4 +1,4 @@
-package com.hew.second.gathering.hotpepper;
+package com.hew.second.gathering.gurunavi;
 
 import java.io.IOException;
 
