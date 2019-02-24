@@ -37,8 +37,8 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         return rowView;
     }
 
-    @Override
-    public boolean isEnabled(int position) {
-        return false;
-    }
+//    @Override
+//    public boolean isEnabled(int position) {
+//        return false;
+//    }
 }

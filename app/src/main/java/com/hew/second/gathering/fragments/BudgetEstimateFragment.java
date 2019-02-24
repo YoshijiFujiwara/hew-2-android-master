@@ -57,82 +57,19 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         if (fragmentActivity != null) {
             view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
 
-            Session session = activity.session;
-
             // 予算額があれば、セットする
             budget_estimate_tv = (EditText) view.findViewById(R.id.budget_estimate_tv);
-            if (session.budget != 0) {
-                budget_estimate_tv.setText(Integer.toString(session.budget), TextView.BufferType.EDITABLE);
+            if (activity.session.budget != 0) {
+                budget_estimate_tv.setText(Integer.toString(activity.session.budget), TextView.BufferType.EDITABLE);
             }
-
-            // 予算額から、支払い予定額を計算する
-            ArrayList<String> nameArray = new ArrayList<>();
-            ArrayList<Integer> costArray = new ArrayList<>();
-
-            // 実額から、支払い金額を計算する
-            if (session.budget != 0) {
-                int sum = session.budget;
-                Log.v("予算額", String.valueOf(sum));
-                // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
-                int managerCost = 0;
-                for (int i = 0; i < session.users.size(); i++) {
-                    sum += session.users.get(i).plus_minus;
-                }
-                managerCost = sum / (session.users.size() + 1);
-
-                // 幹事情報をまずセットする
-                nameArray.add(session.manager.username + "(幹事)");
-                costArray.add(managerCost);
-                for (int i = 0; i < session.users.size(); i++) {
-                    nameArray.add(session.users.get(i).username);
-                    costArray.add(managerCost + session.users.get(i).plus_minus);
-                }
-
-            } else {
-                // 幹事情報をまずセットする
-                nameArray.add(session.manager.username + "(幹事)");
-                costArray.add(0);
-                // session情報から,usernameのリストを生成
-                for (int i = 0; i < session.users.size(); i++) {
-                    nameArray.add(session.users.get(i).username);
-                    costArray.add(0);
-                }
-            }
-
-            String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
-            Integer[] infoParams = costArray.toArray(new Integer[costArray.size()]);
-            BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(fragmentActivity, nameParams, infoParams);
-            budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
-            budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
+            updateListView();
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
-                updateBudget(fragmentActivity, session, String.valueOf(budget_estimate_tv.getText()));
+                updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()));
+                activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
+                updateListView();
 
-                // 再計算（汚い）
-                ArrayList<String> nameArray2 = new ArrayList<>();
-                ArrayList<Integer> costArray2 = new ArrayList<>();
-
-                int sum = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
-                // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
-                int managerCost = 0;
-                for (int i = 0; i < session.users.size(); i++) {
-                    sum += session.users.get(i).plus_minus;
-                }
-                managerCost = sum / (session.users.size() + 1);
-
-                // 幹事情報をまずセットする
-                nameArray2.add(session.manager.username + "(幹事)");
-                costArray2.add(managerCost);
-                for (int i = 0; i < session.users.size(); i++) {
-                    nameArray2.add(session.users.get(i).username);
-                    costArray2.add(managerCost + session.users.get(i).plus_minus);
-                }
-
-                String[] nameParams2 = nameArray2.toArray(new String[nameArray2.size()]);
-                Integer[] infoParams2 = costArray2.toArray(new Integer[costArray2.size()]);
-                BudgetEstimateListAdapter budgetEstimateListAdapter2 = new BudgetEstimateListAdapter(fragmentActivity, nameParams2, infoParams2);
-                budget_estimate_lv.setAdapter(budgetEstimateListAdapter2);
             });
             return view;
         }
@@ -186,5 +123,47 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                     }
                 }
             ));
+    }
+
+    private void updateListView() {
+        // 予算額から、支払い予定額を計算する
+        ArrayList<String> nameArray = new ArrayList<>();
+        ArrayList<Integer> costArray = new ArrayList<>();
+
+        // 実額から、支払い金額を計算する
+        if (activity.session.budget != 0) {
+            int sum = activity.session.budget;
+            Log.v("予算額", String.valueOf(sum));
+            // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
+            int managerCost = 0;
+            for (int i = 0; i < activity.session.users.size(); i++) {
+                sum += activity.session.users.get(i).plus_minus;
+            }
+            managerCost = sum / (activity.session.users.size() + 1);
+
+            // 幹事情報をまずセットする
+            nameArray.add(activity.session.manager.username + "(幹事)");
+            costArray.add(managerCost);
+            for (int i = 0; i < activity.session.users.size(); i++) {
+                nameArray.add(activity.session.users.get(i).username);
+                costArray.add(managerCost + activity.session.users.get(i).plus_minus);
+            }
+
+        } else {
+            // 幹事情報をまずセットする
+            nameArray.add(activity.session.manager.username + "(幹事)");
+            costArray.add(0);
+            // session情報から,usernameのリストを生成
+            for (int i = 0; i < activity.session.users.size(); i++) {
+                nameArray.add(activity.session.users.get(i).username);
+                costArray.add(0);
+            }
+        }
+
+        String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
+        Integer[] infoParams = costArray.toArray(new Integer[costArray.size()]);
+        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, infoParams);
+        budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
+        budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
     }
 }

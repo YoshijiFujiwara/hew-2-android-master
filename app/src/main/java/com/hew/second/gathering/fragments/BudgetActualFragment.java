@@ -89,7 +89,6 @@ public class BudgetActualFragment extends SessionBaseFragment {
                     updateListView();
                 }
             });
-
             return view;
         }
         return null;
