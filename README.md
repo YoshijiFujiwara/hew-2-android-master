@@ -123,10 +123,23 @@ github上からプルリクエストを作ってdevelopとマージ
 ## バックエンドメモ
 
 ### テストユーザー
-
+```
 testuser@example.com  
 o34k30skm3h4b 
-
+```
+### テストユーザー(プロフィールを変更するなど、サブで使用する用)
+```
+testuser48@example.com  
+o34k30skm3h4b  
+```
+```
+testuser49@example.com  
+o34k30skm3h4b  
+```
+```
+testuser50@example.com  
+o34k30skm3h4b  
+```
 ### APIURL
 
 <https://laravel-dot-eventer-1543384121468.appspot.com/>
