@@ -68,12 +68,14 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         paidImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchPaid(userIdArray[position]);
+                if (position != 0) {
+                    switchPaid(userIdArray[position]);
+                }
                 if (paidArray[position] == true) {
                     paidImageView.setAlpha(0);
                     ((Animatable) paidImageView.getDrawable()).stop();
                     paidArray[position] = false;
-                } else {
+                } else if (position != 0){
                     paidImageView.setAlpha(255);
                     ((Animatable) paidImageView.getDrawable()).start();
                     paidArray[position] = true;
@@ -85,6 +87,10 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         nameTextField.setText(nameArray[position]);
         infoTextField.setText(costArray[position].toString() + "円");
         userIdField.setText(userIdArray[position]);
+        // 幹事の場合
+        if (position == 0) {
+            paidImageView.setAlpha(0);
+        }
         if (paidArray[position] == true) {
             ((Animatable) paidImageView.getDrawable()).start();
         }
