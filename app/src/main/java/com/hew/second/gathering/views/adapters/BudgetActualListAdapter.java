@@ -2,6 +2,7 @@ package com.hew.second.gathering.views.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.media.Image;
 import android.os.SystemClock;
@@ -25,14 +26,16 @@ public class BudgetActualListAdapter extends ArrayAdapter {
     private final String[] nameArray;
     private final Integer[] costArray;
     private final Boolean[] paidArray;
+    private final Integer[] userIdArray; // hidden プロパティ的な
 
-    public BudgetActualListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam, Boolean[] paidArrayParam) {
+    public BudgetActualListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam, Boolean[] paidArrayParam, Integer[] userIdParam) {
         super(context, R.layout.listview_actual_row, nameArrayParam);
 
         this.context = context;
         this.nameArray = nameArrayParam;
         this.costArray = costArrayParam;
         this.paidArray = paidArrayParam;
+        this.userIdArray = userIdParam;
     }
 
     public View getView(int position, View view, ViewGroup parent) {
@@ -42,11 +45,13 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         //this code gets references to objects in the listview_actual_row.xml file
         TextView nameTextField = (TextView) rowView.findViewById(R.id.budgetActualUsername);
         TextView infoTextField = (TextView) rowView.findViewById(R.id.budgetActualListInfo);
+        TextView userIdField = (TextView) rowView.findViewById(R.id.budgetActualListUserId);
         ImageView paidImageView = (ImageView) rowView.findViewById(R.id.budgetActualListPaid);
 
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
         infoTextField.setText(costArray[position].toString() + "円");
+        userIdField.setText(userIdArray[position].toString());
         if (paidArray[position] == true) {
             ((Animatable) paidImageView.getDrawable()).start();
         }
@@ -54,8 +59,8 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         return rowView;
     }
 
-    @Override
-    public boolean isEnabled(int position) {
-        return false;
-    }
+//    @Override
+//    public boolean isEnabled(int position) {
+//        return false;
+//    }
 }

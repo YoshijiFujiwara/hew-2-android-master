@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -63,6 +64,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
             ArrayList<String> nameArray = new ArrayList<>();
             ArrayList<Integer> costArray = new ArrayList<>();
+            ArrayList<Integer> userIdArray = new ArrayList<>();
             ArrayList<Boolean> paidArray = new ArrayList<>();
 
             // 実額から、支払い金額を計算する
@@ -80,9 +82,11 @@ public class BudgetActualFragment extends SessionBaseFragment {
                 nameArray.add(session.manager.username + "(幹事)");
                 costArray.add(managerCost);
                 paidArray.add(false);
+                userIdArray.add(session.manager.id);
                 for (int i = 0; i < session.users.size(); i++) {
                     nameArray.add(session.users.get(i).username);
                     costArray.add(managerCost + session.users.get(i).plus_minus);
+                    userIdArray.add(session.users.get(i).id);
                     if (session.users.get(i).paid == 1) {
                         paidArray.add(true);
                     } else {
@@ -94,10 +98,12 @@ public class BudgetActualFragment extends SessionBaseFragment {
                 // 幹事情報をまずセットする
                 nameArray.add(session.manager.username + "(幹事)");
                 costArray.add(0);
+                userIdArray.add(session.manager.id);
                 // session情報から,usernameのリストを生成
                 for (int i = 0; i < session.users.size(); i++) {
                     nameArray.add(session.users.get(i).username);
                     costArray.add(0);
+                    userIdArray.add(session.users.get(i).id);
                     if (session.users.get(i).paid == 1) {
                         paidArray.add(true);
                     } else {
@@ -109,7 +115,8 @@ public class BudgetActualFragment extends SessionBaseFragment {
             String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
             Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
             Boolean[] paidParams = paidArray.toArray(new Boolean[paidArray.size()]);
-            BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(fragmentActivity, nameParams, costParams, paidParams);
+            Integer[] userIdParams = userIdArray.toArray(new Integer[userIdArray.size()]);
+            BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(fragmentActivity, nameParams, costParams, paidParams, userIdParams);
             budget_actual_lv = (ListView) view.findViewById(R.id.budget_actual_list);
             budget_actual_lv.setAdapter(budgetActualListAdapter);
 
@@ -117,11 +124,12 @@ public class BudgetActualFragment extends SessionBaseFragment {
             budget_actual_update_btn.setOnClickListener((v) -> {
                 updateBudgetActual(fragmentActivity, view, session, String.valueOf(budget_actual_tv.getText()));
                 // リストビューを空にする
-                budget_actual_lv.setAdapter(new BudgetActualListAdapter(fragmentActivity, new String[0], new Integer[0], new Boolean[0]));
+                budget_actual_lv.setAdapter(new BudgetActualListAdapter(fragmentActivity, new String[0], new Integer[0], new Boolean[0], new Integer[0]));
 
                 // 再計算（汚い）
                 ArrayList<String> nameArray2 = new ArrayList<>();
                 ArrayList<Integer> costArray2 = new ArrayList<>();
+                ArrayList<Integer> userIdArray2 = new ArrayList<>();
                 ArrayList<Boolean> paidArray2 = new ArrayList<>();
 
                 int sum = Integer.parseInt(String.valueOf(budget_actual_tv.getText()));
@@ -135,10 +143,12 @@ public class BudgetActualFragment extends SessionBaseFragment {
                 // 幹事情報をまずセットする
                 nameArray2.add(session.manager.username + "(幹事)");
                 costArray2.add(managerCost);
+                userIdArray2.add(session.manager.id);
                 paidArray2.add(false);
                 for (int i = 0; i < session.users.size(); i++) {
                     nameArray2.add(session.users.get(i).username);
                     costArray2.add(managerCost + session.users.get(i).plus_minus);
+                    userIdArray2.add(session.users.get(i).id);
                     if (session.users.get(i).paid == 1) {
                         paidArray2.add(true);
                     } else {
@@ -149,10 +159,22 @@ public class BudgetActualFragment extends SessionBaseFragment {
                 String[] nameParams2 = nameArray2.toArray(new String[nameArray2.size()]);
                 Integer[] costParams2 = costArray2.toArray(new Integer[costArray2.size()]);
                 Boolean[] paidParam2 = paidArray2.toArray(new Boolean[paidArray2.size()]);
+                Integer[] userIdParams2 = userIdArray2.toArray(new Integer[userIdArray2.size()]);
 
-                BudgetActualListAdapter budgetActualListAdapter2 = new BudgetActualListAdapter(fragmentActivity, nameParams2, costParams2, paidParam2);
+                BudgetActualListAdapter budgetActualListAdapter2 = new BudgetActualListAdapter(fragmentActivity, nameParams2, costParams2, paidParam2, userIdParams2);
                 budget_actual_lv.setAdapter(budgetActualListAdapter2);
             });
+
+
+            // リストビューのクリックイベント
+            budget_actual_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+            });
+
+
             return view;
         }
         return null;
