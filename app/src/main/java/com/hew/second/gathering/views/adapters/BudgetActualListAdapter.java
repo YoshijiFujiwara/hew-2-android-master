@@ -52,5 +52,10 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         }
 
         return rowView;
-    };
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
 }

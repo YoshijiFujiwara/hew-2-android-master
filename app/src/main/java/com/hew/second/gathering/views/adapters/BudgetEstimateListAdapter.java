@@ -35,5 +35,10 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         infoTextField.setText(costArray[position].toString() + "円");
 
         return rowView;
-    };
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
 }
