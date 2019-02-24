@@ -2,6 +2,7 @@ package com.hew.second.gathering.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -68,7 +69,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
                 updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()));
-                updateSessionInfo();
+                updateSessionInfo(activity.session);
                 activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
 
             });
@@ -97,7 +98,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("budget", budgetText);
-        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), activity.session.id, body);
+        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .unsubscribeOn(Schedulers.io())
@@ -137,7 +138,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
             int managerCost = 0;
             for (int i = 0; i < session.users.size(); i++) {
-                sum += session.users.get(i).plus_minus;
+                sum -= session.users.get(i).plus_minus;
             }
             managerCost = sum / (session.users.size() + 1);
 
@@ -177,15 +178,15 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         Integer[] plusMinusParams = plusMinusArray.toArray(new Integer[plusMinusArray.size()]);
         String[] attributeNameParams = attributeArray.toArray(new String[attributeArray.size()]);
         String[] userIdParams = userIdArray.toArray(new String[userIdArray.size()]);
-        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, session.id, cd, activity);
+        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, session.id);
         budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
         budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
     }
 
     // activity.session　の情報を更新する
-    public void updateSessionInfo() {
+    public void updateSessionInfo(Session session) {
         ApiService service = Util.getService();
-        Observable<SessionDetail> token = service.getSessionDetail(LoginUser.getToken(), activity.session.id);
+        Observable<SessionDetail> token = service.getSessionDetail(LoginUser.getToken(), session.id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -193,7 +194,6 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                         list -> {
                             Log.v("sessioninfo", list.data.name);
                             if (activity != null) {
-                                activity.session = list.data;
                                 updateListView(list.data);
                             }
 

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="9dp"
-    android:paddingBottom="9dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:orientation="horizontal">
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_marginBottom="4dp" />
 
     <TextView
-        android:id="@+id/budgetEstimateListCost"
+        android:id="@+id/budgetEstimateListAttribute"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -32,7 +32,7 @@
 
     <EditText
         android:id="@+id/budgetEstimateListPlusMinus"
-        android:hint="プラス何円？"
+        android:hint="基準"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -44,7 +44,7 @@
         android:inputType="numberDecimal|numberSigned"/>
 
     <TextView
-        android:id="@+id/budgetEstimateListAttribute"
+        android:id="@+id/budgetEstimateListCost"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

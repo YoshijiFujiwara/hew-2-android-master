@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -40,12 +41,10 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
     private final String[] attributeArray;
     private final String[] userIdArray;
     private final Integer sessionId;
-    private final CompositeDisposable cd;
-    private final FragmentActivity activity;
-
+    private final CompositeDisposable cd = new CompositeDisposable();
 
     public BudgetEstimateListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam,
-                                     Integer[] plusMinusParam, String[] attributeParam, String[] userIdParam, int sessionId, CompositeDisposable cd, FragmentActivity activity) {
+                                     Integer[] plusMinusParam, String[] attributeParam, String[] userIdParam, int sessionId) {
         super(context, R.layout.listview_estimate_row, userIdParam);
 
         this.context = context;
@@ -55,8 +54,6 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         this.attributeArray = attributeParam;
         this.userIdArray = userIdParam;
         this.sessionId = sessionId;
-        this.cd = cd;
-        this.activity = activity;
     }
 
     public View getView(int position, View view, ViewGroup parent) {
@@ -101,8 +98,14 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
         costTextField.setText(costArray[position].toString() + "円");
-        plusMinusEditText.setText(plusMinusArray[position].toString());
-        // todo: 幹事の場合は、0固定で編集できないようにする
+        // 幹事の場合は、0固定で編集できないようにする
+        if (position == 0) {
+            plusMinusEditText.setText("");
+            plusMinusEditText.setAlpha(0);
+            plusMinusEditText.setInputType(InputType.TYPE_NULL);
+        } else {
+            plusMinusEditText.setText(plusMinusArray[position].toString());
+        }
 
         attributeTextField.setText(attributeArray[position]);
         userIdField.setText(userIdArray[position]);
@@ -119,15 +122,15 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         body.put("plus_minus", plusMinus);
         Observable<SessionUserDetail> token = service.updateSessionUser(LoginUser.getToken(), sessionId, Integer.parseInt(userId), body);
         cd.add(token.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
+            .observeOn(AndroidSchedulers.mainThread())
+            .unsubscribeOn(Schedulers.io())
+            .subscribe(
+                list -> {
 
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                        }
-                ));
+                },  // 成功時
+                throwable -> {
+                    Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                }
+            ));
     }
 }

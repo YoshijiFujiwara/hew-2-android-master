@@ -69,25 +69,10 @@ public class BudgetActualFragment extends SessionBaseFragment {
             budget_actual_update_btn.setOnClickListener((v) -> {
                 updateBudgetActual(activity, view, activity.session, String.valueOf(budget_actual_tv.getText()));
                 // リストビューを空にする
-                budget_actual_lv.setAdapter(new BudgetActualListAdapter(activity, new String[0], new Integer[0], new Boolean[0], new String[0]));
+                budget_actual_lv.setAdapter(new BudgetActualListAdapter(activity, new String[0], new Integer[0], new Boolean[0], new String[0], activity.session.id));
                 activity.session.actual = Integer.parseInt(String.valueOf(budget_actual_tv.getText()));
                 // 再計算（汚い）
                 updateListView();
-            });
-
-
-            // リストビューのクリックイベント
-            budget_actual_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    ListView list = (ListView) parent;
-                    String clickedUserId = "ItemClick : " + (String)list.getItemAtPosition(position);
-
-                    // クリックされたuseridの支払い状況を反転させる処理をして、画面を更新する
-                    switchPaid(clickedUserId);
-                    updateSessionInfo();
-                    updateListView();
-                }
             });
             return view;
         }
@@ -179,7 +164,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
             // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
             int managerCost = 0;
             for (int i = 0; i < activity.session.users.size(); i++) {
-                sum += activity.session.users.get(i).plus_minus;
+                sum -= activity.session.users.get(i).plus_minus;
             }
             managerCost = sum / (activity.session.users.size() + 1);
 
@@ -221,39 +206,8 @@ public class BudgetActualFragment extends SessionBaseFragment {
         Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
         Boolean[] paidParams = paidArray.toArray(new Boolean[paidArray.size()]);
         String[] userIdParams = userIdArray.toArray(new String[userIdArray.size()]);
-        BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(activity, nameParams, costParams, paidParams, userIdParams);
+        BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(activity, nameParams, costParams, paidParams, userIdParams, activity.session.id);
         budget_actual_lv = (ListView) view.findViewById(R.id.budget_actual_list);
         budget_actual_lv.setAdapter(budgetActualListAdapter);
-    }
-
-    /**
-     * 指定したuserの支払い状況を反転する処理
-     * @param userId
-     */
-    private void switchPaid(String userId) {
-        Toast.makeText(activity, "test", Toast.LENGTH_SHORT).show();
-        return ;
-//        ApiService service = Util.getService();
-//        Observable<SessionUserDetail> token = service.sessionUserSwitchPaid(LoginUser.getToken(), activity.session.id, Integer.parseInt(userId));
-//        cd.add(token.subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(
-//                        list -> {
-//                            if (activity != null) {
-//                                Toast.makeText(activity, "test", Toast.LENGTH_SHORT).show();
-//                            }
-//                        },
-//                        throwable -> {
-//                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-//                            if (activity != null && !cd.isDisposed()) {
-//                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-//                                    // ログインアクティビティへ遷移
-//                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-//                                    startActivity(intent);
-//                                }
-//                            }
-//                        }
-//                ));
     }
 }
