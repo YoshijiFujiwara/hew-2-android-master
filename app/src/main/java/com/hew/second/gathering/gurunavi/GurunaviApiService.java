@@ -1,4 +1,4 @@
-package com.hew.second.gathering.hotpepper;
+package com.hew.second.gathering.gurunavi;
 
 import java.util.Map;
 
@@ -10,5 +10,5 @@ import retrofit2.http.QueryMap;
 public interface GurunaviApiService {
 
     @GET("RestSearchAPI/v3/?keyid=6f24a055d5586327db00ffc1e67999a1")
-    Observable<Tel> getTel(@Query("freeword") String freeword);
+    Observable<Tel> getTel(@QueryMap(encoded=true) Map<String, String> options);
 }

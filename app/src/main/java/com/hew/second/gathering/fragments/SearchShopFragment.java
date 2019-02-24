@@ -165,7 +165,9 @@ public class SearchShopFragment extends SessionBaseFragment {
                                 ArrayAdapter adapter =
                                         new ArrayAdapter(activity, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                spinner.setAdapter(adapter);
+                                if(spinner != null){
+                                    spinner.setAdapter(adapter);
+                                }
                             }
                         },  // 成功時
                         throwable -> {
