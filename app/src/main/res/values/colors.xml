@@ -22,6 +22,8 @@
     <color name="colorShadow">#bdbdbd</color>
     <color name="colorText">#303030</color>
     <color name="colorEdge">#b6b6b6</color>
+    <color name="colorGreen">#8BC34A</color>
+    <color name="transparent">#00000000</color>
 
     <color name="icon_default_color">#ffde7d</color>
     <color name="btn_default_light_normal">#00000000</color>
