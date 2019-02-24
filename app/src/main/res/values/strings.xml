@@ -59,4 +59,8 @@
     <string name="shop_search_genre">ジャンル</string>
     <string name="label_search_result">検索結果</string>
     <string name="label_search_advanced">詳細設定</string>
+
+    <!--日時のフォーマット-->
+    <string name="date_time_format">%1$tF %1$tR</string>
+
 </resources>
