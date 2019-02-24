@@ -20,9 +20,9 @@ public class BudgetActualListAdapter extends ArrayAdapter {
     private final Activity context;
     private final String[] nameArray;
     private final Integer[] costArray;
-    private final String[] paidArray;
+    private final Boolean[] paidArray;
 
-    public BudgetActualListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam, String[] paidArrayParam) {
+    public BudgetActualListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam, Boolean[] paidArrayParam) {
         super(context, R.layout.listview_actual_row, nameArrayParam);
 
         this.context = context;
@@ -43,7 +43,11 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
         infoTextField.setText(costArray[position].toString() + "円");
-        paidTextField.setText(paidArray[position]);
+        if (paidArray[position] == true) {
+            paidTextField.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_green, 0, 0, 0);
+        } else {
+            paidTextField.setText("");
+        }
 
         return rowView;
     };
