@@ -26,10 +26,10 @@ public class BudgetActualListAdapter extends ArrayAdapter {
     private final String[] nameArray;
     private final Integer[] costArray;
     private final Boolean[] paidArray;
-    private final Integer[] userIdArray; // hidden プロパティ的な
+    private final String[] userIdArray; // hidden プロパティ的な
 
-    public BudgetActualListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam, Boolean[] paidArrayParam, Integer[] userIdParam) {
-        super(context, R.layout.listview_actual_row, nameArrayParam);
+    public BudgetActualListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam, Boolean[] paidArrayParam, String[] userIdParam) {
+        super(context, R.layout.listview_actual_row, userIdParam);
 
         this.context = context;
         this.nameArray = nameArrayParam;
@@ -51,7 +51,7 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
         infoTextField.setText(costArray[position].toString() + "円");
-        userIdField.setText(userIdArray[position].toString());
+        userIdField.setText(userIdArray[position]);
         if (paidArray[position] == true) {
             ((Animatable) paidImageView.getDrawable()).start();
         }
