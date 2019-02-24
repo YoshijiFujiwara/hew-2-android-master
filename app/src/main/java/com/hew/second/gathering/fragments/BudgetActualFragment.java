@@ -85,6 +85,8 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
                     // クリックされたuseridの支払い状況を反転させる処理をして、画面を更新する
                     switchPaid(clickedUserId);
+                    updateSessionInfo();
+                    updateListView();
                 }
             });
 
@@ -103,8 +105,32 @@ public class BudgetActualFragment extends SessionBaseFragment {
         super.onResume();
     }
 
-    private void setSessionUserList(FragmentActivity fragmentActivity, View view) {
+    // activity.session　の情報を更新する
+    public void updateSessionInfo() {
+        ApiService service = Util.getService();
+        Observable<SessionDetail> token = service.getSessionDetail(LoginUser.getToken(), activity.session.id);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Log.v("sessioninfo", list.data.name);
+                            if(activity != null){
+                                activity.session = list.data;
+                            }
 
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
     }
 
     private void updateBudgetActual(FragmentActivity fragmentActivity, View view, Session session, String budgetActualText) {
