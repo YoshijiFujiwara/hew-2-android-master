@@ -121,11 +121,6 @@ public class EditDefaultSettingFragment extends BaseFragment {
             }
         });
         RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
-//        mRadioGroup.setOnCheckedChangeListener((RadioGroup.OnCheckedChangeListener) this);
-//
-//        // 選択されているRadioButonのIDを取得する
-//        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
-//        int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
@@ -201,13 +196,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
         EditText startTime = activity.findViewById(R.id.start_time);
         Spinner spinner = activity.findViewById(R.id.group_spinner);
         RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
-//        mRadioGroup.setOnCheckedChangeListener((RadioGroup.OnCheckedChangeListener) this);
 
-        // 選択されているRadioButonのIDを取得する
-        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
-//        int checkedId = mRadioGroup.getCheckedRadioButtonId();
-
-//        defaultName.setText(gdi.current_location_flag);
         defaultName.setText(gdi.name);
         startTime.setText(gdi.timer);
         int sid = -1;
@@ -221,7 +210,12 @@ public class EditDefaultSettingFragment extends BaseFragment {
             spinner.setSelection(sid);
         }
 
-        mRadioGroup.setSelected(Boolean.valueOf(gdi.current_location_flag));
+        if (gdi.current_location_flag.equals("1")){
+            mRadioGroup.check(R.id.current_location);
+        }
+        else {
+            mRadioGroup.check(R.id.specific_location);
+        }
     }
 
     public void saveDefaultSettingName() {
@@ -243,6 +237,8 @@ public class EditDefaultSettingFragment extends BaseFragment {
                 break;
             case R.id.specific_location:
                 flag = "0";
+                latitude = "100.00000000";
+                longitude = "100.00000000";
                 break;
         }
 
@@ -251,7 +247,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
         body.put("group_id", String.valueOf(groupList.get((int)spinner.getSelectedItemPosition()).id));
-        body.put("current_location_flag", flag.toString());
+        body.put("current_location_flag", flag);
         body.put("latitude", latitude);
         body.put("longitude", longitude);
 

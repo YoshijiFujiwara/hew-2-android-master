@@ -109,11 +109,6 @@ public class AddDefaultSettingFragment extends BaseFragment {
             }
         });
         RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
-//        mRadioGroup.setOnCheckedChangeListener(this);
-//
-//        // 選択されているRadioButonのIDを取得する
-//        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
-//        int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
@@ -175,6 +170,8 @@ public class AddDefaultSettingFragment extends BaseFragment {
                 break;
             case R.id.specific_location:
                 flag = "0";
+                latitude = "100.00000000";
+                longitude = "100.00000000";
                 break;
         }
 
