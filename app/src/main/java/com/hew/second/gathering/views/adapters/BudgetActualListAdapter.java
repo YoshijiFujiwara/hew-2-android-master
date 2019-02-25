@@ -59,7 +59,7 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.listview_actual_row, null,true);
 
-        //this code gets references to objects in the listview_actual_row.xml file
+        // this code gets references to objects in the listview_actual_row.xml file
         TextView nameTextField = (TextView) rowView.findViewById(R.id.budgetActualUsername);
         TextView infoTextField = (TextView) rowView.findViewById(R.id.budgetActualListInfo);
         TextView userIdField = (TextView) rowView.findViewById(R.id.budgetActualListUserId);
@@ -83,7 +83,7 @@ public class BudgetActualListAdapter extends ArrayAdapter {
             }
         });
 
-        //this code sets the values of the objects to values from the arrays
+        // this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
         infoTextField.setText(costArray[position].toString() + "円");
         userIdField.setText(userIdArray[position]);
@@ -106,20 +106,20 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         ApiService service = Util.getService();
         Observable<SessionUserDetail> token = service.sessionUserSwitchPaid(LoginUser.getToken(), sessionId, Integer.parseInt(userId));
         cd.add(token.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
+            .observeOn(AndroidSchedulers.mainThread())
+            .unsubscribeOn(Schedulers.io())
+            .subscribe(
+                list -> {
 
-                        },
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (!cd.isDisposed()) {
-                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                },
+                throwable -> {
+                    Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                    if (!cd.isDisposed()) {
+                        if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
 
-                                }
-                            }
                         }
-                ));
+                    }
+                }
+            ));
     }
 }

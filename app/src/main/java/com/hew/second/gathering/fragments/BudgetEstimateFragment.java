@@ -137,10 +137,16 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             Log.v("予算額", String.valueOf(sum));
             // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
             int managerCost = 0;
+            int allowUserCount = 0;
             for (int i = 0; i < session.users.size(); i++) {
-                sum -= session.users.get(i).plus_minus;
+                if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                    allowUserCount++;
+                    sum -= session.users.get(i).plus_minus;
+                }
+
             }
-            managerCost = sum / (session.users.size() + 1);
+            Log.v("allow user count", String.valueOf(allowUserCount));
+            managerCost = sum / (allowUserCount + 1);
 
             // 幹事情報をまずセットする
             nameArray.add(session.manager.username);
@@ -149,11 +155,13 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             attributeArray.add("幹事");
             userIdArray.add(String.valueOf(session.manager.id));
             for (int i = 0; i < session.users.size(); i++) {
-                nameArray.add(session.users.get(i).username);
-                costArray.add(managerCost + session.users.get(i).plus_minus);
-                plusMinusArray.add(session.users.get(i).plus_minus);
-                attributeArray.add(session.users.get(i).attribute_name);
-                userIdArray.add(String.valueOf(session.users.get(i).id));
+                if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                    nameArray.add(session.users.get(i).username);
+                    costArray.add(managerCost + session.users.get(i).plus_minus);
+                    plusMinusArray.add(session.users.get(i).plus_minus);
+                    attributeArray.add(session.users.get(i).attribute_name);
+                    userIdArray.add(String.valueOf(session.users.get(i).id));
+                }
             }
 
         } else {
@@ -165,11 +173,13 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             userIdArray.add(String.valueOf(session.manager.id));
             // session情報から,usernameのリストを生成
             for (int i = 0; i < session.users.size(); i++) {
-                nameArray.add(session.users.get(i).username);
-                costArray.add(0);
-                plusMinusArray.add(session.users.get(i).plus_minus);
-                attributeArray.add(session.users.get(i).attribute_name);
-                userIdArray.add(String.valueOf(session.users.get(i).id));
+                if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                    nameArray.add(session.users.get(i).username);
+                    costArray.add(0);
+                    plusMinusArray.add(session.users.get(i).plus_minus);
+                    attributeArray.add(session.users.get(i).attribute_name);
+                    userIdArray.add(String.valueOf(session.users.get(i).id));
+                }
             }
         }
 
