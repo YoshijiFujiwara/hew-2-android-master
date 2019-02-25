@@ -4,27 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
-import com.hew.second.gathering.activities.EventProcessMainActivity;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.SessionAdapter;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +64,8 @@ public class WaitingPaymentFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceStat) {
         super.onActivityCreated(savedInstanceStat);
+
+
 
         mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout_waiting_payment);
         // 色設定
@@ -128,7 +125,7 @@ public class WaitingPaymentFragment extends BaseFragment {
                 }
             }
 
-            if (paidcheck != sl.users.size()) {
+            if (paidcheck != sl.users.size() && sl.start_time != null) {
                 sessionArrayList.add(sl);
             }
             paidcheck = 0;
