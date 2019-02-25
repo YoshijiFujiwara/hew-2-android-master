@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.LoginActivity;
-import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.gurunavi.GurunaviApiService;
 import com.hew.second.gathering.gurunavi.GurunaviHttp;
 import com.hew.second.gathering.gurunavi.Tel;
@@ -53,6 +52,7 @@ public class ReservationPhoneFragment extends SessionBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getActivity().setTitle("お店予約");
         TextView shopName = activity.findViewById(R.id.shop_name);
         shopName.setText(activity.shop.name);
         TextView time = activity.findViewById(R.id.time);
