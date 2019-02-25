@@ -120,12 +120,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
                 inputMethodMgr.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
-//        RadioGroup mRadioGroup = getActivity().findViewById(R.id.RadioGroup);
-//        mRadioGroup.setOnCheckedChangeListener(this);
-//
-//        // 選択されているRadioButonのIDを取得する
-//        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
-//        int checkedId = mRadioGroup.getCheckedRadioButtonId();
+        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
 
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
@@ -200,12 +195,7 @@ public class EditDefaultSettingFragment extends BaseFragment {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
         Spinner spinner = activity.findViewById(R.id.group_spinner);
-//        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
-//        mRadioGroup.setOnCheckedChangeListener((RadioGroup.OnCheckedChangeListener) this);
-
-        // 選択されているRadioButonのIDを取得する
-        // どれも選択されていなければgetCheckedRadioButtonIdは-1が返ってくる
-//        int checkedId = mRadioGroup.getCheckedRadioButtonId();
+        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
 
         defaultName.setText(gdi.name);
         startTime.setText(gdi.timer);
@@ -219,7 +209,13 @@ public class EditDefaultSettingFragment extends BaseFragment {
         if( sid != -1){
             spinner.setSelection(sid);
         }
-//        mRadioGroup.check(R.id.specific_location);
+
+        if (gdi.current_location_flag.equals("1")){
+            mRadioGroup.check(R.id.current_location);
+        }
+        else {
+            mRadioGroup.check(R.id.specific_location);
+        }
     }
 
     public void saveDefaultSettingName() {
@@ -228,14 +224,32 @@ public class EditDefaultSettingFragment extends BaseFragment {
         EditText defaultName = activity.findViewById(R.id.default_input);
         EditText startTime = activity.findViewById(R.id.start_time);
         Spinner spinner = activity.findViewById(R.id.group_spinner);
-//        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
+        RadioGroup mRadioGroup = activity.findViewById(R.id.RadioGroup);
+        int checkedId = mRadioGroup.getCheckedRadioButtonId();
+        String flag = "1";
+        String latitude = "";
+        String longitude = "";
+        switch (checkedId) {
+            case R.id.current_location:
+                flag = "1";
+                latitude = "";
+                longitude = "";
+                break;
+            case R.id.specific_location:
+                flag = "0";
+                latitude = "100.00000000";
+                longitude = "100.00000000";
+                break;
+        }
 
         HashMap<String, String> body = new HashMap<>();
 
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
         body.put("group_id", String.valueOf(groupList.get((int)spinner.getSelectedItemPosition()).id));
-//        body.put("", String.valueOf(mRadioGroup.getCheckedRadioButtonId()));
+        body.put("current_location_flag", flag);
+        body.put("latitude", latitude);
+        body.put("longitude", longitude);
 
         Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(LoginUser.getToken(), defaultSettingId, body);
         cd.add(token.subscribeOn(Schedulers.io())
