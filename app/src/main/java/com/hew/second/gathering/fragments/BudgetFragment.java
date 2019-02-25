@@ -41,7 +41,7 @@ public class BudgetFragment extends SessionBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        activity.setTitle("予算管理");
         FragmentActivity fragmentActivity = activity;
         if (fragmentActivity != null) {
             View view = inflater.inflate(R.layout.fragment_budget, container, false);
