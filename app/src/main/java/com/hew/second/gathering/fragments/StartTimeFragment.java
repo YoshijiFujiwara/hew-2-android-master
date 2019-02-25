@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.Session;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,7 +33,7 @@ public class StartTimeFragment extends SessionBaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_starttime, container, false);
-        getActivity().setTitle("開始日時・終了日時 設定");
+
         return view;
     }
 
@@ -40,7 +41,8 @@ public class StartTimeFragment extends SessionBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        .setTile()
+
+        activity.setTitle("イベント時刻設定");
 
         Calendar calendar = Calendar.getInstance();
 //      現在 年 月 日 時 分
@@ -57,7 +59,8 @@ public class StartTimeFragment extends SessionBaseFragment {
 
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日E曜日");
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH時mm分");
-//        開始　終了設定されないとき
+
+//        開始　終了設定されないとき(終了時間は初期値は一時間加算)
         startDateText.setText(sdfDate.format(calendar.getTime()));
         startTimeText.setText(sdfTime.format(calendar.getTime()));
         endDateText.setText(sdfDate.format(calendar.getTime()));
@@ -106,7 +109,7 @@ public class StartTimeFragment extends SessionBaseFragment {
 
         private TextView textView;
         private Calendar calendar = Calendar.getInstance();
-
+        java.text.DateFormat dfFull = java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL);
         public DateSetHandler(TextView textView) {
             this.textView = textView;
         }
@@ -122,8 +125,7 @@ public class StartTimeFragment extends SessionBaseFragment {
             calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 
 //          値格納予定
-
-            CharSequence text = DateFormat.format("yyyy/MM/dd,E",calendar);
+            CharSequence text = DateFormat.format("yyyy年MM月dd日E曜日",calendar);
             textView.setText(text);
 
         }
@@ -134,7 +136,7 @@ public class StartTimeFragment extends SessionBaseFragment {
             calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
             calendar.set(Calendar.MINUTE,minute);
 
-            CharSequence text = DateFormat.format("kk:mm",calendar);
+            CharSequence text = DateFormat.format("kk時mm分",calendar);
             textView.setText(text);
         }
     }
@@ -170,4 +172,14 @@ public class StartTimeFragment extends SessionBaseFragment {
         return cal;
     }
 
+    public void headerTextSet(Session data) {
+//        if (getActivity() != null) {
+//            TextView locationText = getActivity().findViewById(R.id.stf_location);
+//            TextView dateText = getActivity().findViewById(R.id.stf_date);
+//            TextView numberText = getActivity().findViewById(R.id.stf_number);
+//
+//
+//            locationText.setText(data.shop_id);
+//            dateText.setText();
+        }
 }
