@@ -144,28 +144,16 @@
 
     <Button
         android:id="@+id/reserve_button"
-        android:layout_width="179dp"
+        android:layout_width="344dp"
         android:layout_height="55dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="15dp"
+        android:background="@color/colorAccentDark"
         android:text="確定"
         android:textColor="@color/colorAccent"
-        android:background="@color/colorAccentDark"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="170dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginBottom="15dp"
-        android:text="キャンセル"
-        android:textColor="@color/colorAccent"
-        android:background="@color/colorAccentDark"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
