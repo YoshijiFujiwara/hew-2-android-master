@@ -57,7 +57,7 @@ public class StartTimeFragment extends SessionBaseFragment {
         TextView endDateText = getActivity().findViewById(R.id.end_date);
         TextView endTimeText = getActivity().findViewById(R.id.end_timer);
 
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日E曜日");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日（E）");
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH時mm分");
 
 //        開始　終了設定されないとき(終了時間は初期値は一時間加算)
@@ -125,7 +125,7 @@ public class StartTimeFragment extends SessionBaseFragment {
             calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 
 //          値格納予定
-            CharSequence text = DateFormat.format("yyyy年MM月dd日E曜日",calendar);
+            CharSequence text = DateFormat.format("yyyy年MM月dd日(E)",calendar);
             textView.setText(text);
 
         }

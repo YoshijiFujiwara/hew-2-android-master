@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -94,11 +92,27 @@ public interface ApiService {
     @GET("api/sessions")
     Observable<SessionList> getSessionList(@Header("Authorization") String authorization);
 
+    @GET("api/sessions/not_start")
+    Observable<SessionList> getSessionNotStartList(@Header("Authorization") String authorization);
+
+    @GET("api/sessions/on_going")
+    Observable<SessionList> getSessionOnGoingList(@Header("Authorization") String authorization);
+
+    @GET("api/sessions/not_payment_complete")
+    Observable<SessionList> getSessionNotPaymentComplete(@Header("Authorization") String authorization);
+
+    @GET("api/sessions/history")
+    Observable<SessionList> getSessionHistory(@Header("Authorization") String authorization);
+
+    @GET("api/sessions/complete")
+    Observable<SessionList> getSessionComplete(@Header("Authorization") String authorization);
+
     @POST("api/sessions")
     Observable<SessionDetail> createSession(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 
     @GET("api/sessions/{session}")
     Observable<SessionDetail> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
 
     @PUT("api/sessions/{session}")
     Observable<SessionDetail> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
