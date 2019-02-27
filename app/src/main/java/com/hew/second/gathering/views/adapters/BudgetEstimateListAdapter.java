@@ -64,6 +64,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         TextView nameTextField = (TextView) rowView.findViewById(R.id.budgetEstimateUsername);
         TextView costTextField = (TextView) rowView.findViewById(R.id.budgetEstimateListCost);
         EditText plusMinusEditText = (EditText) rowView.findViewById(R.id.budgetEstimateListPlusMinus);
+        TextView plusMinusEditTextLabel = (TextView) rowView.findViewById(R.id.budgetEstimateListPlusMinusLabel);
         TextView attributeTextField = (TextView) rowView.findViewById(R.id.budgetEstimateListAttribute);
         TextView userIdField = (TextView) rowView.findViewById(R.id.budgetEstimateListUserId);
 
@@ -104,6 +105,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
             plusMinusEditText.setAlpha(0);
             plusMinusEditText.setInputType(InputType.TYPE_NULL);
         } else {
+            plusMinusEditTextLabel.setText("±");
             plusMinusEditText.setText(plusMinusArray[position].toString());
         }
 

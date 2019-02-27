@@ -43,9 +43,7 @@ public class SessionAddMemberAdapter extends BaseAdapter {
         }
         holder.userName.setText(list.get(position).username);
         holder.uniqueName.setText(list.get(position).unique_id);
-        holder.deleteButton.setOnClickListener((view) -> {
-                ((GridView) parent).performItemClick(view, position, R.id.delete_group_member);
-        });
+        holder.deleteButton.setVisibility(View.GONE);
         return convertView;
     }
     @Override

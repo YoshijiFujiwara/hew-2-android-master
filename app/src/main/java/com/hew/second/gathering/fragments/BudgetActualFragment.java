@@ -6,6 +6,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
     EditText budget_actual_tv;
     ListView budget_actual_lv;
     Button budget_actual_update_btn;
+    CardView budget_estimate_card;
 
     public static BudgetActualFragment newInstance() {
         return new BudgetActualFragment();
@@ -174,7 +176,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
             managerCost = sum / (allowUserCount + 1);
 
             // 幹事情報をまずセットする
-            nameArray.add(activity.session.manager.username + "(幹事)");
+            nameArray.add(activity.session.manager.username);
             costArray.add(managerCost);
             paidArray.add(false);
             userIdArray.add(String.valueOf(activity.session.manager.id));
@@ -193,7 +195,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
         } else {
             // 幹事情報をまずセットする
-            nameArray.add(activity.session.manager.username + "(幹事)");
+            nameArray.add(activity.session.manager.username);
             costArray.add(0);
             userIdArray.add(String.valueOf(activity.session.manager.id));
             // session情報から,usernameのリストを生成
