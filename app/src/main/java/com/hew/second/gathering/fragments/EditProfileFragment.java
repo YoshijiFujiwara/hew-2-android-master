@@ -74,8 +74,6 @@ public class EditProfileFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        fetchList();
-
 //        Intent beforeIntent = activity.getIntent();
 //        defaultSettingId = beforeIntent.getIntExtra("DEFAULTSETTING_ID", -1);//設定したkeyで取り出す
 
@@ -120,6 +118,7 @@ public class EditProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        fetchList();
     }
 
     private void fetchList() {
