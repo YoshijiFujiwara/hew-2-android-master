@@ -72,11 +72,12 @@ public class BudgetActualFragment extends SessionBaseFragment {
             budget_actual_update_btn.setOnClickListener((v) -> {
                 updateBudgetActual(activity, view, activity.session, String.valueOf(budget_actual_tv.getText()));
                 // リストビューを空にする
+//                activity.session.actual = Integer.parseInt(String.valueOf(budget_actual_tv.getText()));
                 updateSessionInfo(activity.session);
-                budget_actual_lv.setAdapter(new BudgetActualListAdapter(activity, new String[0], new Integer[0], new Boolean[0], new String[0], activity.session.id));
-                activity.session.actual = Integer.parseInt(String.valueOf(budget_actual_tv.getText()));
+//                budget_actual_lv.setAdapter(new BudgetActualListAdapter(activity, new String[0], new Integer[0], new Boolean[0], new String[0], activity.session.id));
+
                 // 再計算（汚い）
-                updateListView(activity.session);
+//                updateListView(activity.session);
 
             });
             return view;
