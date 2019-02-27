@@ -202,7 +202,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
             for (int i = 0; i < costArray.size(); i++) {
                 $costArraySum += costArray.get(i);
             }
-            costArray.set(0, costArray.get(0) + (sum - $costArraySum));
+            costArray.set(0, costArray.get(0) + (session.actual - $costArraySum));
 
         } else {
             // 幹事情報をまずセットする

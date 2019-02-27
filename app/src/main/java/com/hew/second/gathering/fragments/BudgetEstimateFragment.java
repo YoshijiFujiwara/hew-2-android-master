@@ -165,11 +165,11 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             }
 
             // 差分を幹事に上乗せする処理
-            int $costArraySum = 0;
+            int costArraySum = 0;
             for (int i = 0; i < costArray.size(); i++) {
-                $costArraySum += costArray.get(i);
+                costArraySum += costArray.get(i);
             }
-            costArray.set(0, costArray.get(0) + (sum - $costArraySum));
+            costArray.set(0, costArray.get(0) + (session.budget - costArraySum));
 
         } else {
             // 幹事情報をまずセットする
