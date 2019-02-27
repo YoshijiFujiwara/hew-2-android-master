@@ -131,6 +131,12 @@ public interface ApiService {
     @PUT("api/sessions/{session}/users/{user}/switch_paid")
     Observable<SessionUserDetail> sessionUserSwitchPaid(@Header("Authorization") String authorization, @Path("session") int sessionId, @Path("user") int userId);
 
+    @POST("api/sessions/{session}/users")
+    Observable<SessionUser> createSessionUser(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
+
+    @POST("api/sessions/{session}/groups/{group}")
+    Observable<SessionUser> createSessionGroup(@Header("Authorization") String authorization, @Path("session") int sessionId, @Path("group") int groupId);
+
     /*
      * デフォルト設定系API
      */
@@ -196,6 +202,9 @@ public interface ApiService {
 
     @GET("api/sessions/{session}/users/can_add")
     Observable<FriendList> getAddableToSessionFriendList(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
+    @GET("api/sessions/{session}/groups/can_add")
+    Observable<GroupList> getAddableToSessionGroupList(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
 //    /*
 //     * ユーザープロフィール系API
