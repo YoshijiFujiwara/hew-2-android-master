@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.hew.second.gathering.LogUtil;
@@ -41,6 +42,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
     ListView budget_estimate_lv;
     Button budget_update_btn;
     String attributeName;
+    Spinner budget_estimate_spinner;
 
     public static BudgetEstimateFragment newInstance() {
         return new BudgetEstimateFragment();
@@ -58,18 +60,21 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         FragmentActivity fragmentActivity = activity;
         if (fragmentActivity != null) {
             view = inflater.inflate(R.layout.fragment_budget_estimate, container, false);
+            budget_estimate_spinner = view.findViewById(R.id.budget_estimate_spinner);
+            String unitRounding = budget_estimate_spinner.getSelectedItem().toString();
+            Log.v("unitRounding", unitRounding);
 
             // 予算額があれば、セットする
             budget_estimate_tv = (EditText) view.findViewById(R.id.budget_estimate_tv);
             if (activity.session.budget != 0) {
                 budget_estimate_tv.setText(Integer.toString(activity.session.budget), TextView.BufferType.EDITABLE);
             }
-            updateListView(activity.session);
+            updateListView(activity.session, Integer.parseInt(unitRounding));
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
                 updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()));
-                updateSessionInfo(activity.session);
+                updateSessionInfo(activity.session, Integer.parseInt(budget_estimate_spinner.getSelectedItem().toString()));
                 activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
 
             });
@@ -123,7 +128,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             ));
     }
 
-    private void updateListView(Session session) {
+    private void updateListView(Session session, int unitRounding) {
         // 予算額から、支払い予定額を計算する
         ArrayList<String> nameArray = new ArrayList<>();
         ArrayList<Integer> costArray = new ArrayList<>();
@@ -146,7 +151,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
             }
             Log.v("allow user count", String.valueOf(allowUserCount));
-            managerCost = sum / (allowUserCount + 1);
+            managerCost = ((sum / unitRounding) / (allowUserCount + 1)) * unitRounding;
 
             // 幹事情報をまずセットする
             nameArray.add(session.manager.username);
@@ -203,7 +208,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
     }
 
     // activity.session　の情報を更新する
-    public void updateSessionInfo(Session session) {
+    public void updateSessionInfo(Session session, int unitRounding) {
         ApiService service = Util.getService();
         Observable<SessionDetail> token = service.getSessionDetail(LoginUser.getToken(), session.id);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -213,7 +218,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                         list -> {
                             Log.v("sessioninfo", list.data.name);
                             if (activity != null) {
-                                updateListView(list.data);
+                                updateListView(list.data, unitRounding);
                             }
 
                         },  // 成功時

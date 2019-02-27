@@ -48,13 +48,13 @@
             android:id="@+id/budget_estimate_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="0dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="90dp"
             android:layout_marginBottom="20dp"
-            android:textAlignment="center"
             android:hint="予算額"
             android:inputType="number"
+            android:textAlignment="center"
             android:textSize="30dp" />
     </LinearLayout>
 
@@ -87,5 +87,26 @@
         android:text="予算更新"
         android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper" />
+
+    <Spinner
+        android:id="@+id/budget_estimate_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="48dp"
+        android:entries="@array/unit_rounding"
+        app:layout_constraintEnd_toStartOf="@+id/budget_update_btn"
+        app:layout_constraintStart_toEndOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="丸め単位(円)"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper" />
 </android.support.constraint.ConstraintLayout>
