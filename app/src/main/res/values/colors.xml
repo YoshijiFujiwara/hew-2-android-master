@@ -37,4 +37,6 @@
     <color name="text_like_counter">#2b5a83</color>
 
     <color name="bg_comments">#FFFFFF</color>
+
+    <color name="colorSelected">#70B98E70</color>
 </resources>

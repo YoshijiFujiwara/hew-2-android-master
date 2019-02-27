@@ -112,10 +112,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                 return true;
             }
         });
-    }
-    @Override
-    public void onResume(){
-        super.onResume();
+
         ApiService service = Util.getService();
         Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
         cd.add(profile.subscribeOn(Schedulers.io())
@@ -134,12 +131,11 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                         }
                 ));
 
+        // 遷移周り
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         if(bundle != null)
         {
             // セッション情報取得
@@ -159,7 +155,10 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
         }
         fragmentTransaction.commit();
-
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
         // セッション未作成の場合非表示
         BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
         if(session == null){
@@ -167,6 +166,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         } else {
             bnv.setVisibility(View.VISIBLE);
         }
+
     }
 
     @Override
