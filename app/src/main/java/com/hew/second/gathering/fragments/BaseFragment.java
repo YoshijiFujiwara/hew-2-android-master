@@ -1,6 +1,7 @@
 package com.hew.second.gathering.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.hew.second.gathering.R;
 
+import dmax.dialog.SpotsDialog;
 import icepick.Icepick;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -21,6 +23,7 @@ public abstract class BaseFragment extends Fragment {
     protected CompositeDisposable cd = new CompositeDisposable();
     protected Activity activity = null;
     protected View view = null;
+    protected AlertDialog dialog = null;
 
     @Override
     public void onAttach(Context context) {
@@ -33,6 +36,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDetach() {
         cd.clear();
+        if(dialog != null){
+            dialog.dismiss();
+        }
         activity = null;
         super.onDetach();
     }

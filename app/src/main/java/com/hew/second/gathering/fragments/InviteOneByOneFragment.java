@@ -1,5 +1,6 @@
 package com.hew.second.gathering.fragments;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,9 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 
@@ -24,18 +28,26 @@ import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
+import com.hew.second.gathering.api.GroupDetail;
+import com.hew.second.gathering.api.SessionUser;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.views.adapters.SessionAddMemberAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
+
+import static android.app.Activity.RESULT_OK;
+import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 
 public class InviteOneByOneFragment extends SessionBaseFragment {
 
@@ -44,9 +56,11 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
     private ArrayList<Friend> ar = new ArrayList<>();
     private GridView gridView = null;
 
+
     public static InviteOneByOneFragment newInstance() {
         return new InviteOneByOneFragment();
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +85,26 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         gridView = activity.findViewById(R.id.gridView_one);
+        gridView.setChoiceMode(gridView.CHOICE_MODE_MULTIPLE);
         gridView.setOnItemClickListener((parent, view, position, id) -> {
+            if (gridView.getCheckedItemPositions().get(position)) {
+                view.setBackgroundColor(getResources().getColor(R.color.colorSelected));
+            } else {
+                view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            }
+        });
 
+        Button inviteOne = activity.findViewById(R.id.button_invite_one);
+        inviteOne.setOnClickListener((l) -> {
+            new MaterialDialog.Builder(activity)
+                    .title("セッションへ追加")
+                    .content(gridView.getCheckedItemPositions().size() + "名をセッションに追加しますか？")
+                    .positiveText("OK")
+                    .onPositive((dialog, which) -> {
+                        createSessionUser();
+                    })
+                    .negativeText("キャンセル")
+                    .show();
         });
 
         SearchView searchView = activity.findViewById(R.id.searchView_invite_one);
@@ -134,7 +166,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<FriendList> friendList = service.getAddableToSessionFriendList(LoginUser.getToken(),activity.session.id);
+        Observable<FriendList> friendList = service.getAddableToSessionFriendList(LoginUser.getToken(), activity.session.id);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -167,12 +199,53 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
     private void updateList(List<Friend> data) {
         // ListView生成
         gridView = activity.findViewById(R.id.gridView_one);
-        if(gridView != null) {
+        if (gridView != null) {
             ArrayList<Friend> list = new ArrayList<>(data);
             ar = new ArrayList<>(data);
             adapter = new SessionAddMemberAdapter(list);
             // ListViewにadapterをセット
             gridView.setAdapter(adapter);
         }
+    }
+
+    private void createSessionUser(){
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
+        SparseBooleanArray sba = gridView.getCheckedItemPositions();
+        ApiService service = Util.getService();
+        ArrayList<Observable<SessionUser>> addList = new ArrayList<>();
+        for (int i = 0; i < sba.size(); i++) {
+            if(sba.get(i)){
+                HashMap<String, String> body = new HashMap<>();
+                body.put("user_id", String.valueOf(ar.get(i).id));
+                addList.add(service.createSessionUser(LoginUser.getToken(), activity.session.id, body));
+
+            }
+        }
+        cd.add(Observable
+                .concat(addList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        },
+                        ()->{
+                            if (activity != null) {
+                                dialog.dismiss();
+                                fetchList();
+                            }
+                        }
+                ));
     }
 }
