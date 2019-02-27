@@ -267,13 +267,10 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.commit();
             }
         } else if (id == R.id.nav_config) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, EditProfileFragment.newInstance());
-                fragmentTransaction.commit();
-            }
+            // アカウント設定画面
+            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_logout) {
             // ログイン情報初期化
             LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));

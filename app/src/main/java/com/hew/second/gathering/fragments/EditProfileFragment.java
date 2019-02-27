@@ -40,7 +40,8 @@ import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 public class EditProfileFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     int defaultSettingId = -1;
-//    private Switch unique_id_search_flag;
+    private Switch unique_id_search_flag;
+    private Switch username_id_search_flag;
 
     public static EditProfileFragment newInstance() {
         return new EditProfileFragment();
@@ -72,7 +73,8 @@ public class EditProfileFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.setTitle("アカウント設定");
+
+//        fetchList();
 
 //        Intent beforeIntent = activity.getIntent();
 //        defaultSettingId = beforeIntent.getIntExtra("DEFAULTSETTING_ID", -1);//設定したkeyで取り出す
