@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -64,6 +65,20 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             String unitRounding = budget_estimate_spinner.getSelectedItem().toString();
             Log.v("unitRounding", unitRounding);
 
+            // todo ハードコーディング中(activity.session.unit_rounding_budgetから取ってくる)
+            String unitRoundingEstimate = "1000";
+            if (unitRoundingEstimate.equals("1")) {
+                budget_estimate_spinner.setSelection(0);
+            } else if (unitRoundingEstimate.equals("10")) {
+                budget_estimate_spinner.setSelection(1);
+            } else if (unitRoundingEstimate.equals("100")) {
+                budget_estimate_spinner.setSelection(2);
+            } else if (unitRoundingEstimate.equals("1000")) {
+                budget_estimate_spinner.setSelection(3);
+            } else if (unitRoundingEstimate.equals("10000")) {
+                budget_estimate_spinner.setSelection(4);
+            }
+
             // 予算額があれば、セットする
             budget_estimate_tv = (EditText) view.findViewById(R.id.budget_estimate_tv);
             if (activity.session.budget != 0) {
@@ -77,6 +92,31 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 updateSessionInfo(activity.session, Integer.parseInt(budget_estimate_spinner.getSelectedItem().toString()));
                 activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
 
+            });
+
+            budget_estimate_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.v("updatedUnitRounding", String.valueOf(position));
+                    int updatedUnitRoundingEstimate = 1;
+                    if (position == 0) {
+                        updatedUnitRoundingEstimate = 1;
+                    } else if (position == 1) {
+                        updatedUnitRoundingEstimate = 10;
+                    } else if (position == 2) {
+                        updatedUnitRoundingEstimate = 100;
+                    } else if (position == 3) {
+                        updatedUnitRoundingEstimate = 1000;
+                    } else if (position == 4) {
+                        updatedUnitRoundingEstimate = 10000;
+                    }
+                    updateUnitRoundingEstimate(activity.session, updatedUnitRoundingEstimate);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
             });
 
             return view;
@@ -221,6 +261,31 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                                 updateListView(list.data, unitRounding);
                             }
 
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
+    }
+
+    private void updateUnitRoundingEstimate(Session session, int unitRounding) {
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("unit_rounding_budget", String.valueOf(unitRounding));
+        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Log.v("sessioninfo", list.data.name);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());

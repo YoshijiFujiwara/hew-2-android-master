@@ -61,6 +61,8 @@
     <string name="label_search_advanced">詳細設定</string>
 
     <string-array name="unit_rounding">
+        <item>1</item>
+        <item>10</item>
         <item>100</item>
         <item>1000</item>
         <item>10000</item>

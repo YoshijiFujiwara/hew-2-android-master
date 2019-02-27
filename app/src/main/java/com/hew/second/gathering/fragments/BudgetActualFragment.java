@@ -45,7 +45,6 @@ public class BudgetActualFragment extends SessionBaseFragment {
     EditText budget_actual_tv;
     ListView budget_actual_lv;
     Button budget_actual_update_btn;
-    CardView budget_estimate_card;
     Spinner budget_actual_spinner;
 
 
@@ -61,6 +60,20 @@ public class BudgetActualFragment extends SessionBaseFragment {
             view = inflater.inflate(R.layout.fragment_budget_actual, container, false);
             budget_actual_spinner = view.findViewById(R.id.budget_actual_spinner);
             String unitRounding = budget_actual_spinner.getSelectedItem().toString();
+
+            // todo ハードコーディング中(activity.session.unit_rounding_budgetから取ってくる)
+            String unitRoundingActual = "1000";
+            if (unitRoundingActual.equals("1")) {
+                budget_actual_spinner.setSelection(0);
+            } else if (unitRoundingActual.equals("10")) {
+                budget_actual_spinner.setSelection(1);
+            } else if (unitRoundingActual.equals("100")) {
+                budget_actual_spinner.setSelection(2);
+            } else if (unitRoundingActual.equals("1000")) {
+                budget_actual_spinner.setSelection(3);
+            } else if (unitRoundingActual.equals("10000")) {
+                budget_actual_spinner.setSelection(4);
+            }
 
             Log.v("sessoinActualNAME", activity.session.name);
 
@@ -85,6 +98,32 @@ public class BudgetActualFragment extends SessionBaseFragment {
 //                updateListView(activity.session);
 
             });
+
+            budget_actual_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.v("updatedUnitRounding", String.valueOf(position));
+                    int updatedUnitRoundingActual = 1;
+                    if (position == 0) {
+                        updatedUnitRoundingActual = 1;
+                    } else if (position == 1) {
+                        updatedUnitRoundingActual = 10;
+                    } else if (position == 2) {
+                        updatedUnitRoundingActual = 100;
+                    } else if (position == 3) {
+                        updatedUnitRoundingActual = 1000;
+                    } else if (position == 4) {
+                        updatedUnitRoundingActual = 10000;
+                    }
+                    updateUnitRoundingActual(activity.session, updatedUnitRoundingActual);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
             return view;
         }
         return null;
@@ -237,5 +276,30 @@ public class BudgetActualFragment extends SessionBaseFragment {
         BudgetActualListAdapter budgetActualListAdapter = new BudgetActualListAdapter(activity, nameParams, costParams, paidParams, userIdParams, session.id);
         budget_actual_lv = (ListView) view.findViewById(R.id.budget_actual_list);
         budget_actual_lv.setAdapter(budgetActualListAdapter);
+    }
+
+    private void updateUnitRoundingActual(Session session, int unitRounding) {
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("unit_rounding_actual", String.valueOf(unitRounding));
+        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Log.v("sessioninfo", list.data.name);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
     }
 }
