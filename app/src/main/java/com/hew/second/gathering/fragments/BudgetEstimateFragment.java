@@ -164,6 +164,13 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 }
             }
 
+            // 差分を幹事に上乗せする処理
+            int $costArraySum = 0;
+            for (int i = 0; i < costArray.size(); i++) {
+                $costArraySum += costArray.get(i);
+            }
+            costArray.set(0, costArray.get(0) + (sum - $costArraySum));
+
         } else {
             // 幹事情報をまずセットする
             nameArray.add(session.manager.username);
@@ -182,6 +189,8 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 }
             }
         }
+
+
 
         String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
         Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
