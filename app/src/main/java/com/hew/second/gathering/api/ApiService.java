@@ -113,7 +113,6 @@ public interface ApiService {
     @GET("api/sessions/{session}")
     Observable<SessionDetail> getSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
-
     @PUT("api/sessions/{session}")
     Observable<SessionDetail> updateSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
 
