@@ -106,7 +106,7 @@ public class InviteGroupFragment extends SessionBaseFragment {
 
     private void fetchList() {
         ApiService service = Util.getService();
-        Observable<GroupList> token = service.getGroupList(LoginUser.getToken());
+        Observable<GroupList> token = service.getAddableToSessionGroupList(LoginUser.getToken(),activity.session.id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

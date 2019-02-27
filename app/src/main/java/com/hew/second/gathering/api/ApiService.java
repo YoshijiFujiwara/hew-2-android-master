@@ -190,6 +190,9 @@ public interface ApiService {
     @GET("api/sessions/{session}/users/can_add")
     Observable<FriendList> getAddableToSessionFriendList(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
+    @GET("api/sessions/{session}/groups/can_add")
+    Observable<GroupList> getAddableToSessionGroupList(@Header("Authorization") String authorization, @Path("session") int sessionId);
+
 //    /*
 //     * ユーザープロフィール系API
 //     */
