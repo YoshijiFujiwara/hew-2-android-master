@@ -40,8 +40,6 @@ import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 public class EditProfileFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     int defaultSettingId = -1;
-    private Switch unique_id_search_flag;
-    private Switch username_id_search_flag;
 
     public static EditProfileFragment newInstance() {
         return new EditProfileFragment();
@@ -104,24 +102,6 @@ public class EditProfileFragment extends BaseFragment {
         Switch uniqueIdSearchFlag = activity.findViewById(R.id.unique_id_search_flag);
         Switch usernameSearchFlag = activity.findViewById(R.id.username_search_flag);
 
-        Button saveButton = activity.findViewById(R.id.save_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // データ保存Loadin
-               saveProfile();
-            }
-        });
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        fetchList();
-    }
-
-    private void fetchList() {
         ApiService service = Util.getService();
         Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
         cd.add(profile.subscribeOn(Schedulers.io())
@@ -139,6 +119,21 @@ public class EditProfileFragment extends BaseFragment {
                             }
                         }
                 ));
+
+        Button saveButton = activity.findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // データ保存Loadin
+               saveProfile();
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void profile(Profile data) {
@@ -157,6 +152,13 @@ public class EditProfileFragment extends BaseFragment {
         }
         else {
             uniqueIdSearchFlag.setChecked(false);
+        }
+
+        if (data.username_search_flag == 1) {
+            usernameSearchFlag.setChecked(true);
+        }
+        else {
+            usernameSearchFlag.setChecked(false);
         }
     }
 
@@ -189,16 +191,6 @@ public class EditProfileFragment extends BaseFragment {
 //
 //                }
 
-//        int checkedId = mRadioGroup.getCheckedRadioButtonId();
-//        String flag = "1";
-//        switch (checkedId) {
-//            case R.id.current_location:
-//                flag = "1";
-//                break;
-//            case R.id.specific_location:
-//                flag = "0";
-//                break;
-//        }
 
         HashMap<String, String> body = new HashMap<>();
 
