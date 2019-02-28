@@ -180,7 +180,7 @@ public class AddDefaultSettingFragment extends BaseFragment {
         body.put("name", defaultName.getText().toString());
         body.put("timer", startTime.getText().toString());
         body.put("group_id", String.valueOf(groupList.get((int)spinner.getSelectedItemPosition()).id));
-        body.put("current_location_flag", flag.toString());
+        body.put("current_location_flag", flag);
         body.put("latitude", latitude);
         body.put("longitude", longitude);
 

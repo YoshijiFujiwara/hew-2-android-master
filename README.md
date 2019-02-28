@@ -140,6 +140,28 @@ o34k30skm3h4b
 testuser50@example.com  
 o34k30skm3h4b  
 ```
+### 本番用データ
+id 1~6を、本番用データとして追加しました。(テスト太郎を始めとするテストデータは、依然として残しております。)  
+パスワードは全員「o34k30skm3h4b」  
+幹事役 １人（id: 1）
+```
+hamada-manager@example.com
+```
+ 上司役 ２人(id: 2, 5)
+ ```
+ kyosuke-yamamoto@example.com
+ taichi-sakamoto@example.com
+ ```
+ 同僚役 1人(id: 3)
+ ```
+ kazuya-harada@example.com
+ ```
+ 女性役 2人(id: 4, 6)
+ ```
+ momoko-wakamatsu@example.com
+ naoko-itho@example.com
+ ```
+  
 ### APIURL
 
 <https://laravel-dot-eventer-1543384121468.appspot.com/>

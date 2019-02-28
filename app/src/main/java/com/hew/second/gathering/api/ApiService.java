@@ -203,6 +203,6 @@ public interface ApiService {
 //     * ユーザープロフィール系API
 //     */
     @PUT("api/profile/update")
-    Observable<ProfileUserDetail> updateProfileUser(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+    Observable<ProfileDetail> updateProfileUser(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 
 }
