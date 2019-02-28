@@ -66,7 +66,8 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             Log.v("unitRounding", unitRounding);
 
             // todo ハードコーディング中(activity.session.unit_rounding_budgetから取ってくる)
-            String unitRoundingEstimate = "1000";
+            String unitRoundingEstimate = activity.session.unit_rounding_budget;
+            Log.v("unitRounding", unitRoundingEstimate);
             if (unitRoundingEstimate.equals("1")) {
                 budget_estimate_spinner.setSelection(0);
             } else if (unitRoundingEstimate.equals("10")) {

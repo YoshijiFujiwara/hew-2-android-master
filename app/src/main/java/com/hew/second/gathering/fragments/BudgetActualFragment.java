@@ -62,7 +62,8 @@ public class BudgetActualFragment extends SessionBaseFragment {
             String unitRounding = budget_actual_spinner.getSelectedItem().toString();
 
             // todo ハードコーディング中(activity.session.unit_rounding_budgetから取ってくる)
-            String unitRoundingActual = "1000";
+            String unitRoundingActual = activity.session.unit_rounding_actual;
+            Log.v("unit_rounding", activity.session.unit_rounding_actual);
             if (unitRoundingActual.equals("1")) {
                 budget_actual_spinner.setSelection(0);
             } else if (unitRoundingActual.equals("10")) {
