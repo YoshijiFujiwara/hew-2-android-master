@@ -110,7 +110,7 @@ public interface ApiService {
      * セッションユーザー系API
      */
     @GET("api/sessions/{session}/users")
-    Observable<FriendList> getSessionUserList(@Header("Authorization") String authorization, @Path("session") int sessionId);
+    Observable<SessionUserList> getSessionUserList(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
     @PUT("api/sessions/{session}/users/{user}")
     Observable<SessionUserDetail> updateSessionUser(@Header("Authorization") String authorization, @Path("session") int sessionId, @Path("user") int userId, @Body HashMap<String, String> body);
@@ -123,6 +123,10 @@ public interface ApiService {
 
     @POST("api/sessions/{session}/groups/{group}")
     Observable<SessionUser> createSessionGroup(@Header("Authorization") String authorization, @Path("session") int sessionId, @Path("group") int groupId);
+
+    @DELETE("api/sessions/{session}/users/{user}")
+    Completable deleteSessionUser(@Header("Authorization") String authorization, @Path("session") int sessionId, @Path("user") int userId);
+
 
     /*
      * デフォルト設定系API
@@ -197,6 +201,6 @@ public interface ApiService {
 //     * ユーザープロフィール系API
 //     */
     @PUT("api/profile/update")
-    Observable<ProfileUserDetail> updateProfileUser(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+    Observable<ProfileDetail> updateProfileUser(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
 
 }
