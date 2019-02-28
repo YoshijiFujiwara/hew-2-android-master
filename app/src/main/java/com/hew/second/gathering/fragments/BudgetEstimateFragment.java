@@ -156,7 +156,10 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                             Log.v("sessioninfo", list.data.name);
                             if (activity != null) {
                                 activity.session = list.data;
+                                dialog.dismiss();
+
                             }
+
 
                         },  // 成功時
                         throwable -> {
@@ -167,11 +170,9 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
-                            }
-                        },
-                        () -> {
-                            if (activity != null) {
-                                dialog.dismiss();
+                                if (activity != null) {
+                                    dialog.dismiss();
+                                }
                             }
                         }
                 ));

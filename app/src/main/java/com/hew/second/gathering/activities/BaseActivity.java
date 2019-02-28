@@ -1,5 +1,6 @@
 package com.hew.second.gathering.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final int INTENT_SHOP_DETAIL = 3;
     public static final int INTENT_GUEST_SESSION_DETAIL = 4;
     public static final int INTENT_FRIEND_DETAIL = 5;
+    protected AlertDialog dialog = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onStop(){
         cd.clear();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy(){
+        if(dialog != null){
+            dialog.dismiss();
+        }
+        super.onDestroy();
     }
 
 

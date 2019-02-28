@@ -229,6 +229,10 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
+                            if (activity != null) {
+                                dialog.dismiss();
+                                fetchList();
+                            }
 
                         },  // 成功時
                         throwable -> {
@@ -238,10 +242,6 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
-                            }
-                        },
-                        ()->{
-                            if (activity != null) {
                                 dialog.dismiss();
                                 fetchList();
                             }
