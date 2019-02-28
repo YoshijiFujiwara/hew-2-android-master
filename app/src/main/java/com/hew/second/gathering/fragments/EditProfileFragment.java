@@ -1,5 +1,6 @@
 package com.hew.second.gathering.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.api.DefaultSettingDetail;
@@ -170,35 +172,34 @@ public class EditProfileFragment extends BaseFragment {
         EditText mailAddress = activity.findViewById(R.id.mail_address);
         Switch uniqueIdSearchFlag = activity.findViewById(R.id.unique_id_search_flag);
         Switch usernameSearchFlag = activity.findViewById(R.id.username_search_flag);
-        String uniqueIdFlag = "1";
-        String usernameFlag = "1";
+        boolean uniqueIdFlag = true;
+        boolean usernameFlag = true;
 
-//        uniqueIdSearchFlag.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked == true) {
-//
-//                }
-//            }
-//        });
-//        switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked = true) {
-//                    // The toggle is enabled
-//
-//                } else {
-//                    // The toggle is disabled
-//
-//                }
-
+        uniqueIdSearchFlag.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    boolean uniqueIdFlag = false;
+                }
+            }
+        });
+        usernameSearchFlag.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    boolean usernameFlag = false;
+                }
+            }
+        });
 
         HashMap<String, String> body = new HashMap<>();
 
         body.put("unique_id", uniqueId.getText().toString());
         body.put("username", userName.getText().toString());
         body.put("email", mailAddress.getText().toString());
-//        body.put("unique_id_search_flag", );
-//        body.put("username_search_flag", );
+        body.put("unique_id_search_flag", String.valueOf(uniqueIdFlag));
+        body.put("username_search_flag", String .valueOf(usernameFlag));
+//        body.put("password",);
 
         Observable<ProfileDetail> token = service.updateProfileUser(LoginUser.getToken(), body);
         cd.add(token.subscribeOn(Schedulers.io())
