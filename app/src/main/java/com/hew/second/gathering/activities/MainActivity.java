@@ -27,6 +27,7 @@ import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
+import com.hew.second.gathering.fragments.EditProfileFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
 import com.hew.second.gathering.fragments.EventFragment;
@@ -265,6 +266,10 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
                 fragmentTransaction.commit();
             }
+        } else if (id == R.id.nav_config) {
+            // アカウント設定画面
+            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             // ログイン情報初期化
