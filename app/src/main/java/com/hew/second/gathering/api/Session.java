@@ -16,6 +16,8 @@ public class Session implements Serializable {
     public int manager_plus_minus; // このセッションの管理者の予算の増減費
     public int budget; // 予算
     public int actual; // 実際にかかった金額
+    public String unit_rounding_budget; // 丸め単位
+    public String unit_rounding_actual; // 丸め単位
     public String start_time; // 開始時刻
     public String end_time; // 終了時刻
     public User manager;
