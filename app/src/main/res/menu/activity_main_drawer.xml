@@ -24,6 +24,18 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
+                    android:id="@+id/nav_friend"
+                    android:icon="@drawable/ic_menu_manage"
+                    android:title="友達設定" />
+                <item
+                    android:id="@+id/nav_group"
+                    android:icon="@drawable/ic_menu_manage"
+                    android:title="グループ設定" />
+                <item
+                    android:id="@+id/nav_attribute"
+                    android:icon="@drawable/ic_menu_manage"
+                    android:title="属性設定" />
+                <item
                     android:id="@+id/nav_config"
                     android:icon="@drawable/ic_menu_manage"
                     android:title="アカウント設定" />
