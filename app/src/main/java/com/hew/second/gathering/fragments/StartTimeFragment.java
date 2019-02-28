@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,14 +25,23 @@ import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
+
+import static android.icu.text.DateFormat.DAY;
+import static android.icu.text.DateFormat.HOUR;
+import static android.icu.text.DateFormat.MINUTE;
+import static android.icu.text.DateFormat.MONTH;
+import static android.icu.text.DateFormat.YEAR;
 
 //　開始時刻設定
 public class StartTimeFragment extends SessionBaseFragment {
@@ -46,8 +54,8 @@ public class StartTimeFragment extends SessionBaseFragment {
     int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
     int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
     int minute = calendar.get(Calendar.MINUTE);
-    String sStartTime = null;
-    String sEndTime = null;
+    String sStartTime ;
+    String sEndTime;
 
     public static StartTimeFragment newInstance() {
 
@@ -78,33 +86,41 @@ public class StartTimeFragment extends SessionBaseFragment {
         TextView endDateText = getActivity().findViewById(R.id.end_date);
         TextView endTimeText = getActivity().findViewById(R.id.end_timer);
 
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日（E）");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日(E)");
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH時mm分");
-
-        if (activity.session.start_time != null) {
-            sStartTime = activity.session.start_time;
-
-
-//                Date dDate = new SimpleDateFormat("yyyy/MM/dd/,E").parse(sStartTime);
-//                Date dTime = new SimpleDateFormat("HH/mm/").parse(sStartTime);
-
-
-                startDateText.setText(sdfDate.format(startTimeText));
-//                startTimeText.setText(s);
-
-
-        } else if (activity.session.end_time != null) {
-            sEndTime = activity.session.end_time;
-
-
-        } else {
+        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.JAPAN);
 
 //          現在時刻と現在時刻に＋１された時間設定
-            startDateText.setText(sdfDate.format(calendar.getTime()));
-            startTimeText.setText(sdfTime.format(calendar.getTime()));
-            endDateText.setText(sdfDate.format(calendar.getTime()));
-            endTimeText.setText(sdfTime.format(addHour(1).getTime()));
+        String sStartTime = sdFormat.format(calendar.getTime());
+        String sEndTime = sdFormat.format(addHour(1).getTime());
 
+        startDateText.setText(sdfDate.format(calendar.getTime()));
+        startTimeText.setText(sdfTime.format(calendar.getTime()));
+        endDateText.setText(sdfDate.format(calendar.getTime()));
+        endTimeText.setText(sdfTime.format(addHour(1).getTime()));
+
+
+        if (activity.session.start_time != null) {
+//          Stringの日付をフォーマットしDateクラスに
+             sStartTime = activity.session.start_time;
+            try {
+               Date date = sdFormat.parse(activity.session.start_time);
+               startDateText.setText(sdfDate.format(date));
+               startTimeText.setText(sdfTime.format(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }else if (activity.session.end_time != null) {
+            sEndTime = activity.session.end_time;
+            try {
+                Date date = sdFormat.parse(activity.session.end_time);
+                endDateText.setText(sdfDate.format(date));
+                endTimeText.setText(sdfTime.format(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -126,7 +142,6 @@ public class StartTimeFragment extends SessionBaseFragment {
         startTimeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 startTime.show();
             }
         });
@@ -145,14 +160,63 @@ public class StartTimeFragment extends SessionBaseFragment {
             }
         });
 
+
+        Calendar startCalendar = Calendar.getInstance();
+        Calendar endCalender = Calendar.getInstance();
         Button reserveButton = getActivity().findViewById(R.id.reserve_button);
-        reserveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+        if (startDate.onSaveInstanceState() != null) {
+
+            int year = startDate.onSaveInstanceState().getInt(YEAR);
+            int month= startDate.onSaveInstanceState().getInt(MONTH);
+            int day = startDate.onSaveInstanceState().getInt(DAY);
+            startCalendar.set(year,month,day);
+
+        } else if (startTime.onSaveInstanceState() != null) {
+
+            int hour = startTime.onSaveInstanceState().getInt(HOUR);
+            int minute = startTime.onSaveInstanceState().getInt(MINUTE);
+            startCalendar.set(Calendar.HOUR_OF_DAY,hour);
+            startCalendar.set(Calendar.MINUTE,minute);
+
+        }
+        if (endDate.onSaveInstanceState() != null) {
+
+            int year = startDate.onSaveInstanceState().getInt(YEAR);
+            int month= startDate.onSaveInstanceState().getInt(MONTH);
+            int day = startDate.onSaveInstanceState().getInt(DAY);
+            endCalender.set(year,month,day);
+
+        } else if (endTime.onSaveInstanceState() != null) {
+
+            int hour = startTime.onSaveInstanceState().getInt(HOUR);
+            int minute = startTime.onSaveInstanceState().getInt(MINUTE);
+            endCalender.set(Calendar.HOUR_OF_DAY, hour);
+            endCalender.set(Calendar.MINUTE, minute);
+        }
+
+        String strStartTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",startCalendar);
+        String strEndTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",endCalender);
+//
+//        if (strStartTime == null ) {
+//            strStartTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",calendar.getTime());
+//        }
+//        if (strEndTime == null) {
+//            strEndTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",addHour(1).getTime());
+//        }
 
 
-            }
-        });
+        String finalStrStartTime = strStartTime;
+        String finalStrEndTime = strEndTime;
+//        reserveButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                updateDate(activity.session, finalStrStartTime, finalStrEndTime);
+//
+//
+//            }
+//        });
 
 
 
@@ -178,7 +242,7 @@ public class StartTimeFragment extends SessionBaseFragment {
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 
-            String text = (String) DateFormat.format("yyyy年MM月dd日(E)",calendar);
+            String text = (String) DateFormat.format("yyyy年MM月dd日",calendar);
             textView.setText(text);
 
         }
@@ -226,21 +290,11 @@ public class StartTimeFragment extends SessionBaseFragment {
         return cal;
     }
 
-    public void headerTextSet(Session data) {
-//        if (getActivity() != null) {
-//            TextView locationText = getActivity().findViewById(R.id.stf_location);
-//            TextView dateText = getActivity().findViewById(R.id.stf_date);
-//            TextView numberText = getActivity().findViewById(R.id.stf_number);
-//
-//
-//            locationText.setText(data.shop_id);
-//            dateText.setText();
-        }
-     public void updateDate(FragmentActivity fragmentActivity, Session session, String startTime, String endTime ) {
+     public void updateDate( Session session, String startTime, String endTime ) {
 
          ApiService service = Util.getService();
          HashMap<String, String> body = new HashMap<>();
-         body.put("start_time",startTime );
+         body.put("start_time",startTime);
          body.put("end_time",endTime);
          Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
          cd.add(token.subscribeOn(Schedulers.io())
@@ -249,8 +303,10 @@ public class StartTimeFragment extends SessionBaseFragment {
                  .subscribe(
                          list -> {
                              Log.v("sessionTime", list.data.start_time);
+                             Log.v("sessionTime", list.data.end_time);
                              if(activity != null){
                                  activity.session.start_time = list.data.start_time;
+                                 activity.session.end_time = list.data.end_time;
                              }
 
                          },  // 成功時
