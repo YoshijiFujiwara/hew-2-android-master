@@ -14,6 +14,8 @@ import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetFragmentPagerAdapter;
 import com.hew.second.gathering.R;
 
+import dmax.dialog.SpotsDialog;
+
 public class BudgetFragment extends SessionBaseFragment {
     protected static final String BUDGET_MESSAGE = "budget_message";
     protected static final String SESSION_DETAIL = "session_detail";
@@ -66,11 +68,7 @@ public class BudgetFragment extends SessionBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        // 多分ロータがくるくる回る
         FragmentActivity fragmentActivity = activity;
-        if (fragmentActivity != null) {
-            Util.setLoading(true, fragmentActivity);
-        }
         Log.v("message", "BudgetFragmentOnResume");
 
     }

@@ -29,12 +29,16 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.AddMemberActivity;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.activities.MainActivity;
+import com.hew.second.gathering.activities.MemberDetailActivity;
+import com.hew.second.gathering.activities.ShopDetailActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +49,9 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
+
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_FRIEND_DETAIL;
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_SHOP_DETAIL;
 
 public class FriendFragment extends BaseFragment {
     private static final String MESSAGE = "message";
@@ -103,6 +110,12 @@ public class FriendFragment extends BaseFragment {
                         })
                         .negativeText("キャンセル")
                         .show();
+            } else {
+                Intent intent = new Intent(activity.getApplication(), MemberDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("FRIEND_DETAIL", Parcels.wrap(ar.get(position)));
+                intent.putExtras(bundle);
+                startActivityForResult(intent, INTENT_FRIEND_DETAIL);
             }
         });
 

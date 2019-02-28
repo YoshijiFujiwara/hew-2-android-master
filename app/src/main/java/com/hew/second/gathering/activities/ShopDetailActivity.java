@@ -118,7 +118,6 @@ public class ShopDetailActivity extends BaseActivity {
                             intent.putExtras(bundle);
                             setResult(RESULT_OK, intent);
                             finish();
-
                         },
                         (throwable) -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
