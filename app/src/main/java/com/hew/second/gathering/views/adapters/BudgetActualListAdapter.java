@@ -91,7 +91,7 @@ public class BudgetActualListAdapter extends ArrayAdapter {
         if (position == 0) {
             paidImageView.setAlpha(0);
         }
-        if (paidArray[position] == true) {
+        if (paidArray.length > 0 && paidArray[position] == true) {
             ((Animatable) paidImageView.getDrawable()).start();
         }
 
@@ -110,7 +110,7 @@ public class BudgetActualListAdapter extends ArrayAdapter {
             .unsubscribeOn(Schedulers.io())
             .subscribe(
                 list -> {
-
+                    
                 },
                 throwable -> {
                     Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
