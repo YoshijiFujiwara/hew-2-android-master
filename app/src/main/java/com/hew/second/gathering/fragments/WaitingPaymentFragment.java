@@ -113,22 +113,15 @@ public class WaitingPaymentFragment extends BaseFragment {
 
     public void updateList(List<Session> data, ListView listView) {
 
-        int paidcheck = 0;
+
 
         ArrayList<Session> sessionArrayList = new ArrayList<>();
 
 //       支払ってない場合追加
         for (Session sl : data) {
-            for (int i = 0; i < sl.users.size(); i++) {
-                if (sl.users.get(i).paid == 1) {
-                    paidcheck++;
-                }
-            }
 
-            if (paidcheck != sl.users.size() && sl.start_time != null) {
-                sessionArrayList.add(sl);
-            }
-            paidcheck = 0;
+            sessionArrayList.add(sl);
+
         }
 
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);

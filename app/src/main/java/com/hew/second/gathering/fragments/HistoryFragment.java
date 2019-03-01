@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -98,22 +97,12 @@ public class HistoryFragment extends BaseFragment {
 
     public void updateList(List<Session> data) {
 
-        int paidcheck = 0;
+
         ListView listView = activity.findViewById(R.id.listView_history);
         ArrayList<Session> sessionArrayList = new ArrayList<>();
         for (Session sl : data) {
-//            開始時刻　終了時刻セットなおかつ
-            if (sl.start_time != null && sl.end_time != null ) {
-                for (int i = 0; i < sl.users.size(); i++) {
-                    if (sl.users.get(i).paid == 1 )   {
-                        paidcheck++;
-                    }
-                }
-                if (paidcheck == sl.users.size()) {
-                    sessionArrayList.add(sl);
-                }
-                paidcheck = 0;
-            }
+            sessionArrayList.add(sl);
+
         }
         SessionAdapter adapter = new SessionAdapter(sessionArrayList);
         if(listView != null)

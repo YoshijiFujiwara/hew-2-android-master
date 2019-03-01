@@ -91,6 +91,7 @@ public class StartTimeFragment extends SessionBaseFragment {
 
         activity.setTitle("イベント時間設定");
         TextView shopName = activity.findViewById(R.id.st_location);
+//        たまに取れてないときがある？
         shopName.setText(activity.shop.name);
         TextView time = activity.findViewById(R.id.st_date);
         if (activity.session.start_time == null) {
@@ -147,9 +148,10 @@ public class StartTimeFragment extends SessionBaseFragment {
             strEndTime = activity.session.end_time;
 
             try {
-                Date date = sdFormat.parse(activity.session.end_time);
 
+                Date date = sdFormat.parse(activity.session.end_time);
 //                終了時間のTextView表示
+//                時間がスタートより前だったらTextView赤字予定
                 endDateText.setText(sdfDate.format(date));
                 endTimeText.setText(sdfTime.format(date));
 //
@@ -208,22 +210,34 @@ public class StartTimeFragment extends SessionBaseFragment {
         });
 
         Button reserveButton = activity.findViewById(R.id.reserve_button);
+        final Calendar[] setStartCalender = new Calendar[1];
+        final Calendar[] setEndCalender = {Calendar.getInstance()};
 
         reserveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                一応チェック
                 if (startDate.onSaveInstanceState() != null && startTime.onSaveInstanceState() != null) {
-                    Calendar setStartCalender = setCalenderOfDate(startDate, startTime);
-                    strStartTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",setStartCalender);
+                    setStartCalender[0] = setCalenderOfDate(startDate, startTime);
+                    strStartTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", setStartCalender[0]);
                 }
 
                 if (endDate.onSaveInstanceState() != null && endTime.onSaveInstanceState() != null) {
-                    Calendar setEndCalender = setCalenderOfDate(endDate,endTime);
-                    strEndTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",setEndCalender);
+                    setEndCalender[0] = setCalenderOfDate(endDate,endTime);
+                    strEndTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", setEndCalender[0]);
                 }
+//              日付比較　０
+                int diff = setStartCalender[0].compareTo(setEndCalender[0]);
 
-                updateDate(activity.session, strStartTime, strEndTime);
+                if (diff == 0) {
+                    Log.d("calenderComparison","TheSame 同じ");
+                } else if (diff > 0) {
+                    Log.d("calenderComparison","開始時間のほうが終了時間より先に進んでいます");
+
+                } else {
+                    Log.d("calenderComparison","開始時間は終了時間より過去です");
+                    updateDate(activity.session, strStartTime, strEndTime);
+                }
 
             }
         });
