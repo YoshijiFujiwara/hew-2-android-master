@@ -2,37 +2,85 @@ package com.hew.second.gathering.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.hew.second.gathering.LogUtil;
+import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.SessionDetail;
+import com.hew.second.gathering.api.Util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 //　開始時刻設定
 public class StartTimeFragment extends SessionBaseFragment {
 
+    private static final String YEAR = "year";
+    private static final String MONTH = "month";
+    private static final String DAY = "day";
+    private static final String HOUR = "hour";
+    private static final String MINUTE = "minute";
+    private static final String IS_24_HOUR = "is24hour";
+
+    //      現在 年 月 日 時 分
+    Calendar calendar = Calendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    int monthOfYear = calendar.get(Calendar.MONTH);
+    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+    int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+    int minute = calendar.get(Calendar.MINUTE);
+    int second = calendar.get(Calendar.SECOND);
+    int endYear = calendar.get(Calendar.YEAR);
+    int endMonthOfYear = calendar.get(Calendar.MONTH);
+    int endDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+    int endHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+    int endMinute = calendar.get(Calendar.MINUTE);
+    int endSecond = calendar.get(Calendar.SECOND);
+
+    String strStartTime;
+    String strEndTime;
+
+
+
     public static StartTimeFragment newInstance() {
+
         Bundle args = new Bundle();
         StartTimeFragment fragment = new StartTimeFragment();
         fragment.setArguments(args);
         return fragment;
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_starttime, container, false);
-        getActivity().setTitle("開始日時・終了日時 設定");
+
         return view;
     }
 
@@ -40,68 +88,150 @@ public class StartTimeFragment extends SessionBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        .setTile()
 
-        Calendar calendar = Calendar.getInstance();
-//      現在 年 月 日 時 分
-        int year = calendar.get(Calendar.YEAR);
-        int monthOfYear = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
+        activity.setTitle("イベント時間設定");
+        TextView shopName = activity.findViewById(R.id.st_location);
+        shopName.setText(activity.shop.name);
+        TextView time = activity.findViewById(R.id.st_date);
+        if (activity.session.start_time == null) {
+            time.setText("未定");
+        } else {
+            time.setText(activity.session.start_time + "〜");
+        }
+        TextView number = activity.findViewById(R.id.st_number);
+        number.setText(activity.session.users.size() + 1 + "人");
 
-        TextView startDateText = getActivity().findViewById(R.id.start_date);
-        TextView startTimeText = getActivity().findViewById(R.id.start_timer);
-        TextView endDateText = getActivity().findViewById(R.id.end_date);
-        TextView endTimeText = getActivity().findViewById(R.id.end_timer);
 
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日E曜日");
+        TextView startDateText = activity.findViewById(R.id.start_date);
+        TextView startTimeText = activity.findViewById(R.id.start_timer);
+        TextView endDateText = activity.findViewById(R.id.end_date);
+        TextView endTimeText = activity.findViewById(R.id.end_timer);
+
+//      テキストに陰影をつける　が無反応
+        startDateText.setShadowLayer(2f,2,2,getResources().getColor(R.color.colorShadow));
+
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日(E)");
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH時mm分");
-//        開始　終了設定されないとき
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.JAPAN);
+
+//      TextViewの初期表示は開始時刻は現在時刻と現在時刻に一時間加算して表示
         startDateText.setText(sdfDate.format(calendar.getTime()));
         startTimeText.setText(sdfTime.format(calendar.getTime()));
         endDateText.setText(sdfDate.format(calendar.getTime()));
         endTimeText.setText(sdfTime.format(addHour(1).getTime()));
 
-        if (savedInstanceState == null) {
+//      開始時間が設定されていたら
+        if (activity.session.start_time != null) {
+//          Stringの日付をフォーマットしDateクラスに
+            strStartTime = activity.session.start_time;
+            try {
+               Date date = sdFormat.parse(activity.session.start_time);
+
+               calendar.setTime(date);
+                year = calendar.get(Calendar.YEAR);
+                monthOfYear = calendar.get(Calendar.MONTH);
+                dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
+
+//               開始時間のTextView表示
+               startDateText.setText(sdfDate.format(date));
+               startTimeText.setText(sdfTime.format(date));
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        //      終了時間が設定されていたら
+        if (activity.session.end_time != null) {
+            strEndTime = activity.session.end_time;
+
+            try {
+                Date date = sdFormat.parse(activity.session.end_time);
+
+//                終了時間のTextView表示
+                endDateText.setText(sdfDate.format(date));
+                endTimeText.setText(sdfTime.format(date));
+//
+                calendar.setTime(date);
+                endYear = calendar.get(Calendar.YEAR);
+                endMonthOfYear = calendar.get(Calendar.MONTH);
+                endDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                endHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+                endMinute = calendar.get(Calendar.MINUTE);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+//          設定なし（値がなかった）の場合
+            strStartTime = sdFormat.format(calendar.getTime());
+            strEndTime = sdFormat.format(addHour(1).getTime());
+            endHourOfDay = endHourOfDay + 1;
+        }
+
 //            第1 context 第2 日付が選択された時のコールバック 第3 年の値 第4 月の値 第5 日の値
-            DatePickerDialog startDate = new DatePickerDialog(getActivity(),new DateSetHandler(startDateText),year,monthOfYear,dayOfMonth);
-            TimePickerDialog startTime = new TimePickerDialog(getActivity(),new DateSetHandler(startTimeText),hourOfDay,minute,true);
-            DatePickerDialog endDate = new DatePickerDialog(getActivity(),new DateSetHandler(endDateText),year,monthOfYear,dayOfMonth);
-            TimePickerDialog endTime = new TimePickerDialog(getActivity(),new DateSetHandler(endTimeText),hourOfDay,minute,true);
+        DatePickerDialog startDate = new DatePickerDialog(activity, new DateSetHandler(startDateText), year, monthOfYear, dayOfMonth);
+        TimePickerDialog startTime = new TimePickerDialog(activity, new DateSetHandler(startTimeText), hourOfDay, minute, true);
+        DatePickerDialog endDate = new DatePickerDialog(activity, new DateSetHandler(endDateText), endYear, endMonthOfYear, endDayOfMonth);
+        TimePickerDialog endTime = new TimePickerDialog(activity, new DateSetHandler(endTimeText), endHourOfDay, endMinute, true);
 
 //              開始日付のTextViewがクリックされた時
-            startDateText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startDate.show();
-                }
-            });
-//               開始時間のTextViewがクリックされた時
-            startTimeText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        startDateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startDate.show();
 
-                    startTime.show();
-                }
-            });
+            }
+        });
+//               開始時間のTextViewがクリックされた時
+        startTimeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTime.show();
+            }
+        });
 //              終了日付のTextViewがクリックされた時
-            endDateText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    endDate.show();
-                }
-            });
+        endDateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endDate.show();
+            }
+        });
 //              終了時間のTextViewがクリックされた時
-            endTimeText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    endTime.show();
+        endTimeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endTime.show();
+            }
+        });
+
+        Button reserveButton = activity.findViewById(R.id.reserve_button);
+
+        reserveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                一応チェック
+                if (startDate.onSaveInstanceState() != null && startTime.onSaveInstanceState() != null) {
+                    Calendar setStartCalender = setCalenderOfDate(startDate, startTime);
+                    strStartTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",setStartCalender);
                 }
-            });
-        }
-    }
-//      日付・時刻選択された時TextViewに格納
+
+                if (endDate.onSaveInstanceState() != null && endTime.onSaveInstanceState() != null) {
+                    Calendar setEndCalender = setCalenderOfDate(endDate,endTime);
+                    strEndTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",setEndCalender);
+                }
+
+                updateDate(activity.session, strStartTime, strEndTime);
+
+            }
+        });
+
+
+
+}
+    //      日付・時刻選択された時TextViewに格納
     private class DateSetHandler implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
         private TextView textView;
@@ -121,9 +251,7 @@ public class StartTimeFragment extends SessionBaseFragment {
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 
-//          値格納予定
-
-            CharSequence text = DateFormat.format("yyyy/MM/dd,E",calendar);
+            String text = (String) DateFormat.format("yyyy年MM月dd日",calendar);
             textView.setText(text);
 
         }
@@ -134,10 +262,11 @@ public class StartTimeFragment extends SessionBaseFragment {
             calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
             calendar.set(Calendar.MINUTE,minute);
 
-            CharSequence text = DateFormat.format("kk:mm",calendar);
+            String  text = (String) DateFormat.format("kk時mm分",calendar);
             textView.setText(text);
         }
     }
+
 
 
     /**
@@ -170,4 +299,60 @@ public class StartTimeFragment extends SessionBaseFragment {
         return cal;
     }
 
+     public void updateDate( Session session, String startTime, String endTime ) {
+
+         ApiService service = Util.getService();
+         HashMap<String, String> body = new HashMap<>();
+         body.put("start_time",startTime);
+         body.put("end_time",endTime);
+         Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
+         cd.add(token.subscribeOn(Schedulers.io())
+                 .observeOn(AndroidSchedulers.mainThread())
+                 .unsubscribeOn(Schedulers.io())
+                 .subscribe(
+                         list -> {
+                             Log.v("sStartTime", list.data.start_time);
+                             Log.v("sessionTime", list.data.end_time);
+                             if(activity != null){
+                                 activity.session.start_time = list.data.start_time;
+                                 activity.session.end_time = list.data.end_time;
+                             }
+
+                         },  // 成功時
+                         throwable -> {
+                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                             if (activity != null && !cd.isDisposed()) {
+                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                     // ログインアクティビティへ遷移
+                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                     startActivity(intent);
+                                 }
+                             }
+                         }
+                 ));
+     }
+
+//   設定された日付と時間を取得してCalenderオブジェクトにセットしCalenderオブジェクトを返してます
+     public Calendar setCalenderOfDate(DatePickerDialog datePickerDialog,TimePickerDialog timePickerDialog) {
+
+         Calendar calendar = Calendar.getInstance();
+//         日付 dataPickerDialog
+         year = datePickerDialog.onSaveInstanceState().getInt(YEAR);
+         monthOfYear = datePickerDialog.onSaveInstanceState().getInt(MONTH);
+         dayOfMonth = datePickerDialog.onSaveInstanceState().getInt(DAY);
+//         時間 timePickerDialog
+         hourOfDay = timePickerDialog.onSaveInstanceState().getInt(HOUR);
+         minute = timePickerDialog.onSaveInstanceState().getInt(MINUTE);
+         second = timePickerDialog.onSaveInstanceState().getInt(IS_24_HOUR);
+
+         calendar.set(Calendar.YEAR, year);
+         calendar.set(Calendar.MONTH, monthOfYear);
+         calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+         calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+         calendar.set(Calendar.MINUTE,minute);
+         calendar.set(Calendar.SECOND,second);
+
+         return calendar;
+
+     }
 }
