@@ -65,6 +65,9 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
     public Session session = null;
     public Shop shop = null;
 
+    @State
+    public String fragment = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,26 +145,36 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         // 遷移周り
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (bundle != null) {
             // セッション情報取得
             this.session = Parcels.unwrap(getIntent().getParcelableExtra("SESSION_DETAIL"));
             this.shop = Parcels.unwrap(getIntent().getParcelableExtra("SHOP_DETAIL"));
-
             // 投げられた値で初期画面分岐
-            String fragment = bundle.getString("FRAGMENT");
+            fragment = bundle.getString("FRAGMENT");
+        }
+
+        if(savedInstanceState == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            bnv.setSelectedItemId(R.id.navi_boto_main);
             if (fragment == null) {
                 fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
             } else if (fragment.equals("SHOP")) {
                 fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
+            } else if (fragment.equals("TIME")) {
+                bnv.setSelectedItemId(R.id.navi_botto_time);
+                fragmentTransaction.replace(R.id.eip_container, StartTimeFragment.newInstance());
+            } else if (fragment.equals("RESERVE")) {
+                bnv.setSelectedItemId(R.id.navi_botto_reservation);
+                fragmentTransaction.replace(R.id.eip_container, ReservationPhoneFragment.newInstance());
+            } else if (fragment.equals("BUDGET")) {
+                bnv.setSelectedItemId(R.id.navi_botto_budget);
+                fragmentTransaction.replace(R.id.eip_container, BudgetFragment.newInstance());
             } else {
                 fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
             }
-        } else {
-            fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
+            fragmentTransaction.commit();
         }
-        fragmentTransaction.commit();
     }
 
     @Override
@@ -172,13 +185,11 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         if (session == null) {
             bnv.setVisibility(View.GONE);
         } else {
+            if (this.shop == null) {
+                fetchShop();
+            }
             bnv.setVisibility(View.VISIBLE);
         }
-
-        if (this.shop == null) {
-            fetchShop();
-        }
-
     }
 
     @Override

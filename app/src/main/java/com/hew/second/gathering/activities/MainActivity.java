@@ -87,25 +87,28 @@ public class MainActivity extends BaseActivity
                         }
                 ));
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if(savedInstanceState == null)
+        {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if (bundle != null) {
-            // 投げられた値で初期画面分岐
-            String fragment = bundle.getString("FRAGMENT");
-            if (fragment == null) {
-                fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
-            } else if (fragment.equals("SESSION")) {
-                fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
+            if (bundle != null) {
+                // 投げられた値で初期画面分岐
+                String fragment = bundle.getString("FRAGMENT");
+                if (fragment == null) {
+                    fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+                } else if (fragment.equals("SESSION")) {
+                    fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
+                } else {
+                    fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+                }
             } else {
                 fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
             }
-        } else {
-            fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
+            fragmentTransaction.commit();
         }
-        fragmentTransaction.commit();
     }
 
     //      試しにonResume

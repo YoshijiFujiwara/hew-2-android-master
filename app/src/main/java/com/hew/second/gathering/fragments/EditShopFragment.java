@@ -58,6 +58,8 @@ public class EditShopFragment extends SessionBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        activity.fragment = "SHOP";
+
         if(activity.session == null){
             BottomNavigationView bnv = activity.findViewById(R.id.eip_bottom_navigation);
             bnv.setVisibility(View.GONE);

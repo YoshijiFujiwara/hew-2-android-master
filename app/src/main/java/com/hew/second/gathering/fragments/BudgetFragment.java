@@ -63,6 +63,7 @@ public class BudgetFragment extends SessionBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        activity.fragment = "BUDGET";
     }
 
     @Override

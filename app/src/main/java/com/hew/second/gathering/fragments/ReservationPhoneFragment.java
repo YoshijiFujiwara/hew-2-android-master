@@ -53,20 +53,22 @@ public class ReservationPhoneFragment extends SessionBaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         getActivity().setTitle("お店予約");
-        TextView shopName = activity.findViewById(R.id.shop_name);
+        activity.fragment = "RESERVE";
+
+        TextView shopName = activity.findViewById(R.id.rps_location);
 
         if (activity.shop == null) {
             shopName.setText("未定");
         } else {
             shopName.setText(activity.shop.name);
         }
-        TextView time = activity.findViewById(R.id.time);
+        TextView time = activity.findViewById(R.id.rpf_date);
         if (activity.session.start_time == null) {
             time.setText("未定");
         } else {
             time.setText(activity.session.start_time + "〜");
         }
-        TextView number = activity.findViewById(R.id.number);
+        TextView number = activity.findViewById(R.id.rpf_number);
         number.setText(activity.session.users.size() + 1 + "人");
 
         Button button = activity.findViewById(R.id.reserve_button);

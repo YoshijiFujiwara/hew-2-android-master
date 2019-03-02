@@ -51,15 +51,23 @@ public class ShopDetailActivity extends BaseActivity {
         }
 
         TextView shopName = findViewById(R.id.textView_shopName);
+        shopName.setText(shop.name);
         TextView shopNameKana = findViewById(R.id.textView_shopName_kana);
+        shopNameKana.setText(shop.name_kana);
         TextView genre = findViewById(R.id.textView_genre);
+        genre.setText(shop.genre.name);
         TextView address = findViewById(R.id.textView_address);
+        address.setText(shop.address);
         TextView url = findViewById(R.id.textView_url);
         url.setText(shop.urls.pc);
         TextView budget = findViewById(R.id.textView_budget);
+        budget.setText(shop.budget.average);
         TextView access = findViewById(R.id.textView_access);
+        access.setText(shop.mobile_access);
         TextView open = findViewById(R.id.textView_open);
+        open.setText(shop.open);
         TextView close = findViewById(R.id.textView_close);
+        close.setText(shop.close);
 
         ImageView imageView = findViewById(R.id.imageView_shop);
         Picasso.get()

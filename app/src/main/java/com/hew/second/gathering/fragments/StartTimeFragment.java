@@ -90,6 +90,8 @@ public class StartTimeFragment extends SessionBaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         activity.setTitle("イベント時間設定");
+        activity.fragment = "TIME";
+
         TextView shopName = activity.findViewById(R.id.st_location);
         if (activity.shop == null) {
             shopName.setText("未定");
@@ -104,6 +106,14 @@ public class StartTimeFragment extends SessionBaseFragment {
         }
         TextView number = activity.findViewById(R.id.st_number);
         number.setText(activity.session.users.size() + 1 + "人");
+
+        Button button = activity.findViewById(R.id.reserve_button);
+        button.setEnabled(false);
+
+        if (activity.shop == null) {
+            button.setText("店が選択されていません");
+            return;
+        }
 
 
         TextView startDateText = activity.findViewById(R.id.start_date);
