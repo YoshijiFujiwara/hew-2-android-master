@@ -9,11 +9,11 @@
     <item
         android:id="@+id/navigation_member"
         android:icon="@drawable/ic_work"
-        android:title="メンバー設定" />
+        android:title="メンバー" />
     <item
         android:id="@+id/navigation_now"
         android:icon="@drawable/ic_now"
-        android:title="セッション" />
+        android:title="イベント" />
     <item
         android:id="@+id/navigation_group"
         android:icon="@drawable/ic_group"
@@ -21,6 +21,6 @@
     <item
         android:id="@+id/navigation_default"
         android:icon="@drawable/ic_default"
-        android:title="@string/title_default" />
+        android:title="デフォルト" />
 
 </menu>
