@@ -22,6 +22,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final int INTENT_SHOP_DETAIL = 3;
     public static final int INTENT_GUEST_SESSION_DETAIL = 4;
     public static final int INTENT_FRIEND_DETAIL = 5;
+    public static final int INTENT_ATTRIBUTE_DETAIL = 6;
     protected AlertDialog dialog = null;
 
     @Override

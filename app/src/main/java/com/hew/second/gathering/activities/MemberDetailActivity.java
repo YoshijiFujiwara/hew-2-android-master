@@ -62,9 +62,9 @@ public class MemberDetailActivity extends BaseActivity {
         TextView uniqueId = findViewById(R.id.unique_id);
         uniqueId.setText(friend.unique_id);
         TextView plusMinus = findViewById(R.id.plus_minus);
-        if(friend.attribute != null){
+        if (friend.attribute != null) {
             plusMinus.setText(friend.attribute.plus_minus == null ? "0" : friend.attribute.plus_minus.toString());
-        }else{
+        } else {
             plusMinus.setText("設定されていません。");
         }
 
@@ -108,8 +108,10 @@ public class MemberDetailActivity extends BaseActivity {
                             int pos = 0;
                             for (int i = 0; i < attrList.size(); i++) {
                                 data.add(attrList.get(i).name);
-                                if (friend.attribute.id == attrList.get(i).id) {
-                                    pos = i + 1;
+                                if (friend.attribute != null) {
+                                    if (friend.attribute.id.equals(attrList.get(i).id)) {
+                                        pos = i + 1;
+                                    }
                                 }
                             }
                             spinner = findViewById(R.id.attribute);

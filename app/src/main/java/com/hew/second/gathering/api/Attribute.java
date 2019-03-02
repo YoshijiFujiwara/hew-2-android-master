@@ -4,7 +4,7 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Attribute {
-    public int id;
+    public Integer id;
     public User manager;
     public String name;
     public Integer plus_minus;

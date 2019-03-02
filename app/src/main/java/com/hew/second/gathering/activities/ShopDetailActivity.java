@@ -24,6 +24,7 @@ import org.parceler.Parcels;
 
 import java.util.HashMap;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -100,6 +101,11 @@ public class ShopDetailActivity extends BaseActivity {
 
     private void createSession(Shop shop) {
 
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
+
+
+        // TODO:セッション名入力
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", "新規セッション");
@@ -111,6 +117,7 @@ public class ShopDetailActivity extends BaseActivity {
                 .subscribe(
                         (list) -> {
                             //遷移
+                            dialog.dismiss();
                             intent.putExtra(SNACK_MESSAGE, "セッションを作成しました。");
                             Bundle bundle = new Bundle();
                             bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
@@ -127,10 +134,14 @@ public class ShopDetailActivity extends BaseActivity {
                                     startActivity(intent);
                                 }
                             }
+                            dialog.dismiss();
                         }));
     }
 
     private void updateSession(Session session, Shop shop) {
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
+
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("shop_id", shop.id);
@@ -141,6 +152,7 @@ public class ShopDetailActivity extends BaseActivity {
                 .subscribe(
                         (list) -> {
                             //遷移
+                            dialog.dismiss();
                             intent.putExtra(SNACK_MESSAGE, "セッションを更新しました。");
                             Bundle bundle = new Bundle();
                             bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
@@ -158,6 +170,7 @@ public class ShopDetailActivity extends BaseActivity {
                                     startActivity(intent);
                                 }
                             }
+                            dialog.dismiss();
                         }));
 
     }

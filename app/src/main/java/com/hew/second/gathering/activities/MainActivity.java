@@ -237,7 +237,14 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.replace(R.id.container, AttributeFragment.newInstance());
                 fragmentTransaction.commit();
             }
-
+        } else if (id == R.id.nav_default) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
+                fragmentTransaction.commit();
+            }
         } else if (id == R.id.nav_logout) {
             // ログイン情報初期化
             LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
@@ -254,5 +261,39 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // fragmentからの呼びだしの場合
+        switch (requestCode & 0xffff) {
+            //店検索から戻ってきた場合
+            case (INTENT_ATTRIBUTE_DETAIL):
+                mHandler.post(() -> {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.container, AttributeFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
+
+                });
+                break;
+            case INTENT_EDIT_DEFAULT:
+                mHandler.post(() -> {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
+
+                });
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

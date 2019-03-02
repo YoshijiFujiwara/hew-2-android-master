@@ -19,6 +19,7 @@ import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.AddMemberActivity;
+import com.hew.second.gathering.activities.EditAttributeActivity;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.activities.MemberDetailActivity;
 import com.hew.second.gathering.api.ApiService;
@@ -42,6 +43,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_ATTRIBUTE_DETAIL;
 import static com.hew.second.gathering.activities.BaseActivity.INTENT_FRIEND_DETAIL;
 
 public class AttributeFragment extends BaseFragment {
@@ -81,11 +83,8 @@ public class AttributeFragment extends BaseFragment {
 
         FloatingActionButton fab = activity.findViewById(R.id.fab);
         fab.setOnClickListener((v) -> {
-            // TODO:属性追加画面へ
-            /*
-            Intent intent = new Intent(activity.getApplication(), AddMemberActivity.class);
-            startActivity(intent);
-            */
+            Intent intent = new Intent(activity.getApplication(), EditAttributeActivity.class);
+            startActivityForResult(intent, INTENT_ATTRIBUTE_DETAIL);
         });
         mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout);
         // 色設定
@@ -106,14 +105,11 @@ public class AttributeFragment extends BaseFragment {
                         .negativeText("キャンセル")
                         .show();
             } else {
-                // TODO:属性編集画面へ
-                /*
-                Intent intent = new Intent(activity.getApplication(), MemberDetailActivity.class);
+                Intent intent = new Intent(activity.getApplication(), EditAttributeActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("FRIEND_DETAIL", Parcels.wrap(ar.get(position)));
+                bundle.putParcelable("ATTRIBUTE_DETAIL", Parcels.wrap(ar.get(position)));
                 intent.putExtras(bundle);
-                startActivityForResult(intent, INTENT_FRIEND_DETAIL);
-                */
+                startActivityForResult(intent, INTENT_ATTRIBUTE_DETAIL);
             }
         });
     }

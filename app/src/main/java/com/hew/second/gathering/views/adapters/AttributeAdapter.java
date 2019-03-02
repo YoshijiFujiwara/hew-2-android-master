@@ -24,13 +24,16 @@ public class AttributeAdapter extends BaseAdapter {
         TextView plus_minus;
         TextView deleteButton;
     }
-    protected AttributeAdapter(){
+
+    protected AttributeAdapter() {
         list = null;
     }
-    public AttributeAdapter(Attribute[] names){
+
+    public AttributeAdapter(Attribute[] names) {
         list = Arrays.asList(names);
     }
-    public AttributeAdapter(ArrayList<Attribute> names){
+
+    public AttributeAdapter(ArrayList<Attribute> names) {
         list = new ArrayList<>(names);
     }
 
@@ -52,7 +55,7 @@ public class AttributeAdapter extends BaseAdapter {
         }
 
         holder.userName.setText(list.get(position).name);
-        holder.plus_minus.setText(list.get(position).plus_minus == null? "¥0" : "¥" + list.get(position).plus_minus.toString());
+        holder.plus_minus.setText(list.get(position).plus_minus == null ? "¥0" : "¥" + list.get(position).plus_minus.toString());
         holder.deleteButton.setOnClickListener((view) -> {
             ((ListView) parent).performItemClick(view, position, R.id.attribute_delete);
         });
@@ -70,14 +73,18 @@ public class AttributeAdapter extends BaseAdapter {
         return position;
     }
 
-    public List<Attribute> getList() { return list; }
+    public List<Attribute> getList() {
+        return list;
+    }
 
-    public void clear(){
+    public void clear() {
         list.clear();
     }
-    public void addAll(List<Attribute> attributes){
+
+    public void addAll(List<Attribute> attributes) {
         list.addAll(attributes);
     }
+
     @Override
     public long getItemId(int position) {
         return position;
