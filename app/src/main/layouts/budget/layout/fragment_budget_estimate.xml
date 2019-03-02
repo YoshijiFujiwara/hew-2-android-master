@@ -24,12 +24,14 @@
         android:id="@+id/budget_estimate_upper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/colorAccent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/payment_in_style"
         android:elevation="5dp"
         android:gravity="center_vertical"
+        app:layout_constraintBottom_toTopOf="@+id/budget_update_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -61,15 +63,18 @@
     <LinearLayout
         android:id="@+id/budget_estimate_card"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
         android:layout_below="@+id/budget_estimate_upper"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="#00000000"
         android:elevation="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper">
 
         <ListView
             android:id="@+id/budget_estimate_list"
@@ -80,13 +85,18 @@
     <Button
         android:id="@+id/budget_update_btn"
         android:layout_width="wrap_content"
-        android:layout_height="39dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@color/design_default_color_primary"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_style"
         android:text="予算更新"
         android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/budget_estimate_card"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/budget_estimate_spinner"
         app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper" />
 
     <Spinner
@@ -94,8 +104,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
         android:entries="@array/unit_rounding"
+        app:layout_constraintBottom_toTopOf="@+id/budget_estimate_card"
         app:layout_constraintEnd_toStartOf="@+id/budget_update_btn"
         app:layout_constraintStart_toEndOf="@+id/textView15"
         app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper" />
@@ -106,7 +118,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:text="丸め単位(円)"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/budget_estimate_spinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/budget_estimate_upper" />
 </android.support.constraint.ConstraintLayout>
