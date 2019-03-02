@@ -16,7 +16,9 @@
                 android:color="@color/colorWhite"/>
             <solid
                 android:color="@color/colorBrown"/>
-
+            <corners
+                android:radius="8dp">
+            </corners>
         </shape>
     </item>
 </layer-list>

@@ -45,6 +45,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
+        android:background="@drawable/text_style"
         app:layout_constraintBottom_toTopOf="@+id/spinner_genre"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -58,6 +59,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/text_style"
+        app:layout_constraintBottom_toTopOf="@+id/sliding_layout_search"
         app:layout_constraintEnd_toEndOf="@+id/searchView_keyword"
         app:layout_constraintStart_toStartOf="@+id/searchView_keyword"
         app:layout_constraintTop_toBottomOf="@+id/searchView_keyword" />
@@ -68,6 +72,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
+        android:background="@drawable/text_style"
         android:gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -165,11 +170,11 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:background="@color/bg_comments"
                 android:gravity="center|top"
                 android:lineSpacingExtra="24sp"
                 android:text="@string/label_search_advanced"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/switch_nomi"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -218,6 +223,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/text_style"
             tools:layout_editor_absoluteY="400dp">
 
             <TextView
