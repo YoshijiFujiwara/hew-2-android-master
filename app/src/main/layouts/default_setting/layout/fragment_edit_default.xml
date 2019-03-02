@@ -70,7 +70,7 @@
 
         <RadioButton
             android:id="@+id/current_location"
-            android:layout_width="165dp"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_button"
             android:button="@null"
@@ -83,7 +83,7 @@
 
         <RadioButton
             android:id="@+id/specific_location"
-            android:layout_width="165dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_button"
             android:button="@null"

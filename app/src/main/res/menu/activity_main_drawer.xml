@@ -11,12 +11,12 @@
         <item
             android:id="@+id/nav_session"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="セッション" />
+            android:title="イベント" />
 
         <item
             android:id="@+id/nav_guest"
             android:icon="@drawable/ic_menu_share"
-            android:title="ゲストセッション" />
+            android:title="ゲストイベント" />
     </group>
 
 
@@ -48,7 +48,7 @@
     </item>
     <item
         android:id="@+id/nav_logout"
-        android:icon="@drawable/ic_tag_faces"
+        android:icon="@drawable/ic_logout"
         android:title="ログアウト" />
 
 </menu>

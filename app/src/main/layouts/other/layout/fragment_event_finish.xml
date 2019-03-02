@@ -17,15 +17,18 @@
 
     <ImageView
         android:id="@+id/going_event"
-        android:layout_width="381dp"
+        android:layout_width="0dp"
         android:layout_height="240dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:minHeight="400dp"
         android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toTopOf="@+id/event_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,15 +55,17 @@
 
     <RelativeLayout
         android:id="@+id/event_card"
-        android:layout_width="389dp"
-        android:layout_height="218dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_below="@id/going_event"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="7dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="5dp"
         android:background="@color/colorWhite"
         android:elevation="5dp"
         android:paddingLeft="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,20 +73,22 @@
 
         <TextView
             android:id="@+id/session_site"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_above="@+id/session_time"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="18dp"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="18dp"
+            android:layout_marginBottom="8dp"
             android:minHeight="30dp"
             android:textColor="@color/colorBlack" />
 
         <TextView
             android:id="@+id/session_time"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_above="@+id/session_people"
             android:layout_alignParentStart="true"
@@ -94,7 +101,7 @@
 
         <TextView
             android:id="@+id/session_people"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
@@ -130,17 +137,19 @@
         <Button
             android:id="@+id/session_finish_btn"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginLeft="8dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="24dp"
             android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/session_finish_btn"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_style"
+            android:elevation="10dp"
             android:padding="5dp"
-            android:text="セッションを終了"
+            android:text="イベントを終了"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
 <!--</RelativeLayout>-->
 </android.support.constraint.ConstraintLayout>

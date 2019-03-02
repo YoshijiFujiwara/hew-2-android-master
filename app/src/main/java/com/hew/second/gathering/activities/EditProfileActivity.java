@@ -1,5 +1,6 @@
 package com.hew.second.gathering.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -7,7 +8,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.hew.second.gathering.LogUtil;
+import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.EditDefaultSettingFragment;
 import com.hew.second.gathering.fragments.EditProfileFragment;
 

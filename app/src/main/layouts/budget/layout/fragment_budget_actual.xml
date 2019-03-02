@@ -23,14 +23,15 @@
         android:id="@+id/budget_actual_upper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/colorAccent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/payment_style"
         android:elevation="5dp"
         android:gravity="center_vertical"
+        app:layout_constraintBottom_toTopOf="@+id/budget_actual_update_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -52,23 +53,26 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="90dp"
             android:layout_marginBottom="20dp"
-            android:textAlignment="center"
             android:hint="総額"
             android:inputType="number"
+            android:textAlignment="center"
             android:textSize="30dp" />
+
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
+        android:layout_below="@+id/budget_actual_upper"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:elevation="3dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#00000000"
+        android:elevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/budget_actual_upper">
 
@@ -82,13 +86,19 @@
     <Button
         android:id="@+id/budget_actual_update_btn"
         android:layout_width="wrap_content"
-        android:layout_height="39dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@color/design_default_color_primary"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_style"
+        android:elevation="5dp"
         android:text="実費を更新"
         android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/budget_actual_spinner"
         app:layout_constraintTop_toBottomOf="@+id/budget_actual_upper" />
 
     <Spinner
@@ -96,8 +106,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
         android:entries="@array/unit_rounding"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toStartOf="@+id/budget_update_btn"
         app:layout_constraintStart_toEndOf="@+id/textView15"
         app:layout_constraintTop_toBottomOf="@+id/budget_actual_upper" />
@@ -108,7 +120,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:text="丸め単位(円)"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/budget_actual_spinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/budget_actual_upper" />
 </android.support.constraint.ConstraintLayout>
