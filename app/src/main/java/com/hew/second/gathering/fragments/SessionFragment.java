@@ -28,7 +28,7 @@ public class SessionFragment extends BaseFragment {
 
         view =  inflater.inflate(R.layout.fragment_session_main, container, false);
 
-        getActivity().setTitle("セッション一覧");
+        getActivity().setTitle("イベント");
 
         tabLayout = view.findViewById(R.id.session_tablayout_id);
         viewPager = view.findViewById(R.id.session_viewpager_id);
