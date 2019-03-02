@@ -32,6 +32,7 @@ import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -67,7 +68,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
             // todo ハードコーディング中(activity.session.unit_rounding_budgetから取ってくる)
             String unitRoundingEstimate = activity.session.unit_rounding_budget;
-            Log.v("unitRounding", unitRoundingEstimate);
+            //Log.v("unitRounding", unitRoundingEstimate);
             if (unitRoundingEstimate.equals("1")) {
                 budget_estimate_spinner.setSelection(0);
             } else if (unitRoundingEstimate.equals("10")) {
@@ -141,32 +142,40 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
     }
 
     private void updateBudget(FragmentActivity fragmentActivity, Session session, String budgetText) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("budget", budgetText);
         Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .unsubscribeOn(Schedulers.io())
-            .subscribe(
-                list -> {
-                    Log.v("sessioninfo", list.data.name);
-                    if(activity != null){
-                        activity.session = list.data;
-                    }
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Log.v("sessioninfo", list.data.name);
+                            if (activity != null) {
+                                activity.session = list.data;
+                                dialog.dismiss();
 
-                },  // 成功時
-                throwable -> {
-                    Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                    if (activity != null && !cd.isDisposed()) {
-                        if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                            // ログインアクティビティへ遷移
-                            Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                            startActivity(intent);
+                            }
+
+
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                                if (activity != null) {
+                                    dialog.dismiss();
+                                }
+                            }
                         }
-                    }
-                }
-            ));
+                ));
     }
 
     private void updateListView(Session session, int unitRounding) {
@@ -235,7 +244,6 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 }
             }
         }
-
 
 
         String[] nameParams = nameArray.toArray(new String[nameArray.size()]);

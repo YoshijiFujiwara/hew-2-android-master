@@ -62,6 +62,8 @@ public interface ApiService {
     @PUT("api/friends/{friend}/cancel_invitation")
     Completable cancelFriendInvitation(@Header("Authorization") String authorization, @Path("friend") int userId);
 
+    @PUT("api/friends/{friend}/attribute")
+    Observable<FriendDetail> updateFriendAttribute(@Header("Authorization") String authorization, @Path("friend") int userId, @Body HashMap<String, String> body);
     /*
      * グループ系API
      */

@@ -156,6 +156,8 @@ public class InvitedListFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
+                                dialog.dismiss();
+                                fetchList();
                             }
                         }
                 ));

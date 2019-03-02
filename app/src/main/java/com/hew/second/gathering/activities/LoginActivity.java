@@ -22,6 +22,7 @@ import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -121,6 +122,9 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
+
         ApiService service = Util.getService();
         Observable<JWT> token = service.getToken(email, password);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -128,10 +132,12 @@ public class LoginActivity extends BaseActivity {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
+                            dialog.dismiss();
                             finishLogin(list);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
                             // ログイン情報初期化
                             LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
                             final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "ログイン情報が異なります。再度お試しください。", Snackbar.LENGTH_SHORT);

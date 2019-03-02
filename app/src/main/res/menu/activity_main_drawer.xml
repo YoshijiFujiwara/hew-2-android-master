@@ -24,6 +24,22 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
+                    android:id="@+id/nav_friend"
+                    android:icon="@drawable/ic_people"
+                    android:title="友達設定" />
+                <item
+                    android:id="@+id/nav_group"
+                    android:icon="@drawable/ic_group"
+                    android:title="グループ設定" />
+                <item
+                    android:id="@+id/nav_attribute"
+                    android:icon="@drawable/ic_work"
+                    android:title="属性設定" />
+                <item
+                    android:id="@+id/nav_default"
+                    android:icon="@drawable/ic_default"
+                    android:title="デフォルト設定" />
+                <item
                     android:id="@+id/nav_config"
                     android:icon="@drawable/ic_menu_manage"
                     android:title="アカウント設定" />
@@ -32,7 +48,7 @@
     </item>
     <item
         android:id="@+id/nav_logout"
-        android:icon="@drawable/ic_menu_manage"
+        android:icon="@drawable/ic_tag_faces"
         android:title="ログアウト" />
 
 </menu>
