@@ -199,7 +199,9 @@ public class EditProfileFragment extends BaseFragment {
         body.put("email", mailAddress.getText().toString());
         body.put("unique_id_search_flag", String.valueOf(uniqueIdFlag));
         body.put("username_search_flag", String .valueOf(usernameFlag));
-//        body.put("password",);
+        String password = (LoginUser.getPassword(activity.getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+        body.put("password", password);
+
 
         Observable<ProfileDetail> token = service.updateProfileUser(LoginUser.getToken(), body);
         cd.add(token.subscribeOn(Schedulers.io())
