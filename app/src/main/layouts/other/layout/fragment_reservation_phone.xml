@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/shop_name"
+            android:id="@+id/rps_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView"
@@ -64,7 +64,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/rpf_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/imageView2"
@@ -88,12 +88,12 @@
             android:layout_alignBottom="@+id/imageView2"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_people"
-            app:layout_constraintBottom_toBottomOf="@+id/time"
-            app:layout_constraintStart_toEndOf="@+id/time"
-            app:layout_constraintTop_toTopOf="@+id/time" />
+            app:layout_constraintBottom_toBottomOf="@+id/rpf_date"
+            app:layout_constraintStart_toEndOf="@+id/rpf_date"
+            app:layout_constraintTop_toTopOf="@+id/rpf_date" />
 
         <TextView
-            android:id="@+id/number"
+            android:id="@+id/rpf_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView6"

@@ -26,6 +26,7 @@ import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.fragments.AttributeFragment;
 import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EditProfileFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
@@ -86,73 +87,12 @@ public class MainActivity extends BaseActivity
                         }
                 ));
 
-        // ボトムバー遷移
-        BottomNavigationView bnv = findViewById(R.id.navigation);
-        bnv.setOnNavigationItemSelectedListener(menuItem -> {
-            int id = menuItem.getItemId();
-
-            if (id == R.id.navigation_home) {
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (fragmentManager != null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
-                    fragmentTransaction.commit();
-                }
-
-            } else if (id == R.id.navigation_member) {
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (fragmentManager != null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
-                    fragmentTransaction.commit();
-                }
-
-            } else if (id == R.id.navigation_now) {
-                // TODO:セッション画面に遷移
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (fragmentManager != null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
-                    fragmentTransaction.commit();
-                }
-
-            } else if (id == R.id.navigation_group) {
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (fragmentManager != null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
-                    fragmentTransaction.commit();
-                }
-
-            } else if (id == R.id.navigation_default) {
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (fragmentManager != null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
-                    fragmentTransaction.commit();
-                }
-            }
-
-            return true;
-        });
-
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if(bundle != null)
-        {
+        if (bundle != null) {
             // 投げられた値で初期画面分岐
             String fragment = bundle.getString("FRAGMENT");
             if (fragment == null) {
@@ -271,6 +211,40 @@ public class MainActivity extends BaseActivity
             Intent intent = new Intent(getApplication(), EditProfileActivity.class);
             startActivity(intent);
 
+        } else if (id == R.id.nav_group) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
+                fragmentTransaction.commit();
+            }
+
+        } else if (id == R.id.nav_friend) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
+                fragmentTransaction.commit();
+            }
+
+        } else if (id == R.id.nav_attribute) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.container, AttributeFragment.newInstance());
+                fragmentTransaction.commit();
+            }
+        } else if (id == R.id.nav_default) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
+                fragmentTransaction.commit();
+            }
         } else if (id == R.id.nav_logout) {
             // ログイン情報初期化
             LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
@@ -287,5 +261,39 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // fragmentからの呼びだしの場合
+        switch (requestCode & 0xffff) {
+            //店検索から戻ってきた場合
+            case (INTENT_ATTRIBUTE_DETAIL):
+                mHandler.post(() -> {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.container, AttributeFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
+
+                });
+                break;
+            case INTENT_EDIT_DEFAULT:
+                mHandler.post(() -> {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
+
+                });
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

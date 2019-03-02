@@ -31,46 +31,6 @@ public class Util {
     private static ApiService service = null;
     private static OkHttpClient.Builder httpClient = null;
 
-    public static boolean isLoading() {
-        return loading;
-    }
-
-    public static void setLoading(boolean loading, Activity activity, int color) {
-        /*
-        try{
-            View loadingView = activity.findViewById(R.id.loading_view);
-            ProgressBar loadingProgressBar = activity.findViewById(R.id.loading_progressBar);
-            loadingView.setBackgroundColor(color);
-            if(loading){
-                loadingView.setVisibility(View.VISIBLE);
-                loadingProgressBar.setVisibility(View.VISIBLE);
-            }else{
-                loadingView.setVisibility(View.GONE);
-                loadingProgressBar.setVisibility(View.GONE);
-            }
-            Util.loading = loading;
-        }catch (Exception e){
-            Log.d("loading","不正な呼び出しです。");
-        }
-        */
-        try {
-            ProgressBar loadingProgressBar = activity.findViewById(R.id.loading_progressBar);
-            if (loading) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-            } else {
-                loadingProgressBar.setVisibility(View.GONE);
-            }
-        }catch (Exception e){
-            Log.d("loading","呼び出しに失敗しました。");
-        }
-    }
-
-    public static void setLoading(boolean loading, Activity activity) {
-        setLoading(loading, activity , Color.argb(100,100,100,100));
-    }
-
-    private static boolean loading = false;
-
     protected static OkHttpClient.Builder getHttpClientWithHeader() {
         if (httpClient == null) {
             httpClient = new OkHttpClient.Builder().authenticator(new TokenRefreshAuthenticator());

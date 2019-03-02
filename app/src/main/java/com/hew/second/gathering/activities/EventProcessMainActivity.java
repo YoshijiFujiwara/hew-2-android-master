@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -21,36 +20,23 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.DeviceTokenDetail;
 import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.BudgetFragment;
-import com.hew.second.gathering.fragments.DefaultSettingFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
-import com.hew.second.gathering.fragments.EventFragment;
-import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
-import com.hew.second.gathering.fragments.MemberFragment;
 import com.hew.second.gathering.fragments.ReservationPhoneFragment;
-import com.hew.second.gathering.fragments.SessionFragment;
 import com.hew.second.gathering.fragments.StartTimeFragment;
 import com.hew.second.gathering.hotpepper.Shop;
 
-import org.parceler.Parcel;
 import org.parceler.Parcels;
-
-import java.util.HashMap;
 
 import icepick.State;
 import io.reactivex.Observable;
@@ -79,7 +65,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         mHandler = new Handler();
         Toolbar toolbar = (Toolbar) findViewById(R.id.sip_toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_event);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

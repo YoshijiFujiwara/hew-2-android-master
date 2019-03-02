@@ -148,7 +148,7 @@ public class DefaultSettingFragment extends BaseFragment {
 
     private void createDefault() {
         Intent intent = new Intent(activity.getApplication(), AddDefaultSettingActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, INTENT_EDIT_DEFAULT);
     }
 
     private void fetchList() {
