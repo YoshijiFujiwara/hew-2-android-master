@@ -34,17 +34,25 @@ import com.hew.second.gathering.fragments.EventFinishFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
 import com.hew.second.gathering.fragments.ReservationPhoneFragment;
 import com.hew.second.gathering.fragments.StartTimeFragment;
+import com.hew.second.gathering.hotpepper.GourmetResult;
+import com.hew.second.gathering.hotpepper.HpApiService;
+import com.hew.second.gathering.hotpepper.HpHttp;
 import com.hew.second.gathering.hotpepper.Shop;
+import com.hew.second.gathering.hotpepper.ShopList;
 
 import org.parceler.Parcels;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import dmax.dialog.SpotsDialog;
 import icepick.State;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
-public class EventProcessMainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class EventProcessMainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     //セッション詳細画面
 //    activity_event_process_main.xml
 //      |→FrameLayout(id :eip_parent_container)
@@ -136,8 +144,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         Bundle bundle = intent.getExtras();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if(bundle != null)
-        {
+        if (bundle != null) {
             // セッション情報取得
             this.session = Parcels.unwrap(getIntent().getParcelableExtra("SESSION_DETAIL"));
             this.shop = Parcels.unwrap(getIntent().getParcelableExtra("SHOP_DETAIL"));
@@ -156,15 +163,20 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         }
         fragmentTransaction.commit();
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         // セッション未作成の場合非表示
         BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
-        if(session == null){
+        if (session == null) {
             bnv.setVisibility(View.GONE);
         } else {
             bnv.setVisibility(View.VISIBLE);
+        }
+
+        if (this.shop == null) {
+            fetchShop();
         }
 
     }
@@ -286,6 +298,37 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         user_email.setText(data.email);
         TextView uniqueId = header.findViewById(R.id.user_unique_id);
         uniqueId.setText("@" + data.unique_id);
+    }
+
+    private void fetchShop() {
+        if (session.shop_id != null) {
+            dialog = new SpotsDialog.Builder().setContext(this).build();
+            dialog.show();
+            HpApiService hpService = HpHttp.getService();
+            Map<String, String> body = new HashMap<>();
+            body.put("id", session.shop_id);
+            Observable<GourmetResult> shopList = hpService.getShopList(body);
+            cd.add(shopList
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .unsubscribeOn(Schedulers.io())
+                    .subscribe(
+                            list -> {
+                                this.shop = list.results.shop.get(0);
+                                dialog.dismiss();
+                            },  // 成功時
+                            throwable -> {
+                                Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                if (!cd.isDisposed()) {
+                                    if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                        // ログインアクティビティへ遷移
+                                        Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                    ));
+        }
     }
 
 }

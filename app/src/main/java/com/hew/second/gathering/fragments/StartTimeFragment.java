@@ -91,7 +91,11 @@ public class StartTimeFragment extends SessionBaseFragment {
 
         activity.setTitle("イベント時間設定");
         TextView shopName = activity.findViewById(R.id.st_location);
-        shopName.setText(activity.shop.name);
+        if (activity.shop == null) {
+            shopName.setText("未定");
+        } else {
+            shopName.setText(activity.shop.name);
+        }
         TextView time = activity.findViewById(R.id.st_date);
         if (activity.session.start_time == null) {
             time.setText("未定");

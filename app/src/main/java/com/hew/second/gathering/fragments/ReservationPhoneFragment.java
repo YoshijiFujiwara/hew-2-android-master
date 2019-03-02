@@ -54,7 +54,12 @@ public class ReservationPhoneFragment extends SessionBaseFragment {
 
         getActivity().setTitle("お店予約");
         TextView shopName = activity.findViewById(R.id.shop_name);
-        shopName.setText(activity.shop.name);
+
+        if (activity.shop == null) {
+            shopName.setText("未定");
+        } else {
+            shopName.setText(activity.shop.name);
+        }
         TextView time = activity.findViewById(R.id.time);
         if (activity.session.start_time == null) {
             time.setText("未定");
@@ -67,6 +72,10 @@ public class ReservationPhoneFragment extends SessionBaseFragment {
         Button button = activity.findViewById(R.id.reserve_button);
         button.setEnabled(false);
 
+        if (activity.shop == null) {
+            button.setText("店が選択されていません");
+            return;
+        }
 
         HashMap<String, String> body = new HashMap<>();
         String freeWord = activity.shop.name_kana.replace(" ", ",");
