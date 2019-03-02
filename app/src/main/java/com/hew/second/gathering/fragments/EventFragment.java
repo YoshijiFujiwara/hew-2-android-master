@@ -23,6 +23,7 @@ import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionList;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.hotpepper.GourmetResult;
 import com.hew.second.gathering.hotpepper.HpApiService;
 import com.hew.second.gathering.hotpepper.HpHttp;
 import com.hew.second.gathering.hotpepper.Shop;
@@ -43,6 +44,7 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
 import static com.hew.second.gathering.activities.BaseActivity.INTENT_SHOP_DETAIL;
+import static io.reactivex.Observable.concat;
 
 
 public class EventFragment extends BaseFragment {
@@ -121,27 +123,43 @@ public class EventFragment extends BaseFragment {
         ApiService service = Util.getService();
         HpApiService hpService = HpHttp.getService();
         Observable<SessionList> token = service.getSessionList(LoginUser.getToken());
+        List<Shop> shops = new ArrayList<>();
         cd.add(token.subscribeOn(Schedulers.io())
                 .flatMap((list) -> {
                     ar = new ArrayList<>(list.data);
                     StringBuilder strId = new StringBuilder();
                     String prefix = "";
+                    ArrayList<String> strList = new ArrayList<>();
+                    List<Observable<GourmetResult>> l = new ArrayList<>();
                     for (Session s : list.data) {
-                        strId.append(prefix);
-                        prefix = ",";
-                        strId.append(s.shop_id);
+                        if(!strList.contains(s.shop_id)){
+                            strList.add(s.shop_id);
+                            strId.append(prefix);
+                            prefix = ",";
+                            strId.append(s.shop_id);
+
+                            if(strList.size() % 20 == 0){
+                                Map<String, String> body = new HashMap<>();
+                                body.put("id", strId.toString());
+                                l.add(hpService.getShopList(body));
+                                prefix = "";
+                                strId = new StringBuilder();
+                            }
+                        }
                     }
-                    Map<String, String> body = new HashMap<>();
-                    body.put("id", strId.toString());
-                    return hpService.getShopList(body);
+                    if(!strId.toString().isEmpty())
+                    {
+                        Map<String, String> body = new HashMap<>();
+                        body.put("id", strId.toString());
+                        l.add(hpService.getShopList(body));
+                    }
+                    return concat(l);
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                            //画像後更新
-                            updateList(ar, list.results.shop);
+                            shops.addAll(list.results.shop);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -153,6 +171,12 @@ public class EventFragment extends BaseFragment {
                                     startActivity(intent);
                                 }
                             }
+                        },
+                        ()->{
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            //画像後更新
+                            updateList(ar, shops);
+
                         }
                 ));
     }
@@ -184,7 +208,7 @@ public class EventFragment extends BaseFragment {
         //遷移
         Intent intent = new Intent(activity.getApplication(), EventProcessMainActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("FRAGMENT", "SHOP");
+        bundle.putString("FRAGMENT", "DEFAULT");
         intent.putExtras(bundle);
         startActivity(intent);
     }

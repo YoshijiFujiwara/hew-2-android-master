@@ -24,10 +24,12 @@ import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.api.Profile;
 import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.fragments.ApplyDefaultFragment;
 import com.hew.second.gathering.fragments.BudgetFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
@@ -63,10 +65,16 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
     Handler mHandler = null;
     @State
     public Session session = null;
+    @State
     public Shop shop = null;
-
     @State
     public String fragment = null;
+    @State
+    public DefaultSetting defaultSetting = null;
+
+    public boolean requestUpdateInvited = false;
+    public boolean requestUpdateInviteOne = false;
+    public boolean requestUpdateInviteGroup = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +169,8 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                 fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
             } else if (fragment.equals("SHOP")) {
                 fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
+            } else if (fragment.equals("DEFAULT")) {
+                fragmentTransaction.replace(R.id.eip_container, ApplyDefaultFragment.newInstance());
             } else if (fragment.equals("TIME")) {
                 bnv.setSelectedItemId(R.id.navi_botto_time);
                 fragmentTransaction.replace(R.id.eip_container, StartTimeFragment.newInstance());
@@ -258,6 +268,10 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         try {
             if (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof InviteFragment) {
                 InviteFragment fragment = (InviteFragment) getSupportFragmentManager().findFragmentById(R.id.eip_container);
+                fragment.removeFocus();
+            }
+            if (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof ApplyDefaultFragment) {
+                ApplyDefaultFragment fragment = (ApplyDefaultFragment) getSupportFragmentManager().findFragmentById(R.id.eip_container);
                 fragment.removeFocus();
             }
 

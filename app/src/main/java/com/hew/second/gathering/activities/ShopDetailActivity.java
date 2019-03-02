@@ -5,15 +5,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
@@ -22,7 +26,12 @@ import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
@@ -33,6 +42,7 @@ import retrofit2.HttpException;
 public class ShopDetailActivity extends BaseActivity {
 
     Intent intent;
+    DefaultSetting defaultSetting = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,7 @@ public class ShopDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_shop_detail);
         Shop shop = Parcels.unwrap(getIntent().getParcelableExtra("SHOP_DETAIL"));
         Session session = Parcels.unwrap(getIntent().getParcelableExtra("SESSION_DETAIL"));
+        defaultSetting = Parcels.unwrap(getIntent().getParcelableExtra("DEFAULT_DETAIL"));
         setTitle("店舗詳細");
 
         intent = new Intent();
@@ -92,7 +103,16 @@ public class ShopDetailActivity extends BaseActivity {
             if (session != null) {
                 updateSession(session, shop);
             } else {
-                createSession(shop);
+                new MaterialDialog.Builder(this)
+                        .title("イベント作成")
+                        .content("タイトル")
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .inputRangeRes(1, 30, R.color.colorAccentDark)
+                        .input("ヒント", "新規イベント", (MaterialDialog dialog, CharSequence input) -> {
+                            createSession(input.toString(), shop);
+                        })
+                        .negativeText("キャンセル")
+                        .show();
             }
         });
         Button back = findViewById(R.id.button_back);
@@ -107,43 +127,92 @@ public class ShopDetailActivity extends BaseActivity {
         return true;
     }
 
-    private void createSession(Shop shop) {
+    private void createSession(String title, Shop shop) {
 
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
 
-
-        // TODO:セッション名入力
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
-        body.put("name", "新規セッション");
+        body.put("name", title);
         body.put("shop_id", shop.id);
-        Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
-        cd.add(session.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        (list) -> {
-                            //遷移
-                            dialog.dismiss();
-                            intent.putExtra(SNACK_MESSAGE, "セッションを作成しました。");
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
-                            bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(list.data));
-                            intent.putExtras(bundle);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        },
-                        (throwable) -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (!cd.isDisposed()) {
-                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                    Intent intent = new Intent(getApplication(), LoginActivity.class);
-                                    startActivity(intent);
+        if(defaultSetting == null) {
+            Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
+            cd.add(session.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .unsubscribeOn(Schedulers.io())
+                    .subscribe(
+                            (list) -> {
+                                //遷移
+                                dialog.dismiss();
+                                intent.putExtra(SNACK_MESSAGE, "イベントを作成しました。");
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
+                                bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(list.data));
+                                intent.putExtras(bundle);
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            },
+                            (throwable) -> {
+                                Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                if (!cd.isDisposed()) {
+                                    if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                        Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                        startActivity(intent);
+                                    }
                                 }
-                            }
-                            dialog.dismiss();
-                        }));
+                                dialog.dismiss();
+                            }));
+        } else {
+            // Date型のフォーマットの設定
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // 加算される現在時間の取得(Calender型)
+            Calendar calendar = Calendar.getInstance();
+            long date = 0;
+            long now = new Date().getTime();
+            try {
+                date = sdf.parse(defaultSetting.timer).getTime();
+            } catch(ParseException e) {
+                e.printStackTrace();
+            }
+            now += date;
+            // 日時を加算する
+            Date start = new Date();
+            start.setTime(now);
+            body.put("start_time", sdf2.format(start));
+            Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
+            Bundle bundle = new Bundle();
+
+            cd.add(session.subscribeOn(Schedulers.io())
+                    .flatMap((v)->{
+                        bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(v.data));
+                        return service.createSessionGroup(LoginUser.getToken(),v.data.id,defaultSetting.group.id);
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .unsubscribeOn(Schedulers.io())
+                    .subscribe(
+                            (list) -> {
+                                //遷移
+                                dialog.dismiss();
+                                intent.putExtra(SNACK_MESSAGE, "イベントを作成しました。");
+                                bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
+                                intent.putExtras(bundle);
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            },
+                            (throwable) -> {
+                                Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                if (!cd.isDisposed()) {
+                                    if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                        Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                                dialog.dismiss();
+                            }));
+        }
     }
 
     private void updateSession(Session session, Shop shop) {
@@ -161,7 +230,7 @@ public class ShopDetailActivity extends BaseActivity {
                         (list) -> {
                             //遷移
                             dialog.dismiss();
-                            intent.putExtra(SNACK_MESSAGE, "セッションを更新しました。");
+                            intent.putExtra(SNACK_MESSAGE, "イベントを更新しました。");
                             Bundle bundle = new Bundle();
                             bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
                             bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(list.data));

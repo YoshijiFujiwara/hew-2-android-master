@@ -87,18 +87,26 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
         gridView = activity.findViewById(R.id.gridView_one);
         gridView.setChoiceMode(gridView.CHOICE_MODE_MULTIPLE);
         gridView.setOnItemClickListener((parent, view, position, id) -> {
-            if (gridView.getCheckedItemPositions().get(position)) {
-                view.setBackgroundColor(getResources().getColor(R.color.colorSelected));
+            if (adapter.getChecked(position)) {
+                adapter.setChecked(position,false);
             } else {
-                view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                adapter.setChecked(position,true);
             }
+            adapter.notifyDataSetChanged();
         });
 
         Button inviteOne = activity.findViewById(R.id.button_invite_one);
         inviteOne.setOnClickListener((l) -> {
+            if(adapter.getCheckedCount() <= 0){
+                final Snackbar snackbar = Snackbar.make(view, "招待する人を選択してください。", Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(Color.BLACK);
+                snackbar.setActionTextColor(Color.WHITE);
+                snackbar.show();
+                return;
+            }
             new MaterialDialog.Builder(activity)
                     .title("セッションへ追加")
-                    .content(gridView.getCheckedItemPositions().size() + "名をセッションに追加しますか？")
+                    .content(adapter.getCheckedCount() + "名をセッションに追加しますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {
                         createSessionUser();
@@ -163,6 +171,17 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
         fetchList();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            // 表示状態になったときの処理
+            if(activity != null && activity.requestUpdateInviteOne){
+                activity.requestUpdateInviteOne = false;
+                fetchList();
+            }
+        }
+    }
+
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
@@ -211,15 +230,17 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
     private void createSessionUser(){
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
-        SparseBooleanArray sba = gridView.getCheckedItemPositions();
+        activity.requestUpdateInviteGroup = true;
+        activity.requestUpdateInvited = true;
+        List<Boolean> sba = adapter.getCheckedList();
+        List<Friend> work = adapter.getList();
         ApiService service = Util.getService();
         ArrayList<Observable<SessionUser>> addList = new ArrayList<>();
         for (int i = 0; i < sba.size(); i++) {
             if(sba.get(i)){
                 HashMap<String, String> body = new HashMap<>();
-                body.put("user_id", String.valueOf(ar.get(i).id));
+                body.put("user_id", String.valueOf(work.get(i).id));
                 addList.add(service.createSessionUser(LoginUser.getToken(), activity.session.id, body));
-
             }
         }
         cd.add(Observable
@@ -245,6 +266,10 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                         ()->{
                             if (activity != null) {
                                 dialog.dismiss();
+                                final Snackbar snackbar = Snackbar.make(view, "招待を送信しました。", Snackbar.LENGTH_SHORT);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
                                 fetchList();
                             }
                         }

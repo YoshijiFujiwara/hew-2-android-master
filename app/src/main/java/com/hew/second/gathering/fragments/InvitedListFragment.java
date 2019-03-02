@@ -86,6 +86,18 @@ public class InvitedListFragment extends SessionBaseFragment {
         fetchList();
     }
 
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            // 表示状態になったときの処理
+            if(activity != null && activity.requestUpdateInvited){
+                activity.requestUpdateInvited = false;
+                fetchList();
+            }
+        }
+    }
+
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
@@ -130,6 +142,8 @@ public class InvitedListFragment extends SessionBaseFragment {
     private void abortInvite() {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
+        activity.requestUpdateInviteGroup = true;
+        activity.requestUpdateInviteOne = true;
         ApiService service = Util.getService();
         ArrayList<Completable> addList = new ArrayList<>();
         for (SessionUser s : ar) {

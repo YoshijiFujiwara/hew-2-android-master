@@ -44,7 +44,7 @@ public class StartActivity extends BaseActivity {
                 // 新規セッション作成へ
                 Intent intent = new Intent(getApplication(), EventProcessMainActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("FRAGMENT", "SHOP");
+                bundle.putString("FRAGMENT", "DEFAULT");
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

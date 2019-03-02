@@ -1,7 +1,9 @@
 package com.hew.second.gathering.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
@@ -24,9 +26,7 @@ import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.GroupList;
 import com.hew.second.gathering.api.SessionUser;
 import com.hew.second.gathering.api.Util;
-import com.hew.second.gathering.views.adapters.GroupAdapter;
 import com.hew.second.gathering.views.adapters.InviteGroupAdapter;
-import com.hew.second.gathering.views.adapters.SessionAddMemberAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,10 +75,10 @@ public class InviteGroupFragment extends SessionBaseFragment {
         gridView = activity.findViewById(R.id.gridView_group);
         gridView.setChoiceMode(gridView.CHOICE_MODE_SINGLE);
         gridView.setOnItemClickListener((parent, view, position, id) -> {
-            adapter.clearChecked();
             if(adapter.getChecked(position)){
                 adapter.setChecked(position,false);
             } else {
+                adapter.clearChecked();
                 adapter.setChecked(position,true);
             }
             adapter.notifyDataSetChanged();
@@ -86,9 +86,16 @@ public class InviteGroupFragment extends SessionBaseFragment {
 
         Button inviteGroup = activity.findViewById(R.id.button_invite_group);
         inviteGroup.setOnClickListener((l) -> {
+            if(adapter.getCheckedPos() == null){
+                final Snackbar snackbar = Snackbar.make(view, "招待するグループを選択してください。", Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(Color.BLACK);
+                snackbar.setActionTextColor(Color.WHITE);
+                snackbar.show();
+                return;
+            }
             new MaterialDialog.Builder(activity)
                     .title("セッションへ追加")
-                    .content(ar.get(gridView.getCheckedItemPosition()).name + "をセッションに追加しますか？")
+                    .content(ar.get(adapter.getCheckedPos()).name + "をセッションに追加しますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {
                         createSessionGroup();
@@ -102,6 +109,17 @@ public class InviteGroupFragment extends SessionBaseFragment {
     public void onResume() {
         super.onResume();
         fetchList();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            // 表示状態になったときの処理
+            if(activity != null && activity.requestUpdateInviteGroup){
+                activity.requestUpdateInviteGroup = false;
+                fetchList();
+            }
+        }
     }
 
     private void fetchList() {
@@ -142,6 +160,8 @@ public class InviteGroupFragment extends SessionBaseFragment {
     private void createSessionGroup(){
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
+        activity.requestUpdateInviteOne = true;
+        activity.requestUpdateInvited = true;
         int pos = gridView.getCheckedItemPosition();
         ApiService service = Util.getService();
         Observable<SessionUser> user = service.createSessionGroup(LoginUser.getToken(), activity.session.id, ar.get(pos).id);
@@ -153,6 +173,10 @@ public class InviteGroupFragment extends SessionBaseFragment {
                         list -> {
                             if (activity != null) {
                                 dialog.dismiss();
+                                final Snackbar snackbar = Snackbar.make(view, "招待を送信しました。", Snackbar.LENGTH_SHORT);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
                                 fetchList();
                             }
                         },  // 成功時

@@ -192,6 +192,9 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
             if( activity.session != null){
                 bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(activity.session));
             }
+            if( activity.defaultSetting != null){
+                bundle.putParcelable("DEFAULT_DETAIL", Parcels.wrap(activity.defaultSetting));
+            }
             intent.putExtras(bundle);
             startActivityForResult(intent, INTENT_SHOP_DETAIL);
         });
@@ -236,6 +239,9 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                     bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(i)));
                     if( activity.session != null){
                         bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(activity.session));
+                    }
+                    if( activity.defaultSetting != null){
+                        bundle.putParcelable("DEFAULT_DETAIL", Parcels.wrap(activity.defaultSetting));
                     }
                     intent.putExtras(bundle);
                     startActivity(intent);

@@ -23,6 +23,14 @@ public class InviteGroupAdapter extends BaseAdapter {
     public boolean getChecked(int pos) {
         return checked.get(pos);
     }
+    public Integer getCheckedPos() {
+        for(int i = 0;i<checked.size();i++){
+            if(checked.get(i)){
+                return i;
+            }
+        }
+        return null;
+    }
 
     public void setChecked(int pos,Boolean checked) {
         this.checked.set(pos,checked);

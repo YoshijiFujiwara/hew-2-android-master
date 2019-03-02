@@ -3,9 +3,11 @@ package com.hew.second.gathering.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -64,7 +67,6 @@ public class StartTimeFragment extends SessionBaseFragment {
 
     String strStartTime;
     String strEndTime;
-
 
 
     public static StartTimeFragment newInstance() {
@@ -107,22 +109,10 @@ public class StartTimeFragment extends SessionBaseFragment {
         TextView number = activity.findViewById(R.id.st_number);
         number.setText(activity.session.users.size() + 1 + "人");
 
-        Button button = activity.findViewById(R.id.reserve_button);
-        button.setEnabled(false);
-
-        if (activity.shop == null) {
-            button.setText("店が選択されていません");
-            return;
-        }
-
-
         TextView startDateText = activity.findViewById(R.id.start_date);
         TextView startTimeText = activity.findViewById(R.id.start_timer);
         TextView endDateText = activity.findViewById(R.id.end_date);
         TextView endTimeText = activity.findViewById(R.id.end_timer);
-
-//      テキストに陰影をつける　が無反応
-        startDateText.setShadowLayer(2f,2,2,getResources().getColor(R.color.colorShadow));
 
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日(E)");
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH時mm分");
@@ -139,9 +129,9 @@ public class StartTimeFragment extends SessionBaseFragment {
 //          Stringの日付をフォーマットしDateクラスに
             strStartTime = activity.session.start_time;
             try {
-               Date date = sdFormat.parse(activity.session.start_time);
+                Date date = sdFormat.parse(activity.session.start_time);
 
-               calendar.setTime(date);
+                calendar.setTime(date);
                 year = calendar.get(Calendar.YEAR);
                 monthOfYear = calendar.get(Calendar.MONTH);
                 dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -149,12 +139,14 @@ public class StartTimeFragment extends SessionBaseFragment {
                 minute = calendar.get(Calendar.MINUTE);
 
 //               開始時間のTextView表示
-               startDateText.setText(sdfDate.format(date));
-               startTimeText.setText(sdfTime.format(date));
+                startDateText.setText(sdfDate.format(date));
+                startTimeText.setText(sdfTime.format(date));
 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        }else{
+
         }
         //      終了時間が設定されていたら
         if (activity.session.end_time != null) {
@@ -222,29 +214,46 @@ public class StartTimeFragment extends SessionBaseFragment {
         });
 
         Button reserveButton = activity.findViewById(R.id.reserve_button);
+        final Calendar[] setStartCalender = new Calendar[1];
+        final Calendar[] setEndCalender = new Calendar[1];
 
         reserveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                一応チェック
                 if (startDate.onSaveInstanceState() != null && startTime.onSaveInstanceState() != null) {
-                    Calendar setStartCalender = setCalenderOfDate(startDate, startTime);
-                    strStartTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",setStartCalender);
+                    setStartCalender[0] = setCalenderOfDate(startDate, startTime);
+                    strStartTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", setStartCalender[0]);
                 }
 
                 if (endDate.onSaveInstanceState() != null && endTime.onSaveInstanceState() != null) {
-                    Calendar setEndCalender = setCalenderOfDate(endDate,endTime);
-                    strEndTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss",setEndCalender);
+                    setEndCalender[0] = setCalenderOfDate(endDate,endTime);
+                    strEndTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", setEndCalender[0]);
                 }
+//              日付比較　０
+                int diff = setStartCalender[0].compareTo(setEndCalender[0]);
 
-                updateDate(activity.session, strStartTime, strEndTime);
 
+                final Snackbar snackbar = Snackbar.make(view, "開始時刻と終了時刻の値が不正です。", Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(Color.BLACK);
+                snackbar.setActionTextColor(Color.WHITE);
+                if (diff == 0) {
+                    Log.d("calenderComparison","TheSame 同じ");
+                    snackbar.show();
+                } else if (diff > 0) {
+                    Log.d("calenderComparison","開始時間のほうが終了時間より先に進んでいます");
+                    snackbar.show();
+
+                } else {
+                    Log.d("calenderComparison","開始時間は終了時間より過去です");
+                    updateDate(activity.session, strStartTime, strEndTime);
+                }
             }
         });
 
 
+    }
 
-}
     //      日付・時刻選択された時TextViewに格納
     private class DateSetHandler implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -254,7 +263,8 @@ public class StartTimeFragment extends SessionBaseFragment {
         public DateSetHandler(TextView textView) {
             this.textView = textView;
         }
-//      日付が選択された時の処理
+
+        //      日付が選択された時の処理
 //       Calender.set(第１,第２)
 //       第１引数 指定したいカレンダーフィールド
 //       第２引数 指定されたカレンダーフィールドに設定したい値
@@ -263,9 +273,9 @@ public class StartTimeFragment extends SessionBaseFragment {
 
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            String text = (String) DateFormat.format("yyyy年MM月dd日",calendar);
+            String text = (String) DateFormat.format("yyyy年MM月dd日", calendar);
             textView.setText(text);
 
         }
@@ -273,39 +283,40 @@ public class StartTimeFragment extends SessionBaseFragment {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-            calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
-            calendar.set(Calendar.MINUTE,minute);
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
 
-            String  text = (String) DateFormat.format("kk時mm分",calendar);
+            String text = (String) DateFormat.format("kk時mm分", calendar);
             textView.setText(text);
         }
     }
 
 
-
     /**
      * 現在の日付・時刻から指定の【時間】を加算・減算した結果を返します。
+     *
      * @param addHour 加算・減算する時間
-     * @return    計算後の Calendar インスタンス。
+     * @return 計算後の Calendar インスタンス。
      */
-    public static Calendar addHour(int addHour){
-        return add(null,0,0,0,addHour,0,0,0);
+    public static Calendar addHour(int addHour) {
+        return add(null, 0, 0, 0, addHour, 0, 0, 0);
     }
+
     /**
      * 各時間フィールドに設定する数量が0の場合は、現在の値が設定されます。
      * java.util.GregorianCalendarの内部処理では以下の分岐を行っている。
-     *     if (amount == 0) {
-     *         return;
-     *     }
+     * if (amount == 0) {
+     * return;
+     * }
      *
-     * @param cal 日付時刻の指定があればセットする。
-     *     nullの場合、現在の日付時刻で新しいCalendarインスタンスを生成する。
+     * @param cal     日付時刻の指定があればセットする。
+     *                nullの場合、現在の日付時刻で新しいCalendarインスタンスを生成する。
      * @param addHour 加算・減算する時間
      */
     public static Calendar add(Calendar cal,
-                               int addYera,int addMonth,int addDate,
-                               int addHour,int addMinute,int addSecond,
-                               int addMillisecond){
+                               int addYera, int addMonth, int addDate,
+                               int addHour, int addMinute, int addSecond,
+                               int addMillisecond) {
         if (cal == null) {
             cal = Calendar.getInstance();
         }
@@ -313,60 +324,67 @@ public class StartTimeFragment extends SessionBaseFragment {
         return cal;
     }
 
-     public void updateDate( Session session, String startTime, String endTime ) {
+    public void updateDate(Session session, String startTime, String endTime) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("start_time", startTime);
+        body.put("end_time", endTime);
+        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Log.v("sStartTime", list.data.start_time);
+                            Log.v("sessionTime", list.data.end_time);
+                            if (activity != null) {
+                                activity.session.start_time = list.data.start_time;
+                                activity.session.end_time = list.data.end_time;
 
-         ApiService service = Util.getService();
-         HashMap<String, String> body = new HashMap<>();
-         body.put("start_time",startTime);
-         body.put("end_time",endTime);
-         Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
-         cd.add(token.subscribeOn(Schedulers.io())
-                 .observeOn(AndroidSchedulers.mainThread())
-                 .unsubscribeOn(Schedulers.io())
-                 .subscribe(
-                         list -> {
-                             Log.v("sStartTime", list.data.start_time);
-                             Log.v("sessionTime", list.data.end_time);
-                             if(activity != null){
-                                 activity.session.start_time = list.data.start_time;
-                                 activity.session.end_time = list.data.end_time;
-                             }
+                                dialog.dismiss();
+                                final Snackbar snackbar = Snackbar.make(view, "時刻を更新しました。", Snackbar.LENGTH_SHORT);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
+                            }
 
-                         },  // 成功時
-                         throwable -> {
-                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                             if (activity != null && !cd.isDisposed()) {
-                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                     // ログインアクティビティへ遷移
-                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                     startActivity(intent);
-                                 }
-                             }
-                         }
-                 ));
-     }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
+    }
 
-//   設定された日付と時間を取得してCalenderオブジェクトにセットしCalenderオブジェクトを返してます
-     public Calendar setCalenderOfDate(DatePickerDialog datePickerDialog,TimePickerDialog timePickerDialog) {
+    //   設定された日付と時間を取得してCalenderオブジェクトにセットしCalenderオブジェクトを返してます
+    public Calendar setCalenderOfDate(DatePickerDialog datePickerDialog, TimePickerDialog timePickerDialog) {
 
-         Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 //         日付 dataPickerDialog
-         year = datePickerDialog.onSaveInstanceState().getInt(YEAR);
-         monthOfYear = datePickerDialog.onSaveInstanceState().getInt(MONTH);
-         dayOfMonth = datePickerDialog.onSaveInstanceState().getInt(DAY);
+        year = datePickerDialog.onSaveInstanceState().getInt(YEAR);
+        monthOfYear = datePickerDialog.onSaveInstanceState().getInt(MONTH);
+        dayOfMonth = datePickerDialog.onSaveInstanceState().getInt(DAY);
 //         時間 timePickerDialog
-         hourOfDay = timePickerDialog.onSaveInstanceState().getInt(HOUR);
-         minute = timePickerDialog.onSaveInstanceState().getInt(MINUTE);
-         second = timePickerDialog.onSaveInstanceState().getInt(IS_24_HOUR);
+        hourOfDay = timePickerDialog.onSaveInstanceState().getInt(HOUR);
+        minute = timePickerDialog.onSaveInstanceState().getInt(MINUTE);
+        second = timePickerDialog.onSaveInstanceState().getInt(IS_24_HOUR);
 
-         calendar.set(Calendar.YEAR, year);
-         calendar.set(Calendar.MONTH, monthOfYear);
-         calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-         calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
-         calendar.set(Calendar.MINUTE,minute);
-         calendar.set(Calendar.SECOND,second);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, monthOfYear);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
 
-         return calendar;
+        return calendar;
 
-     }
+    }
 }

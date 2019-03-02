@@ -137,7 +137,7 @@ public class InProgressFragment extends BaseFragment {
         //遷移
         Intent intent = new Intent(activity.getApplication(), EventProcessMainActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("FRAGMENT", "SHOP");
+        bundle.putString("FRAGMENT", "DEFAULT");
         intent.putExtras(bundle);
         startActivity(intent);
     }

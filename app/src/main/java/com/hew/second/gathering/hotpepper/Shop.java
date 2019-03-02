@@ -2,8 +2,11 @@ package com.hew.second.gathering.hotpepper;
 
 import org.parceler.Parcel;
 
+import java.io.Serializable;
+
+
 @Parcel
-public class Shop {
+public class Shop implements Serializable{
     public Shop(){}
     public String id;
     public String name;
@@ -17,34 +20,6 @@ public class Shop {
     public Url urls;
     public Photo photo;
     public Budget budget;
-
-
-    @Parcel
-    public static class Budget{
-        public Budget(){}
-        public String code;
-        public String name;
-        public String average;
-    }
-
-    @Parcel
-    public static class Url{
-        public Url(){}
-        public String pc;
-    }
-
-    @Parcel
-    public static class Photo{
-        public Photo(){}
-        public PhotoDetail pc;
-        public PhotoDetail mobile;
-        @Parcel
-        public static class PhotoDetail{
-            public PhotoDetail(){}
-            public String l;
-            public String s;
-        }
-    }
 
     public String capacity;
     public String mobile_access;
