@@ -26,15 +26,29 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:cardBackgroundColor="@color/colorBackground"
+        app:layout_constraintBottom_toTopOf="@+id/cardView_shopDetail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView_shop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccentDark"
+            android:padding="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -49,18 +63,6 @@
                 android:gravity="bottom"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-            <ImageView
-                android:id="@+id/imageView_shop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorAccentDark"
-                android:padding="0dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_launcher_foreground" />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
@@ -90,13 +92,15 @@
                 <TextView
                     android:id="@+id/shop_name"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="24dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:singleLine="true"
                     android:text="TextView"
                     android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/time"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/cardView5"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -105,8 +109,10 @@
                     android:id="@+id/cardView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/shop_name"
+                    app:layout_constraintEnd_toStartOf="@+id/shop_name"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/shop_name">
 
@@ -125,9 +131,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:singleLine="true"
                     android:text="TextView"
                     android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/button"
                     app:layout_constraintStart_toStartOf="@+id/time"
                     app:layout_constraintTop_toBottomOf="@+id/time" />
 
@@ -135,7 +143,9 @@
                     android:id="@+id/cardView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     app:layout_constraintBottom_toBottomOf="@+id/count_member"
+                    app:layout_constraintEnd_toStartOf="@+id/count_member"
                     app:layout_constraintStart_toStartOf="@+id/cardView6"
                     app:layout_constraintTop_toTopOf="@+id/count_member">
 
@@ -153,9 +163,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:singleLine="true"
                     android:text="TextView"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@+id/count_member"
                     app:layout_constraintEnd_toEndOf="@+id/shop_name"
                     app:layout_constraintStart_toStartOf="@+id/shop_name"
                     app:layout_constraintTop_toBottomOf="@+id/shop_name" />
@@ -182,10 +194,12 @@
                     android:id="@+id/textView_genre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:text="TextView"
                     android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_budget"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/count_member" />
 
@@ -193,10 +207,12 @@
                     android:id="@+id/textView_budget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
                     android:text="TextView"
                     android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_address"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_genre" />
 
@@ -204,11 +220,13 @@
                     android:id="@+id/textView_address"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
                     android:text="TextView"
                     android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_access"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_budget" />
@@ -217,11 +235,13 @@
                     android:id="@+id/textView_access"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
                     android:text="TextView"
                     android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_url"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_address" />
@@ -230,14 +250,94 @@
                     android:id="@+id/textView_url"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="TextView"
                     android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_access" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="住所"
+                    android:textColor="@color/colorAccentDark"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_budget" />
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="URL"
+                    android:textColor="@color/colorAccentDark"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_url"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_access" />
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="アクセス"
+                    android:textColor="@color/colorAccentDark"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_access"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_address" />
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="予想予算"
+                    android:textColor="@color/colorAccentDark"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_budget"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_genre" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/colorBackground"
+                    app:layout_constraintBottom_toTopOf="@+id/textView16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/count_member" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="ジャンル"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccentDark"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_genre"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button" />
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
     </android.support.v7.widget.CardView>
