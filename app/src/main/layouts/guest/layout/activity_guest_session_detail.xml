@@ -305,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="予想予算"
+                    android:text="予算"
                     android:textColor="@color/colorAccentDark"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/textView_budget"
