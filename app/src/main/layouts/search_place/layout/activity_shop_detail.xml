@@ -121,9 +121,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="TextView"
+                    app:layout_constraintBottom_toTopOf="@+id/label_address"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/label_genre" />
@@ -138,6 +139,7 @@
                     android:text="住所"
                     android:textColor="@color/colorAccentDark"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_address"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_genre" />
@@ -147,9 +149,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="TextView"
+                    app:layout_constraintBottom_toTopOf="@+id/label_url"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/label_address" />
@@ -164,6 +167,7 @@
                     android:text="URL"
                     android:textColor="@color/colorAccentDark"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_url"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_address" />
@@ -173,9 +177,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="TextView"
+                    app:layout_constraintBottom_toTopOf="@+id/label_budget"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/label_url" />
@@ -190,6 +195,7 @@
                     android:text="予算"
                     android:textColor="@color/colorAccentDark"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_budget"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_url" />
@@ -199,9 +205,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="TextView"
+                    app:layout_constraintBottom_toTopOf="@+id/label_access"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/label_budget" />
@@ -216,6 +223,7 @@
                     android:text="アクセス"
                     android:textColor="@color/colorAccentDark"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_access"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_budget" />
@@ -225,9 +233,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="TextView"
+                    app:layout_constraintBottom_toTopOf="@+id/label_open"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/label_access" />
@@ -242,6 +251,7 @@
                     android:text="営業時間"
                     android:textColor="@color/colorAccentDark"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_open"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_access" />
@@ -249,11 +259,12 @@
                 <TextView
                     android:id="@+id/textView_open"
                     android:layout_width="0dp"
-                    android:layout_height="229dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="TextView"
+                    app:layout_constraintBottom_toTopOf="@+id/label_close"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/label_open" />
@@ -268,6 +279,7 @@
                     android:text="休日"
                     android:textColor="@color/colorAccentDark"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_close"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_open" />
@@ -277,7 +289,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="TextView"
