@@ -145,21 +145,21 @@ id 1~6を、本番用データとして追加しました。(テスト太郎を�
 パスワードは全員「hoisulu」  
 幹事役 １人（id: 1）
 ```
-hamada-manager@example.com
+hamada@hew.com
 ```
  上司役 ２人(id: 2, 5)
  ```
- kyosuke-yamamoto@example.com
- taichi-sakamoto@example.com
+ yamamoto@hew.com
+ sakamoto@hew.com
  ```
  同僚役 1人(id: 3)
  ```
- kazuya-harada@example.com
+ harada@hew.com
  ```
  女性役 2人(id: 4, 6)
  ```
- momoko-wakamatsu@example.com
- naoko-itho@example.com
+ wakamatsu@hew.com
+ itho@hew.com
  ```
   
 ### APIURL
