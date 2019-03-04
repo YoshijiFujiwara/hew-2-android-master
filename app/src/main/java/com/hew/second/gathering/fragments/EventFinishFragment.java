@@ -49,24 +49,25 @@ public class EventFinishFragment extends SessionBaseFragment {
     public static EventFinishFragment newInstance() {
         return new EventFinishFragment();
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_event_finish,container,false);
+        view = inflater.inflate(R.layout.fragment_event_finish, container, false);
 
         return view;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState){
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(activity.session != null){
+        if (activity.session != null) {
             activity.setTitle(activity.session.name);
             activity.fragment = null;
 
             Button button = activity.findViewById(R.id.session_finish_btn);
-            button.setOnClickListener((l)->{
+            button.setOnClickListener((l) -> {
                 // 参加しない
                 new MaterialDialog.Builder(activity)
                         .title("イベント")
@@ -79,15 +80,15 @@ public class EventFinishFragment extends SessionBaseFragment {
                         .show();
             });
 
-            if(activity.shop == null){
+            if (activity.shop == null) {
                 fetchShop();
-            }else{
+            } else {
                 displayShopInfo();
             }
         }
     }
 
-    private void displayShopInfo(){
+    private void displayShopInfo() {
         ImageView imageView = activity.findViewById(R.id.going_event);
         Picasso.get()
                 .load(activity.shop.photo.pc.l)
@@ -104,12 +105,12 @@ public class EventFinishFragment extends SessionBaseFragment {
         time.setText(activity.session.start_time + "〜" + activity.session.end_time);
         TextView countMember = activity.findViewById(R.id.count_member);
         int ok = 0;
-        for(SessionUser u :activity.session.users){
-            if(u.join_status.equals("allow")){
+        for (SessionUser u : activity.session.users) {
+            if (u.join_status.equals("allow")) {
                 ok++;
             }
         }
-        countMember.setText(Integer.toString(ok) +" / " + (activity.session.users.size() + 1) + "人");
+        countMember.setText(Integer.toString(ok + 1) + " / " + (activity.session.users.size() + 1) + "人");
 
         TextView genre = activity.findViewById(R.id.textView_genre);
         genre.setText(activity.shop.genre.name);
@@ -157,17 +158,17 @@ public class EventFinishFragment extends SessionBaseFragment {
         }
     }
 
-    private void finishSession(){
+    private void finishSession() {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
-        Completable session = Util.getService().deleteSession(LoginUser.getToken(),activity.session.id);
+        Completable session = Util.getService().deleteSession(LoginUser.getToken(), activity.session.id);
         cd.add(session
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         () -> {
-                            if(activity != null){
+                            if (activity != null) {
                                 dialog.dismiss();
                                 Intent intent = new Intent(activity.getApplication(), MainActivity.class);
                                 intent.putExtra(SNACK_MESSAGE, "イベントを完了しました。");
