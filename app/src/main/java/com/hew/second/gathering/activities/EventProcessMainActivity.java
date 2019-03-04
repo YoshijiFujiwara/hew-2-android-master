@@ -350,6 +350,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                                         Intent intent = new Intent(getApplication(), LoginActivity.class);
                                         startActivity(intent);
                                     }
+                                    dialog.dismiss();
                                 }
                             }
                     ));

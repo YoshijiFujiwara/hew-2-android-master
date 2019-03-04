@@ -95,7 +95,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
             allow.setOnClickListener((l) -> {
                 // 参加する
                 new MaterialDialog.Builder(this)
-                        .title("ゲストセッション")
+                        .title("ゲストイベント")
                         .content(session.name+ "に参加しますか？")
                         .positiveText("OK")
                         .onPositive((dialog, which) -> {
@@ -112,7 +112,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
         deny.setOnClickListener((l) -> {
             // 参加しない
             new MaterialDialog.Builder(this)
-                    .title("ゲストセッション")
+                    .title("ゲストイベント")
                     .content(session.name+ "への参加を断りますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {
