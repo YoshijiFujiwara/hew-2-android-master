@@ -3,14 +3,12 @@ package com.hew.second.gathering.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.hew.second.gathering.LogUtil;
@@ -22,87 +20,147 @@ import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionList;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.hotpepper.GourmetResult;
+import com.hew.second.gathering.hotpepper.HpApiService;
+import com.hew.second.gathering.hotpepper.HpHttp;
+import com.hew.second.gathering.hotpepper.Shop;
+import com.hew.second.gathering.views.adapters.GuestSessionAdapter;
 import com.hew.second.gathering.views.adapters.SessionAdapter;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
+import static io.reactivex.Observable.concat;
+
 //セッション一覧進行中のセッション
 public class InProgressFragment extends BaseFragment {
 
+    private static final String MESSAGE = "message";
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    SessionAdapter adapter;
-    ArrayList<Session> sessionArrayList;
-    ListView listView;
+    private SessionAdapter adapter = null;
+    private ArrayList<Session> ar = new ArrayList<>();
+    private ArrayList<Shop> shopList = new ArrayList<>();
+    private ArrayList<String> headers = new ArrayList<>();
+    private ListView listView = null;
 
     public static InProgressFragment newInstance() {
-        return new InProgressFragment();
+        InProgressFragment fragment = new InProgressFragment();
+        return fragment;
     }
 
-    public InProgressFragment() {
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void onDestroy() {
+        cd.clear();
+        super.onDestroy();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+
         view = inflater.inflate(R.layout.fragment_in_progress, container, false);
         return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceStat) {
-        super.onActivityCreated(savedInstanceStat);
-
-        FloatingActionButton fab = activity.findViewById(R.id.fab);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FloatingActionButton fab = activity.findViewById(R.id.fab_newSession);
         fab.setOnClickListener((v) -> createSession());
 
-        listView = activity.findViewById(R.id.listView_in_progress);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(activity.getApplication(), EventProcessMainActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(sessionArrayList.get(position)));
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
-        mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout_progress);
+        mSwipeRefreshLayout = activity.findViewById(R.id.swipeLayout_in_progress);
         // 色設定
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccentDark);
         // Listenerをセット
-        mSwipeRefreshLayout.setOnRefreshListener(() -> updateSessionList());
+        mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
+
+        listView = activity.findViewById(R.id.listView_event_in_progress);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(activity, EventProcessMainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(position)));
+            bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(ar.get(position)));
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        activity.setTitle("イベント一覧");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateSessionList();
-
+        fetchList();
     }
 
-    public void updateSessionList() {
+    private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<SessionList> sessionList;
-        sessionList = service.getSessionList(LoginUser.getToken());
-        cd.add(sessionList.subscribeOn(Schedulers.io())
+        HpApiService hpService = HpHttp.getService();
+        Observable<SessionList> token = service.getSessionOnGoingList(LoginUser.getToken());
+        List<Shop> shops = new ArrayList<>();
+        cd.add(token.subscribeOn(Schedulers.io())
+                .flatMap((list) -> {
+                    // 進行中のセッション
+                    ar = new ArrayList<>(list.data);
+                    headers = new ArrayList<>();
+                    for (Session s : list.data) {
+                        headers.add("進行中のイベント");
+                    }
+                    return service.getSessionNotStartList(LoginUser.getToken());
+                })
+                .flatMap((list) -> {
+                    // 始まっていないセッション
+                    ar.addAll(list.data);
+                    for (Session s : list.data) {
+                        headers.add("開始前のイベント");
+                    }
+                    StringBuilder strId = new StringBuilder();
+                    String prefix = "";
+                    ArrayList<String> strList = new ArrayList<>();
+                    List<Observable<GourmetResult>> l = new ArrayList<>();
+                    for (Session s : ar) {
+                        if (!strList.contains(s.shop_id)) {
+                            strList.add(s.shop_id);
+                            strId.append(prefix);
+                            prefix = ",";
+                            strId.append(s.shop_id);
+
+                            if (strList.size() % 20 == 0) {
+                                Map<String, String> body = new HashMap<>();
+                                body.put("id", strId.toString());
+                                l.add(hpService.getShopList(body));
+                                prefix = "";
+                                strId = new StringBuilder();
+                            }
+                        }
+                    }
+                    if (!strId.toString().isEmpty()) {
+                        Map<String, String> body = new HashMap<>();
+                        body.put("id", strId.toString());
+                        l.add(hpService.getShopList(body));
+                    }
+                    return concat(l);
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            if(activity != null){
-                                mSwipeRefreshLayout.setRefreshing(false);
-                                updateList(list.data);
-                            }
+                            shops.addAll(list.results.shop);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -114,23 +172,37 @@ public class InProgressFragment extends BaseFragment {
                                     startActivity(intent);
                                 }
                             }
+                        },
+                        () -> {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            //画像後更新
+                            updateList(ar, shops);
+
                         }
                 ));
     }
 
-    public void updateList(List<Session> data) {
-        sessionArrayList = new ArrayList<>();
-        //開始時刻がセットされて終了時刻がNULL
-        for (Session sl : data) {
-
-                sessionArrayList.add(sl);
-
+    private void updateList(List<Session> data, List<Shop> shops) {
+        // ListView生成
+        listView = activity.findViewById(R.id.listView_event_in_progress);
+        ArrayList<Session> list = new ArrayList<>(data);
+        ar = new ArrayList<>(data);
+        // ショップリストをセッションと同一形式にする
+        ArrayList<Shop> shopSession = new ArrayList<>();
+        for (Session s : data) {
+            for (Shop shop : shops) {
+                if (s.shop_id.equals(shop.id)) {
+                    shopSession.add(shop);
+                    break;
+                }
+            }
         }
-        SessionAdapter adapter = new SessionAdapter(sessionArrayList);
+        shopList = new ArrayList<>(shopSession);
+        adapter = new SessionAdapter(list, shopSession, headers);
         if (listView != null) {
+            // ListViewにadapterをセット
             listView.setAdapter(adapter);
         }
-
     }
 
     private void createSession() {

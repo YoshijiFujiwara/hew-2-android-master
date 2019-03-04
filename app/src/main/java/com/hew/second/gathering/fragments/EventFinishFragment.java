@@ -40,8 +40,6 @@ import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 
 public class EventFinishFragment extends SessionBaseFragment {
 
-    // TODO:画面全般組む
-
     public EventFinishFragment() {
     }
 

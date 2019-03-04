@@ -28,6 +28,7 @@ public class GuestSessionAdapter extends BaseAdapter {
         TextView shop_name;
         TextView time;
         TextView count_member;
+        TextView header;
         ImageView imageView;
     }
 
@@ -54,6 +55,7 @@ public class GuestSessionAdapter extends BaseAdapter {
             holder.time = convertView.findViewById(R.id.time);
             holder.count_member = convertView.findViewById(R.id.count_member);
             holder.imageView = convertView.findViewById(R.id.imageView_shop);
+            holder.header = convertView.findViewById(R.id.header);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -75,6 +77,7 @@ public class GuestSessionAdapter extends BaseAdapter {
                     .centerInside()
                     .into(holder.imageView);
         }
+        holder.header.setVisibility(View.GONE);
         return convertView;
     }
 
