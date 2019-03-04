@@ -353,6 +353,7 @@ public class StartTimeFragment extends SessionBaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
                             if (activity != null && !cd.isDisposed()) {
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移

@@ -30,24 +30,16 @@ import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.ApplyDefaultFragment;
-import com.hew.second.gathering.fragments.AttributeFragment;
 import com.hew.second.gathering.fragments.BudgetFragment;
-import com.hew.second.gathering.fragments.DefaultSettingFragment;
-import com.hew.second.gathering.fragments.EditProfileFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
-import com.hew.second.gathering.fragments.EventFragment;
-import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
-import com.hew.second.gathering.fragments.MemberFragment;
 import com.hew.second.gathering.fragments.ReservationPhoneFragment;
-import com.hew.second.gathering.fragments.SessionFragment;
 import com.hew.second.gathering.fragments.StartTimeFragment;
 import com.hew.second.gathering.hotpepper.GourmetResult;
 import com.hew.second.gathering.hotpepper.HpApiService;
 import com.hew.second.gathering.hotpepper.HpHttp;
 import com.hew.second.gathering.hotpepper.Shop;
-import com.hew.second.gathering.hotpepper.ShopList;
 
 import org.parceler.Parcels;
 

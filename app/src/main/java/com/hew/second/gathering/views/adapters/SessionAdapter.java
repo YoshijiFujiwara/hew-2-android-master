@@ -19,12 +19,14 @@ public class SessionAdapter extends BaseAdapter {
 
     protected List<Session> list;
     protected List<Shop> shopList = null;
+    protected List<String> headerList = null;
 
     static public class ViewHolder {
         TextView title;
         TextView shop_name;
         TextView time;
         TextView count_member;
+        TextView header;
         ImageView imageView;
     }
 
@@ -32,9 +34,10 @@ public class SessionAdapter extends BaseAdapter {
         list = null;
     }
 
-    public SessionAdapter(ArrayList<Session> names, List<Shop> shops) {
+    public SessionAdapter(ArrayList<Session> names, List<Shop> shops, List<String> headers) {
         list = new ArrayList<>(names);
         shopList = new ArrayList<>(shops);
+        headerList = new ArrayList<>(headers);
     }
 
     @Override
@@ -51,6 +54,7 @@ public class SessionAdapter extends BaseAdapter {
             holder.time = convertView.findViewById(R.id.time);
             holder.count_member = convertView.findViewById(R.id.count_member);
             holder.imageView = convertView.findViewById(R.id.imageView_shop);
+            holder.header = convertView.findViewById(R.id.header);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -58,9 +62,9 @@ public class SessionAdapter extends BaseAdapter {
 
         holder.title.setText(list.get(position).name);
         holder.shop_name.setText(shopList.get(position).name);
-        if(list.get(position).start_time == null){
+        if (list.get(position).start_time == null) {
             holder.time.setText("未定");
-        }else{
+        } else {
             holder.time.setText(list.get(position).start_time + "〜");
         }
         holder.count_member.setText(list.get(position).users.size() + 1 + "名");
@@ -71,6 +75,12 @@ public class SessionAdapter extends BaseAdapter {
                     .fit()
                     .centerInside()
                     .into(holder.imageView);
+        }
+        if (position != 0 && headerList.get(position).equals(headerList.get(position - 1))) {
+            holder.header.setVisibility(View.GONE);
+        } else {
+            holder.header.setVisibility(View.VISIBLE);
+            holder.header.setText(headerList.get(position));
         }
         return convertView;
     }

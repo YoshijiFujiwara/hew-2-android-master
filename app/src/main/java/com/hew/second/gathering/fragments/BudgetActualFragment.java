@@ -265,6 +265,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
             // 幹事情報をまずセットする
             nameArray.add(session.manager.username);
             costArray.add(0);
+            paidArray.add(false);
             userIdArray.add(String.valueOf(session.manager.id));
             // session情報から,usernameのリストを生成
             for (int i = 0; i < session.users.size(); i++) {
@@ -310,7 +311,6 @@ public class BudgetActualFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
-                                dialog.dismiss();
                             }
                         }
                 ));
