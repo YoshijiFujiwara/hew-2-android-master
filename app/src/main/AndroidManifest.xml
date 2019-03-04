@@ -90,6 +90,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".activities.DefaultMapActivity"
+            android:label="場所選択"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".activities.AddDefaultSettingActivity"
             android:label="@string/title_activity_edit_defaultSetting"
             android:screenOrientation="portrait"

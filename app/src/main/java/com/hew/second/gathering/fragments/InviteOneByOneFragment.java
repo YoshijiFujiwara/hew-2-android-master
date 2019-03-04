@@ -30,6 +30,7 @@ import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
 import com.hew.second.gathering.api.GroupDetail;
 import com.hew.second.gathering.api.SessionUser;
+import com.hew.second.gathering.api.SessionUserList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
@@ -235,7 +236,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
         List<Boolean> sba = adapter.getCheckedList();
         List<Friend> work = adapter.getList();
         ApiService service = Util.getService();
-        ArrayList<Observable<SessionUser>> addList = new ArrayList<>();
+        ArrayList<Observable<SessionUserList>> addList = new ArrayList<>();
         for (int i = 0; i < sba.size(); i++) {
             if(sba.get(i)){
                 HashMap<String, String> body = new HashMap<>();
@@ -250,7 +251,9 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-
+                            if(activity != null){
+                                activity.session.users = new ArrayList<>(list.data);
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());

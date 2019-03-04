@@ -32,6 +32,7 @@ import com.hew.second.gathering.fragments.EditProfileFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
 import com.hew.second.gathering.fragments.EventFragment;
+import com.hew.second.gathering.fragments.FriendFragment;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
 import com.hew.second.gathering.fragments.SessionFragment;
@@ -87,8 +88,7 @@ public class MainActivity extends BaseActivity
                         }
                 ));
 
-        if(savedInstanceState == null)
-        {
+        if (savedInstanceState == null) {
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -101,6 +101,14 @@ public class MainActivity extends BaseActivity
                     fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
                 } else if (fragment.equals("SESSION")) {
                     fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
+                } else if (fragment.equals("FRIEND")) {
+                    fragmentTransaction.replace(R.id.container, FriendFragment.newInstance());
+                } else if (fragment.equals("GROUP")) {
+                    fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
+                } else if (fragment.equals("ATTRIBUTE")) {
+                    fragmentTransaction.replace(R.id.container, AttributeFragment.newInstance());
+                } else if (fragment.equals("DEFAULT")) {
+                    fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
                 } else {
                     fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
                 }
@@ -194,13 +202,14 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_top) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, EventFragment.newInstance());
-                fragmentTransaction.commit();
-            }
+            Intent intent = new Intent(getApplication(), StartActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_new) {
+            Intent intent = new Intent(getApplication(), EventProcessMainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("FRAGMENT", "DEFAULT");
+            intent.putExtras(bundle);
+            startActivity(intent);
         } else if (id == R.id.nav_session) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {
@@ -209,10 +218,17 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
                 fragmentTransaction.commit();
             }
-        } else if (id == R.id.nav_config) {
-            // アカウント設定画面
-            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
+        } else if (id == R.id.nav_guest) {
+            Intent intent = new Intent(getApplication(), GuestActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_friend) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
+                fragmentTransaction.commit();
+            }
 
         } else if (id == R.id.nav_group) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -220,15 +236,6 @@ public class MainActivity extends BaseActivity
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
-                fragmentTransaction.commit();
-            }
-
-        } else if (id == R.id.nav_friend) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
                 fragmentTransaction.commit();
             }
 
@@ -248,6 +255,11 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
                 fragmentTransaction.commit();
             }
+        } else if (id == R.id.nav_config) {
+            // アカウント設定画面
+            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_logout) {
             // ログイン情報初期化
             LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
@@ -255,11 +267,6 @@ public class MainActivity extends BaseActivity
             Intent intent = new Intent(getApplication(), LoginActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_guest) {
-            mHandler.post(() -> {
-                Intent intent = new Intent(getApplication(), GuestActivity.class);
-                startActivity(intent);
-            });
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -269,34 +276,40 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // fragmentからの呼びだしの場合
+
         switch (requestCode & 0xffff) {
             //店検索から戻ってきた場合
             case (INTENT_ATTRIBUTE_DETAIL):
-                mHandler.post(() -> {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    if (fragmentManager != null) {
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.replace(R.id.container, AttributeFragment.newInstance());
-                        fragmentTransaction.commit();
-                    }
-
-                });
+                if (! (getSupportFragmentManager().findFragmentById(R.id.container) instanceof AttributeFragment)) {
+                    mHandler.post(() -> {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        if (fragmentManager != null) {
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.replace(R.id.container, AttributeFragment.newInstance());
+                            fragmentTransaction.commit();
+                        }
+                    });
+                }
                 break;
             case INTENT_EDIT_DEFAULT:
-                mHandler.post(() -> {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    if (fragmentManager != null) {
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
-                        fragmentTransaction.commit();
-                    }
+                if (! (getSupportFragmentManager().findFragmentById(R.id.container) instanceof DefaultSettingFragment)) {
+                    mHandler.post(() -> {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        if (fragmentManager != null) {
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
+                            fragmentTransaction.commit();
+                        }
 
-                });
+                    });
+                }
             default:
                 break;
         }
+
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

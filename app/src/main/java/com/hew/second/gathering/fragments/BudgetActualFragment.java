@@ -1,10 +1,12 @@
 package com.hew.second.gathering.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Animatable;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -35,6 +37,7 @@ import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -80,7 +83,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
             // 実額があれば、セットする
             budget_actual_tv = (EditText) view.findViewById(R.id.budget_actual_tv);
-            if (activity.session.budget != 0) {
+            if (activity.session.actual != 0) {
                 budget_actual_tv.setText(Integer.toString(activity.session.actual), TextView.BufferType.EDITABLE);
             }
 
@@ -89,15 +92,14 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
             budget_actual_update_btn = view.findViewById(R.id.budget_actual_update_btn);
             budget_actual_update_btn.setOnClickListener((v) -> {
-                updateBudgetActual(activity, view, activity.session, String.valueOf(budget_actual_tv.getText()));
-                // リストビューを空にする
-//                activity.session.actual = Integer.parseInt(String.valueOf(budget_actual_tv.getText()));
-                updateSessionInfo(activity.session,  Integer.parseInt(budget_actual_spinner.getSelectedItem().toString()));
-//                budget_actual_lv.setAdapter(new BudgetActualListAdapter(activity, new String[0], new Integer[0], new Boolean[0], new String[0], activity.session.id));
-
-                // 再計算（汚い）
-//                updateListView(activity.session);
-
+                if(budget_actual_tv.getText().toString().isEmpty()){
+                    final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
+                    snackbar.getView().setBackgroundColor(Color.BLACK);
+                    snackbar.setActionTextColor(Color.WHITE);
+                    snackbar.show();
+                }else{
+                    updateBudgetActual(activity, view, activity.session, String.valueOf(budget_actual_tv.getText()));
+                }
             });
 
             budget_actual_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -142,6 +144,8 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
     // activity.session　の情報を更新する
     public void updateSessionInfo(Session session, int unitRounding) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         Observable<SessionDetail> token = service.getSessionDetail(LoginUser.getToken(), session.id);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -151,6 +155,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
                         list -> {
                             Log.v("sessioninfo", list.data.name);
                             if(activity != null){
+                                dialog.dismiss();
                                 updateListView(list.data, unitRounding);
                             }
 
@@ -163,12 +168,15 @@ public class BudgetActualFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
+                                dialog.dismiss();
                             }
                         }
                 ));
     }
 
     private void updateBudgetActual(FragmentActivity fragmentActivity, View view, Session session, String budgetActualText) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", session.name);
@@ -185,6 +193,8 @@ public class BudgetActualFragment extends SessionBaseFragment {
                         list -> {
                             Log.v("sessioninfo", list.data.name);
                             if(activity != null){
+                                dialog.dismiss();
+                                updateSessionInfo(activity.session,  Integer.parseInt(budget_actual_spinner.getSelectedItem().toString()));
                                 activity.session = list.data;
                             }
 
@@ -197,6 +207,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
+                                dialog.dismiss();
                             }
                         }
                 ));
@@ -299,6 +310,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
+                                dialog.dismiss();
                             }
                         }
                 ));

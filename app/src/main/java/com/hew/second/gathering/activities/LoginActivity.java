@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,17 +16,25 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.DeviceTokenDetail;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
+
+import java.util.HashMap;
 
 import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 public class LoginActivity extends BaseActivity {
 
@@ -65,6 +74,14 @@ public class LoginActivity extends BaseActivity {
         forgot_pass_btn.setOnClickListener((v) -> {
             // これから書く？？？forgotPasswordActivity必要になるけど、優先度は低いかもね
         });
+
+
+        // ログイン情報があるならすぐに遷移
+        if (!LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)).equals("")) {
+            email_et.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+            password_et.setText(LoginUser.getPassword(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+            checkLogin(LoginUser.getEmail(null), LoginUser.getPassword(null));
+        }
     }
 
 
@@ -87,12 +104,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // ログイン情報があるならすぐに遷移
-        if (!LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)).equals("")) {
-            email_et.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
-            password_et.setText(LoginUser.getPassword(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
-            checkLogin(LoginUser.getEmail(null), LoginUser.getPassword(null));
-        }
     }
 
     @Override
@@ -152,10 +163,65 @@ public class LoginActivity extends BaseActivity {
         // ログイン情報を保存
         LoginUser.setUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE),
                 email_et.getText().toString(), password_et.getText().toString(), token.access_token);
+        // androidデバイストークン送信
+        sendTokenToServer();
         // TOP画面へ
         Intent intent = new Intent(getApplication(), StartActivity.class);
         intent.putExtra(SNACK_MESSAGE, "ログインに成功しました。");
-        startActivity(intent);
+        startActivityForResult(intent, INTENT_LOGIN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == INTENT_LOGIN) {
+            if (!LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)).equals("")) {
+                email_et.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+                password_et.setText(LoginUser.getPassword(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+            }
+        }
+    }
+
+
+
+    private void sendTokenToServer() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("tag", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        postToken(token);
+                    }
+                });
+    }
+
+    private void postToken(String deviceToken) {
+        // 取得したデバイストークンを、サーバーに投げる
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("device_token", deviceToken);
+        Observable<DeviceTokenDetail> token = service.storeDeviceToken(LoginUser.getToken(), body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        (list) -> {
+                            Log.d("api", "デバイストークンの送信完了");
+                        }, // 終了時
+                        (throwable) -> {
+                            Log.d("api", "デバイストークンの送信失敗");
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }));
     }
 }
 

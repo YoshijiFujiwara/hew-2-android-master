@@ -20,6 +20,8 @@ import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
+import com.hew.second.gathering.api.SessionUser;
+import com.hew.second.gathering.api.SessionUserList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.hotpepper.Shop;
 import com.squareup.picasso.Picasso;
@@ -28,9 +30,11 @@ import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TimeZone;
 
 import dmax.dialog.SpotsDialog;
@@ -184,10 +188,11 @@ public class ShopDetailActivity extends BaseActivity {
             body.put("start_time", sdf2.format(start));
             Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
             Bundle bundle = new Bundle();
+            final Session[] s = new Session[1];
 
             cd.add(session.subscribeOn(Schedulers.io())
                     .flatMap((v)->{
-                        bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(v.data));
+                        s[0] = v.data;
                         return service.createSessionGroup(LoginUser.getToken(),v.data.id,defaultSetting.group.id);
                     })
                     .observeOn(AndroidSchedulers.mainThread())
@@ -196,7 +201,9 @@ public class ShopDetailActivity extends BaseActivity {
                             (list) -> {
                                 //遷移
                                 dialog.dismiss();
+                                s[0].users = new ArrayList<>(list.data);
                                 intent.putExtra(SNACK_MESSAGE, "イベントを作成しました。");
+                                bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(s[0]));
                                 bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
                                 intent.putExtras(bundle);
                                 setResult(RESULT_OK, intent);

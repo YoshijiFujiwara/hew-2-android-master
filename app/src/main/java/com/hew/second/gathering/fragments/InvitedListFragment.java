@@ -112,6 +112,7 @@ public class InvitedListFragment extends SessionBaseFragment {
                 .subscribe(
                         list -> {
                             if (activity != null) {
+                                activity.session.users = new ArrayList<>(list.data);
                                 mSwipeRefreshLayout.setRefreshing(false);
                                 updateList(list.data);
                             }

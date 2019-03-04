@@ -128,15 +128,13 @@ public class PendingFragment extends BaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                List<Friend> filteredItems;
+                ArrayList<Friend> filteredItems;
                 // フィルター処理
                 if (s.isEmpty()) {
                     filteredItems = new ArrayList<>(ar);
@@ -149,9 +147,7 @@ public class PendingFragment extends BaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return true;
             }
         });
