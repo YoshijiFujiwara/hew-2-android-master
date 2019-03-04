@@ -125,24 +125,24 @@ github上からプルリクエストを作ってdevelopとマージ
 ### テストユーザー
 ```
 testuser@example.com  
-o34k30skm3h4b 
+hoisulu 
 ```
 ### テストユーザー(プロフィールを変更するなど、サブで使用する用)
 ```
 testuser48@example.com  
-o34k30skm3h4b  
+hoisulu  
 ```
 ```
 testuser49@example.com  
-o34k30skm3h4b  
+hoisulu  
 ```
 ```
 testuser50@example.com  
-o34k30skm3h4b  
+hoisulu  
 ```
 ### 本番用データ
 id 1~6を、本番用データとして追加しました。(テスト太郎を始めとするテストデータは、依然として残しております。)  
-パスワードは全員「o34k30skm3h4b」  
+パスワードは全員「hoisulu」  
 幹事役 １人（id: 1）
 ```
 hamada-manager@example.com
