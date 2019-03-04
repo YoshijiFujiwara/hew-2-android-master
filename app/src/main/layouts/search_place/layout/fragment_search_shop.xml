@@ -82,7 +82,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent">
 
             <Switch
                 android:id="@+id/switch_nomi"
@@ -109,6 +110,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/switch_nomi"
                 app:layout_constraintTop_toBottomOf="@+id/label_search_result" />
+
+            <Switch
+                android:id="@+id/switch_lunch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="16dp"
+                android:text="ランチあり"
+                app:layout_constraintBottom_toTopOf="@+id/label_range2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/switch_parking"
+                app:layout_constraintTop_toBottomOf="@+id/switch_room" />
 
             <Switch
                 android:id="@+id/switch_course"
@@ -147,19 +161,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/switch_lunch"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switch_course" />
-
-            <Switch
-                android:id="@+id/switch_lunch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp"
-                android:text="ランチあり"
-                app:layout_constraintBottom_toTopOf="@+id/label_range2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/switch_parking"
-                app:layout_constraintTop_toBottomOf="@+id/switch_room" />
 
             <TextView
                 android:id="@+id/label_search_result"
@@ -227,7 +228,7 @@
                 android:id="@+id/textView12"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
-                android:background="@color/btn_context_menu_pressed"
+                android:background="@drawable/button_style"
                 android:gravity="center"
                 android:text="＾"
                 android:textSize="30sp"
