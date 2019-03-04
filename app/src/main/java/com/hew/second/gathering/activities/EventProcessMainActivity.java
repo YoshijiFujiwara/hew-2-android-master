@@ -30,11 +30,18 @@ import com.hew.second.gathering.api.ProfileDetail;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.ApplyDefaultFragment;
+import com.hew.second.gathering.fragments.AttributeFragment;
 import com.hew.second.gathering.fragments.BudgetFragment;
+import com.hew.second.gathering.fragments.DefaultSettingFragment;
+import com.hew.second.gathering.fragments.EditProfileFragment;
 import com.hew.second.gathering.fragments.EditShopFragment;
 import com.hew.second.gathering.fragments.EventFinishFragment;
+import com.hew.second.gathering.fragments.EventFragment;
+import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.InviteFragment;
+import com.hew.second.gathering.fragments.MemberFragment;
 import com.hew.second.gathering.fragments.ReservationPhoneFragment;
+import com.hew.second.gathering.fragments.SessionFragment;
 import com.hew.second.gathering.fragments.StartTimeFragment;
 import com.hew.second.gathering.hotpepper.GourmetResult;
 import com.hew.second.gathering.hotpepper.HpApiService;
@@ -161,7 +168,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             fragment = bundle.getString("FRAGMENT");
         }
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             bnv.setSelectedItemId(R.id.navi_boto_main);
@@ -209,16 +216,17 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             //店検索から戻ってきた場合
             case (INTENT_SHOP_DETAIL):
                 if (resultCode == RESULT_OK) {
-                    mHandler.post(() -> {
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        if (fragmentManager != null) {
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
-                            fragmentTransaction.commit();
-                        }
-
-                    });
+                    if (! (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof EventFinishFragment)) {
+                        mHandler.post(() -> {
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            if (fragmentManager != null) {
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.addToBackStack(null);
+                                fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
+                                fragmentTransaction.commit();
+                            }
+                        });
+                    }
                     this.session = Parcels.unwrap(data.getParcelableExtra("SESSION_DETAIL"));
                     this.shop = Parcels.unwrap(data.getParcelableExtra("SHOP_DETAIL"));
                 }
@@ -233,18 +241,51 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_top) {
-            Intent intent = new Intent(getApplication(), MainActivity.class);
+            Intent intent = new Intent(getApplication(), StartActivity.class);
             startActivity(intent);
-
+        } else if (id == R.id.nav_new) {
+            Intent intent = new Intent(getApplication(), EventProcessMainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("FRAGMENT", "DEFAULT");
+            intent.putExtras(bundle);
+            startActivity(intent);
         } else if (id == R.id.nav_session) {
             Intent intent = new Intent(getApplication(), MainActivity.class);
             Bundle bundle = new Bundle();
             bundle.putString("FRAGMENT", "SESSION");
             intent.putExtras(bundle);
             startActivity(intent);
-
+        } else if (id == R.id.nav_guest) {
+            Intent intent = new Intent(getApplication(), GuestActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_friend) {
+            Intent intent = new Intent(getApplication(), MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("FRAGMENT", "FRIEND");
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else if (id == R.id.nav_group) {
+            Intent intent = new Intent(getApplication(), MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("FRAGMENT", "GROUP");
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else if (id == R.id.nav_attribute) {
+            Intent intent = new Intent(getApplication(), MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("FRAGMENT", "ATTRIBUTE");
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else if (id == R.id.nav_default) {
+            Intent intent = new Intent(getApplication(), MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("FRAGMENT", "DEFAULT");
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else if (id == R.id.nav_config) {
+            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // ログイン情報初期化
             LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
@@ -252,11 +293,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             Intent intent = new Intent(getApplication(), LoginActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_guest) {
-            mHandler.post(() -> {
-                Intent intent = new Intent(getApplication(), GuestActivity.class);
-                startActivity(intent);
-            });
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_event);
         drawer.closeDrawer(GravityCompat.START);
@@ -272,6 +308,10 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             }
             if (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof ApplyDefaultFragment) {
                 ApplyDefaultFragment fragment = (ApplyDefaultFragment) getSupportFragmentManager().findFragmentById(R.id.eip_container);
+                fragment.removeFocus();
+            }
+            if (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof BudgetFragment) {
+                BudgetFragment fragment = (BudgetFragment) getSupportFragmentManager().findFragmentById(R.id.eip_container);
                 fragment.removeFocus();
             }
 

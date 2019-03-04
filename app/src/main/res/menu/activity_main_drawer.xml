@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="TOP" />
         <item
+            android:id="@+id/nav_new"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="新規イベント" />
+        <item
             android:id="@+id/nav_session"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="イベント" />

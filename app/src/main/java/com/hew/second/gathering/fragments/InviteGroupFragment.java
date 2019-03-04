@@ -25,6 +25,7 @@ import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.GroupList;
 import com.hew.second.gathering.api.SessionUser;
+import com.hew.second.gathering.api.SessionUserList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.InviteGroupAdapter;
 
@@ -164,7 +165,7 @@ public class InviteGroupFragment extends SessionBaseFragment {
         activity.requestUpdateInvited = true;
         int pos = gridView.getCheckedItemPosition();
         ApiService service = Util.getService();
-        Observable<SessionUser> user = service.createSessionGroup(LoginUser.getToken(), activity.session.id, ar.get(pos).id);
+        Observable<SessionUserList> user = service.createSessionGroup(LoginUser.getToken(), activity.session.id, ar.get(pos).id);
         cd.add(user
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -172,6 +173,7 @@ public class InviteGroupFragment extends SessionBaseFragment {
                 .subscribe(
                         list -> {
                             if (activity != null) {
+                                activity.session.users = new ArrayList<>(list.data);
                                 dialog.dismiss();
                                 final Snackbar snackbar = Snackbar.make(view, "招待を送信しました。", Snackbar.LENGTH_SHORT);
                                 snackbar.getView().setBackgroundColor(Color.BLACK);

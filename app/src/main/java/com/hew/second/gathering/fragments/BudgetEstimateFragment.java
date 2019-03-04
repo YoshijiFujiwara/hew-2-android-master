@@ -3,9 +3,11 @@ package com.hew.second.gathering.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInstaller;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -90,9 +92,15 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
-                updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()));
-                updateSessionInfo(activity.session, Integer.parseInt(budget_estimate_spinner.getSelectedItem().toString()));
-                activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
+                try{
+                    activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
+                    updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()));
+                }catch (Exception e){
+                    final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
+                    snackbar.getView().setBackgroundColor(Color.BLACK);
+                    snackbar.setActionTextColor(Color.WHITE);
+                    snackbar.show();
+                }
 
             });
 
@@ -157,7 +165,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                             if (activity != null) {
                                 activity.session = list.data;
                                 dialog.dismiss();
-
+                                updateSessionInfo(activity.session, Integer.parseInt(budget_estimate_spinner.getSelectedItem().toString()));
                             }
 
 
@@ -258,6 +266,8 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
     // activity.session　の情報を更新する
     public void updateSessionInfo(Session session, int unitRounding) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         Observable<SessionDetail> token = service.getSessionDetail(LoginUser.getToken(), session.id);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -268,6 +278,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                             Log.v("sessioninfo", list.data.name);
                             if (activity != null) {
                                 updateListView(list.data, unitRounding);
+                                dialog.dismiss();
                             }
 
                         },  // 成功時

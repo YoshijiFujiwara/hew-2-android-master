@@ -1,64 +1,287 @@
 package com.hew.second.gathering.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 
-import com.hew.second.gathering.fragments.EditDefaultSettingFragment;
+import com.hew.second.gathering.LoginUser;
+import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.DefaultSetting;
+import com.hew.second.gathering.api.DefaultSettingDetail;
+import com.hew.second.gathering.api.Group;
+import com.hew.second.gathering.api.GroupList;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.Util;
-import com.hew.second.gathering.fragments.EditGroupFragment;
+import com.hew.second.gathering.views.adapters.GroupAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import dmax.dialog.SpotsDialog;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 public class EditDefaultSettingActivity extends BaseActivity {
+
+    int defaultSettingId = -1;
+    GroupAdapter adapter = null;
+    private List<Group> groupList = new ArrayList<>();
+    private Spinner spinner = null;
+    private String lat = null;
+    private String lng = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_default);
-        setTitle( "デフォルト追加" );
+        setContentView(R.layout.fragment_edit_default);
+        setTitle("デフォルト編集");
 
         // Backボタンを有効にする
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        if(savedInstanceState == null) {
-            // FragmentManagerのインスタンス生成
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            // FragmentTransactionのインスタンスを取得
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            // インスタンスに対して張り付け方を指定する
-            fragmentTransaction.replace(R.id.container, EditDefaultSettingFragment.newInstance(""));
-            // 張り付けを実行
-            fragmentTransaction.commit();
-        }
+        Intent beforeIntent = getIntent();
+        defaultSettingId = beforeIntent.getIntExtra("DEFAULTSETTING_ID", -1);//設定したkeyで取り出す
+
+        EditText defaultName = findViewById(R.id.default_input);
+        defaultName.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                // フォーカスが外れた場合キーボードを非表示にする
+                InputMethodManager inputMethodMgr = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                inputMethodMgr.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        });
+        EditText startTime = findViewById(R.id.start_time);
+        startTime.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                // フォーカスが外れた場合キーボードを非表示にする
+                InputMethodManager inputMethodMgr = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                inputMethodMgr.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        });
+        RadioGroup mRadioGroup = findViewById(R.id.RadioGroup);
+
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        Observable<GroupList> token = service.getGroupList(LoginUser.getToken());
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            groupList = new ArrayList<>(list.data);
+                            ArrayList<String> data = new ArrayList<>();
+                            for (Group g : groupList) {
+                                data.add(g.name);
+                            }
+                            spinner = findViewById(R.id.group_spinner);
+                            ArrayAdapter adapter =
+                                    new ArrayAdapter(this, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinner.setAdapter(adapter);
+                            fetchList();
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (!cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
+
+
+        Button saveButton = findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // データ保存Loadin
+                saveDefaultSettingName();
+            }
+        });
+
+        RadioButton rb = findViewById(R.id.specific_location);
+        rb.setOnClickListener((l) -> {
+            Intent intent = new Intent(getApplication(), DefaultMapActivity.class);
+            if (lat != null && lng != null) {
+                intent.putExtra("lat", lat);
+                intent.putExtra("lng", lng);
+            }
+            startActivityForResult(intent, INTENT_DEFAULT_MAP);
+        });
+
 
     }
+
+
+    public void removeFocus() {
+        InputMethodManager inputMethodMgr = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodMgr.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        try{
-            if(getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditDefaultSettingFragment){
-                EditDefaultSettingFragment fragment = (EditDefaultSettingFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-                fragment.removeFocus();
-            }
-        }catch (Exception e){
-            Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
-        }
+        removeFocus();
         return super.dispatchTouchEvent(ev);
     }
+
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void fetchList() {
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
+        ApiService service = Util.getService();
+        Observable<DefaultSettingDetail> token = service.getDefaultSettingDetail(LoginUser.getToken(), defaultSettingId);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            dialog.dismiss();
+                            if(list.data.current_location_flag.equals("0")){
+                                lat = list.data.latitude;
+                                lng = list.data.longitude;
+                            }
+                            updateList(list.data);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
+    }
+
+    private void updateList(DefaultSetting gdi) {
+        EditText defaultName = findViewById(R.id.default_input);
+        EditText startTime = findViewById(R.id.start_time);
+        Spinner spinner = findViewById(R.id.group_spinner);
+        RadioGroup mRadioGroup = findViewById(R.id.RadioGroup);
+
+        defaultName.setText(gdi.name);
+        startTime.setText(gdi.timer);
+        int sid = -1;
+        for (int i = 0; i < groupList.size(); i++) {
+            if (groupList.get(i).id == gdi.group.id) {
+                sid = i;
+                break;
+            }
+        }
+        if (sid != -1) {
+            spinner.setSelection(sid);
+        }
+
+        if (gdi.current_location_flag.equals("1")) {
+            mRadioGroup.check(R.id.current_location);
+        } else {
+            mRadioGroup.check(R.id.specific_location);
+        }
+    }
+
+    public void saveDefaultSettingName() {
+
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
+
+        ApiService service = Util.getService();
+        EditText defaultName = findViewById(R.id.default_input);
+        EditText startTime = findViewById(R.id.start_time);
+        Spinner spinner = findViewById(R.id.group_spinner);
+        RadioGroup mRadioGroup = findViewById(R.id.RadioGroup);
+        int checkedId = mRadioGroup.getCheckedRadioButtonId();
+        String flag = "1";
+        String latitude = "";
+        String longitude = "";
+        switch (checkedId) {
+            case R.id.current_location:
+                flag = "1";
+                latitude = "";
+                longitude = "";
+                break;
+            case R.id.specific_location:
+                if(lat != null && lng != null){
+                    flag = "0";
+                    latitude = lat;
+                    longitude = lng;
+                }
+                break;
+        }
+
+        HashMap<String, String> body = new HashMap<>();
+
+        body.put("name", defaultName.getText().toString());
+        body.put("timer", startTime.getText().toString());
+        body.put("group_id", String.valueOf(groupList.get((int) spinner.getSelectedItemPosition()).id));
+        body.put("current_location_flag", flag);
+        body.put("latitude", latitude);
+        body.put("longitude", longitude);
+
+        Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(LoginUser.getToken(), defaultSettingId, body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            dialog.dismiss();
+                            Intent intent = new Intent();
+//                                Intent intent = new Intent(activity.getApplication(), MainActivity.class);
+                            intent.putExtra(SNACK_MESSAGE, "デフォルトを更新しました。");
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
+                            if (!cd.isDisposed()) {
+                                Intent intent = new Intent();
+                                if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
+                                    intent.putExtra(SNACK_MESSAGE, "デフォルトの変更はありません。");
+                                } else if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent2 = new Intent(getApplication(), LoginActivity.class);
+                                    startActivity(intent2);
+                                }
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
+                        }
+                ));
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            if (data != null) {
+                this.lat = data.getStringExtra("lat");
+                this.lng = data.getStringExtra("lng");
+            }
+        }
+        if(lat == null || lng == null){
+            RadioButton rb = findViewById(R.id.current_location);
+            rb.toggle();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
