@@ -34,7 +34,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.51">
 
         <ImageView
             android:id="@+id/imageView_shop"
@@ -75,7 +76,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_deny"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
@@ -91,9 +92,9 @@
                 <TextView
                     android:id="@+id/shop_name"
                     android:layout_width="0dp"
-                    android:layout_height="24dp"
+                    android:layout_height="21dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:singleLine="true"
@@ -248,7 +249,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="TextView"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/button_allow"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView19" />
@@ -326,49 +327,50 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:text="ジャンル"
-                    android:textStyle="bold"
                     android:textColor="@color/colorAccentDark"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/textView_genre"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/button" />
+
+                <Button
+                    android:id="@+id/button_allow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/button_style"
+                    android:elevation="5dp"
+                    android:text="参加"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/button_deny"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_url" />
+
+                <Button
+                    android:id="@+id/button_deny"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/button_style"
+                    android:elevation="5dp"
+                    android:text="不参加"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_allow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/button_allow" />
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
     </android.support.v7.widget.CardView>
-
-    <Button
-        android:id="@+id/button_allow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/button_style"
-        android:elevation="5dp"
-        android:text="参加"
-        android:textColor="@color/colorWhite"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_deny" />
-
-    <Button
-        android:id="@+id/button_deny"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/button_style"
-        android:elevation="5dp"
-        android:text="不参加"
-        android:textColor="@color/colorWhite"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_allow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView_shopDetail" />
 
 </android.support.constraint.ConstraintLayout>
