@@ -27,6 +27,7 @@ import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 
+import java.security.cert.Extension;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -116,13 +117,13 @@ public class StartTimeFragment extends SessionBaseFragment {
 
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy年MM月dd日(E)");
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH時mm分");
-        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.JAPAN);
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.JAPAN);
 
 //      TextViewの初期表示は開始時刻は現在時刻と現在時刻に一時間加算して表示
-        startDateText.setText(sdfDate.format(calendar.getTime()));
-        startTimeText.setText(sdfTime.format(calendar.getTime()));
-        endDateText.setText(sdfDate.format(calendar.getTime()));
-        endTimeText.setText(sdfTime.format(addHour(1).getTime()));
+        startDateText.setText("未定");
+        startTimeText.setText("未定");
+        endDateText.setText("未定");
+        endTimeText.setText("未定");
 
 //      開始時間が設定されていたら
         if (activity.session.start_time != null) {
@@ -145,8 +146,9 @@ public class StartTimeFragment extends SessionBaseFragment {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }else{
-
+        } else {
+            //strStartTime = sdFormat.format(calendar.getTime());
+            strStartTime = "未定";
         }
         //      終了時間が設定されていたら
         if (activity.session.end_time != null) {
@@ -172,9 +174,8 @@ public class StartTimeFragment extends SessionBaseFragment {
 
         } else {
 //          設定なし（値がなかった）の場合
-            strStartTime = sdFormat.format(calendar.getTime());
-            strEndTime = sdFormat.format(addHour(1).getTime());
-            endHourOfDay = endHourOfDay + 1;
+            //strEndTime = sdFormat.format(addHour(1).getTime());
+            strEndTime = "未定";
         }
 
 //            第1 context 第2 日付が選択された時のコールバック 第3 年の値 第4 月の値 第5 日の値
@@ -220,32 +221,46 @@ public class StartTimeFragment extends SessionBaseFragment {
         reserveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                一応チェック
-                if (startDate.onSaveInstanceState() != null && startTime.onSaveInstanceState() != null) {
-                    setStartCalender[0] = setCalenderOfDate(startDate, startTime);
-                    strStartTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", setStartCalender[0]);
-                }
-
-                if (endDate.onSaveInstanceState() != null && endTime.onSaveInstanceState() != null) {
-                    setEndCalender[0] = setCalenderOfDate(endDate,endTime);
-                    strEndTime = (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", setEndCalender[0]);
-                }
-//              日付比較　０
-                int diff = setStartCalender[0].compareTo(setEndCalender[0]);
-
 
                 final Snackbar snackbar = Snackbar.make(view, "開始時刻と終了時刻の値が不正です。", Snackbar.LENGTH_SHORT);
                 snackbar.getView().setBackgroundColor(Color.BLACK);
                 snackbar.setActionTextColor(Color.WHITE);
+//                一応チェック
+                if (startDate.onSaveInstanceState() != null && startTime.onSaveInstanceState() != null) {
+
+                    setStartCalender[0] = setCalenderOfDate(startDate, startTime);
+                    strStartTime = (String) DateFormat.format("yyyy-MM-dd HH:mm:ss", setStartCalender[0]);
+                }
+
+                if (endDate.onSaveInstanceState() != null && endTime.onSaveInstanceState() != null) {
+                    setEndCalender[0] = setCalenderOfDate(endDate, endTime);
+                    strEndTime = (String) DateFormat.format("yyyy-MM-dd HH:mm:ss", setEndCalender[0]);
+                }
+
+
+                TextView startDateText = activity.findViewById(R.id.start_date);
+                TextView startTimeText = activity.findViewById(R.id.start_timer);
+                TextView endDateText = activity.findViewById(R.id.end_date);
+                TextView endTimeText = activity.findViewById(R.id.end_timer);
+                if (startDateText.getText().equals("未定") || startTimeText.getText().equals("未定")
+                        || endDateText.getText().equals("未定") || endTimeText.getText().equals("未定")) {
+                    snackbar.show();
+                    return;
+                }
+
+//              日付比較　０
+                int diff = setStartCalender[0].compareTo(setEndCalender[0]);
+
+
                 if (diff == 0) {
-                    Log.d("calenderComparison","TheSame 同じ");
+                    Log.d("calenderComparison", "TheSame 同じ");
                     snackbar.show();
                 } else if (diff > 0) {
-                    Log.d("calenderComparison","開始時間のほうが終了時間より先に進んでいます");
+                    Log.d("calenderComparison", "開始時間のほうが終了時間より先に進んでいます");
                     snackbar.show();
 
                 } else {
-                    Log.d("calenderComparison","開始時間は終了時間より過去です");
+                    Log.d("calenderComparison", "開始時間は終了時間より過去です");
                     updateDate(activity.session, strStartTime, strEndTime);
                 }
             }
@@ -386,6 +401,5 @@ public class StartTimeFragment extends SessionBaseFragment {
         calendar.set(Calendar.SECOND, second);
 
         return calendar;
-
     }
 }
