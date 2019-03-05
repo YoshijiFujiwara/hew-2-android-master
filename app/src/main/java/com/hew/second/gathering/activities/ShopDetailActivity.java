@@ -169,11 +169,9 @@ public class ShopDetailActivity extends BaseActivity {
                             }));
         } else {
             // Date型のフォーマットの設定
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd:HH:mm");
             sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            // 加算される現在時間の取得(Calender型)
-            Calendar calendar = Calendar.getInstance();
             long date = 0;
             long now = new Date().getTime();
             try {

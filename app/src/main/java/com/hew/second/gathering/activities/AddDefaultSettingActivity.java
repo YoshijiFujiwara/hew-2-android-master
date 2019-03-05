@@ -1,7 +1,10 @@
 package com.hew.second.gathering.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,9 +27,12 @@ import com.hew.second.gathering.api.GroupList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.GroupAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
@@ -73,6 +79,9 @@ public class AddDefaultSettingActivity extends BaseActivity {
         });
         RadioGroup mRadioGroup = findViewById(R.id.RadioGroup);
 
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
+
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         Observable<GroupList> token = service.getGroupList(LoginUser.getToken());
@@ -91,9 +100,11 @@ public class AddDefaultSettingActivity extends BaseActivity {
                                     new ArrayAdapter(this, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             spinner.setAdapter(adapter);
+                            dialog.dismiss();
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
                             if (!cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(getApplication(), LoginActivity.class);
                                 startActivity(intent);
@@ -144,14 +155,49 @@ public class AddDefaultSettingActivity extends BaseActivity {
 
     public void saveDefaultSettingName() {
 
-        dialog = new SpotsDialog.Builder().setContext(this).build();
-        dialog.show();
-
-        ApiService service = Util.getService();
         EditText defaultName = findViewById(R.id.default_input);
         EditText startTime = findViewById(R.id.start_time);
         Spinner spinner = findViewById(R.id.group_spinner);
         RadioGroup mRadioGroup = findViewById(R.id.RadioGroup);
+
+        if (TextUtils.isEmpty(defaultName.getText().toString())) {
+            defaultName.setError("デフォルト名を入力してください。");
+            defaultName.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(startTime.getText().toString())) {
+            startTime.setError("開始時刻を入力してください。");
+            startTime.requestFocus();
+            return;
+        }
+
+        String strTimer = startTime.getText().toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd:HH:mm");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        long date = 0;
+        long now = new Date().getTime();
+        try {
+            date = sdf.parse(strTimer).getTime();
+        } catch (Exception e) {
+            try {
+                int timer = Integer.parseInt(strTimer);
+                Integer minute = timer % 60;
+                timer /= 60;
+                Integer hour = timer % 24;
+                timer /= 24;
+                Integer day = timer % 30;
+                if (day > 30) {
+                    throw (new Exception());
+                }
+                strTimer = String.format("%02d:%02d:%02d", day, hour, minute);
+
+            } catch (Exception ex) {
+                startTime.setError("開始時刻の形式が異なります。");
+                startTime.requestFocus();
+                return;
+            }
+        }
+
         int checkedId = mRadioGroup.getCheckedRadioButtonId();
         String flag = "1";
         String latitude = "";
@@ -163,7 +209,7 @@ public class AddDefaultSettingActivity extends BaseActivity {
                 longitude = "";
                 break;
             case R.id.specific_location:
-                if(lat != null && lng != null){
+                if (lat != null && lng != null) {
                     flag = "0";
                     latitude = lat;
                     longitude = lng;
@@ -172,14 +218,16 @@ public class AddDefaultSettingActivity extends BaseActivity {
         }
 
         HashMap<String, String> body = new HashMap<>();
-
         body.put("name", defaultName.getText().toString());
-        body.put("timer", startTime.getText().toString());
+        body.put("timer", strTimer);
         body.put("group_id", String.valueOf(groupList.get((int) spinner.getSelectedItemPosition()).id));
         body.put("current_location_flag", flag);
         body.put("latitude", latitude);
         body.put("longitude", longitude);
 
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
+        ApiService service = Util.getService();
         Observable<DefaultSettingDetail> token = service.createDefaultSetting(LoginUser.getToken(), body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
