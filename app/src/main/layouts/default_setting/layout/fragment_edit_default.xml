@@ -119,7 +119,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/text_style"
         android:ems="10"
-        android:hint="ex) 30"
+        android:hint="ex) 01:00:00"
         android:inputType="time"
         android:padding="20dp"
         app:layout_constraintStart_toStartOf="parent"

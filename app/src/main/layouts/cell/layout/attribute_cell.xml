@@ -20,45 +20,76 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/icon6"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/colorAccentDark"
+                android:padding="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/attribute_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_launcher_foreground" />
+
             <TextView
                 android:id="@+id/attribute_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="3dp"
                 android:layout_marginBottom="8dp"
                 android:singleLine="true"
                 android:text="TextView"
                 android:textColor="@color/colorAccentDark"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView23"
+                app:layout_constraintStart_toEndOf="@+id/icon6"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/attribute_plus_minus"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
                 android:singleLine="true"
                 android:text="TextView"
                 android:textColor="@color/colorAccentDark"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@+id/attribute_name"
-                app:layout_constraintStart_toEndOf="@+id/attribute_name"
+                app:layout_constraintEnd_toStartOf="@+id/attribute_delete"
+                app:layout_constraintStart_toEndOf="@+id/textView23"
                 app:layout_constraintTop_toTopOf="@+id/attribute_name" />
 
             <TextView
                 android:id="@+id/attribute_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/cross"
                 android:textColor="@color/colorPrimary"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@+id/attribute_plus_minus"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/attribute_plus_minus"
                 app:layout_constraintTop_toTopOf="@+id/attribute_plus_minus" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp"
+                android:text="加減額"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/attribute_plus_minus"
+                app:layout_constraintStart_toEndOf="@+id/attribute_name"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 
