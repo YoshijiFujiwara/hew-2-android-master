@@ -19,12 +19,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final int INTENT_EDIT_GROUP = 1;
     public static final int INTENT_ADD_GROUP_MEMBER = 2;
     public static final int INTENT_EDIT_DEFAULT = 3;
-    public static final int INTENT_SHOP_DETAIL = 3;
-    public static final int INTENT_GUEST_SESSION_DETAIL = 4;
-    public static final int INTENT_FRIEND_DETAIL = 5;
-    public static final int INTENT_ATTRIBUTE_DETAIL = 6;
-    public static final int INTENT_LOGIN = 7;
-    public static final int INTENT_DEFAULT_MAP = 7;
+    public static final int INTENT_SHOP_DETAIL = 4;
+    public static final int INTENT_GUEST_SESSION_DETAIL = 5;
+    public static final int INTENT_FRIEND_DETAIL = 6;
+    public static final int INTENT_ATTRIBUTE_DETAIL = 7;
+    public static final int INTENT_LOGIN = 8;
+    public static final int INTENT_DEFAULT_MAP = 9;
+    public static final int INTENT_PROFILE = 10;
     protected AlertDialog dialog = null;
 
     @Override

@@ -181,7 +181,15 @@ public class MainActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
+            startActivityForResult(intent, INTENT_PROFILE);
+        } else if (id == R.id.action_logout) {
+            // ログイン情報初期化
+            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+            // ログイン画面へ
+            Intent intent = new Intent(getApplication(), LoginActivity.class);
+            startActivity(intent);
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -247,18 +255,6 @@ public class MainActivity extends BaseActivity
                 fragmentTransaction.replace(R.id.container, DefaultSettingFragment.newInstance());
                 fragmentTransaction.commit();
             }
-        } else if (id == R.id.nav_config) {
-            // アカウント設定画面
-            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_logout) {
-            // ログイン情報初期化
-            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
-            // ログイン画面へ
-            Intent intent = new Intent(getApplication(), LoginActivity.class);
-            startActivity(intent);
-
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

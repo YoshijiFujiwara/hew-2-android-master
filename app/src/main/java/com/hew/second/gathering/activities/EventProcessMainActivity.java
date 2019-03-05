@@ -208,7 +208,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             //店検索から戻ってきた場合
             case (INTENT_SHOP_DETAIL):
                 if (resultCode == RESULT_OK) {
-                    if (! (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof EventFinishFragment)) {
+                    if (!(getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof EventFinishFragment)) {
                         mHandler.post(() -> {
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             if (fragmentManager != null) {
@@ -275,16 +275,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             bundle.putString("FRAGMENT", "DEFAULT");
             intent.putExtras(bundle);
             startActivity(intent);
-        } else if (id == R.id.nav_config) {
-            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_logout) {
-            // ログイン情報初期化
-            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
-            // ログイン画面へ
-            Intent intent = new Intent(getApplication(), LoginActivity.class);
-            startActivity(intent);
-
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_event);
         drawer.closeDrawer(GravityCompat.START);
@@ -339,7 +329,15 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(getApplication(), EditProfileActivity.class);
+            startActivityForResult(intent, INTENT_PROFILE);
+        } else if (id == R.id.action_logout) {
+            // ログイン情報初期化
+            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+            // ログイン画面へ
+            Intent intent = new Intent(getApplication(), LoginActivity.class);
+            startActivity(intent);
+
         }
 
         return super.onOptionsItemSelected(item);

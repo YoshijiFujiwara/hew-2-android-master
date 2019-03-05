@@ -10,17 +10,17 @@
             android:title="TOP" />
         <item
             android:id="@+id/nav_new"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="新規イベント" />
+            android:icon="@drawable/ic_logo"
+            android:title="新規イベント作成" />
         <item
             android:id="@+id/nav_session"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="イベント" />
+            android:title="幹事イベント" />
 
         <item
             android:id="@+id/nav_guest"
             android:icon="@drawable/ic_menu_share"
-            android:title="ゲストイベント" />
+            android:title="招待されたイベント" />
     </group>
 
 
@@ -43,16 +43,8 @@
                     android:id="@+id/nav_default"
                     android:icon="@drawable/ic_default"
                     android:title="デフォルト設定" />
-                <item
-                    android:id="@+id/nav_config"
-                    android:icon="@drawable/ic_menu_manage"
-                    android:title="アカウント設定" />
             </group>
         </menu>
     </item>
-    <item
-        android:id="@+id/nav_logout"
-        android:icon="@drawable/ic_logout"
-        android:title="ログアウト" />
 
 </menu>
