@@ -1,12 +1,12 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="30dp"
-    android:height="30dp"
-    android:viewportHeight="30.0"
-    android:viewportWidth="30.0">
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportHeight="24.0"
+    android:viewportWidth="24.0">
     <group android:name="background">
         <path
             android:name="circle"
-            android:fillColor="@color/colorBackground"
+            android:fillColor="@color/fab_color_shadow"
             android:pathData="M12,12m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
     </group>
     <group android:name="check">

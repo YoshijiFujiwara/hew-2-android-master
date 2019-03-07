@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +36,11 @@ import com.hew.second.gathering.api.SessionUserDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetActualListAdapter;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
@@ -45,7 +50,7 @@ import retrofit2.HttpException;
 
 public class BudgetActualFragment extends SessionBaseFragment {
 
-    EditText budget_actual_tv;
+    EditText budget_actual_et;
     ListView budget_actual_lv;
     Button budget_actual_update_btn;
     Spinner budget_actual_spinner;
@@ -82,23 +87,57 @@ public class BudgetActualFragment extends SessionBaseFragment {
             Log.v("sessoinActualNAME", activity.session.name);
 
             // 実額があれば、セットする
-            budget_actual_tv = (EditText) view.findViewById(R.id.budget_actual_tv);
+            budget_actual_et = (EditText) view.findViewById(R.id.budget_actual_et);
             if (activity.session.actual != 0) {
-                budget_actual_tv.setText(Integer.toString(activity.session.actual), TextView.BufferType.EDITABLE);
+                budget_actual_et.setText(String.format("%,d", activity.session.actual), TextView.BufferType.EDITABLE);
             }
+
+            // 3桁区切り
+            budget_actual_et.addTextChangedListener(new TextWatcher() {
+                boolean isEdiging;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (isEdiging) return;
+                    isEdiging = true;
+                    String str = s.toString().replaceAll("[^\\d]", "");
+                    double s1 = 0;
+                    try {
+                        s1 = Double.parseDouble(str);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                    NumberFormat nf2 = NumberFormat.getInstance(Locale.JAPANESE);
+                    ((DecimalFormat) nf2).applyPattern("###,###.###");
+                    s.replace(0, s.length(), nf2.format(s1));
+
+                    if (s.toString().equals("0")) {
+                        budget_actual_et.setText("");
+                    }
+                    isEdiging = false;
+                }
+            });
 
             updateListView(activity.session, Integer.parseInt(unitRounding));
 
 
             budget_actual_update_btn = view.findViewById(R.id.budget_actual_update_btn);
             budget_actual_update_btn.setOnClickListener((v) -> {
-                if(budget_actual_tv.getText().toString().isEmpty()){
+                if(budget_actual_et.getText().toString().isEmpty()){
                     final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundColor(Color.BLACK);
                     snackbar.setActionTextColor(Color.WHITE);
                     snackbar.show();
                 }else{
-                    updateBudgetActual(activity, view, activity.session, String.valueOf(budget_actual_tv.getText()));
+                    updateBudgetActual(activity, view, activity.session, String.valueOf(budget_actual_et.getText()).replace(",", ""));
                 }
             });
 
@@ -323,7 +362,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
         // 自動で実額に適用するように見せる
         if (activity != null) {
             if (activity.session.actual != 0) {
-                budget_actual_tv.setText(String.valueOf(activity.session.actual));
+                budget_actual_et.setText(String.valueOf(activity.session.actual));
             }
         }
     }

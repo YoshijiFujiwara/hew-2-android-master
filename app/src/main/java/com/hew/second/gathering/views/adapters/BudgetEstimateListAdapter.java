@@ -101,7 +101,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
         if (allowedArray[position] == true) {
-            costTextField.setText(costArray[position].toString() + "円");
+            costTextField.setText(String.format("%,d", costArray[position]) + "円");
         } else {
             costTextField.setText("招待中");
             costTextField.setTextColor(Color.RED);

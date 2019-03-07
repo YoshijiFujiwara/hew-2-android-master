@@ -72,12 +72,10 @@ public class BudgetActualListAdapter extends ArrayAdapter {
                     switchPaid(userIdArray[position]);
                 }
                 if (paidArray[position] == true) {
-                    paidImageView.setAlpha(0);
-                    ((Animatable) paidImageView.getDrawable()).stop();
+                    paidImageView.setImageResource(R.drawable.ic_check_grey);
                     paidArray[position] = false;
                 } else if (position != 0){
-                    paidImageView.setAlpha(255);
-                    ((Animatable) paidImageView.getDrawable()).start();
+                    paidImageView.setImageResource(R.drawable.ic_check_green);
                     paidArray[position] = true;
                 }
             }
@@ -85,14 +83,16 @@ public class BudgetActualListAdapter extends ArrayAdapter {
 
         // this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
-        infoTextField.setText(costArray[position].toString() + "円");
+        infoTextField.setText(String.format("%,d", costArray[position]) + "円");
         userIdField.setText(userIdArray[position]);
         // 幹事の場合
         if (position == 0) {
             paidImageView.setAlpha(0);
         }
         if (paidArray.length > 0 && paidArray[position] == true) {
-            ((Animatable) paidImageView.getDrawable()).start();
+            paidImageView.setImageResource(R.drawable.ic_check_green);
+        } else {
+            paidImageView.setImageResource(R.drawable.ic_check_grey);
         }
 
         return rowView;

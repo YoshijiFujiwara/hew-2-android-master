@@ -9,6 +9,8 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,8 +33,11 @@ import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
@@ -42,7 +47,7 @@ import retrofit2.HttpException;
 
 public class BudgetEstimateFragment extends SessionBaseFragment {
 
-    EditText budget_estimate_tv;
+    EditText budget_estimate_et;
     ListView budget_estimate_lv;
     Button budget_update_btn;
     String attributeName;
@@ -84,10 +89,45 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             }
 
             // 一人あたりの予算額があれば、セットする
-            budget_estimate_tv = (EditText) view.findViewById(R.id.budget_estimate_tv);
+            budget_estimate_et = (EditText) view.findViewById(R.id.budget_estimate_et);
             if (activity.session.budget != 0) {
-                budget_estimate_tv.setText(Integer.toString(activity.session.budget), TextView.BufferType.EDITABLE);
+                budget_estimate_et.setText(String.format("%,d", activity.session.budget), TextView.BufferType.EDITABLE);
             }
+
+            // 3桁区切り
+            budget_estimate_et.addTextChangedListener(new TextWatcher() {
+                boolean isEdiging;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (isEdiging) return;
+                    isEdiging = true;
+                    String str = s.toString().replaceAll("[^\\d]", "");
+                    double s1 = 0;
+                    try {
+                        s1 = Double.parseDouble(str);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                    NumberFormat nf2 = NumberFormat.getInstance(Locale.JAPANESE);
+                    ((DecimalFormat) nf2).applyPattern("###,###.###");
+                    s.replace(0, s.length(), nf2.format(s1));
+
+                    if (s.toString().equals("0")) {
+                        budget_estimate_et.setText("");
+                    }
+                    isEdiging = false;
+                }
+            });
+
             // 人数のカウント
             int allowUserCount = 0;
             for (int i = 0; i < activity.session.users.size(); i++) {
@@ -100,12 +140,12 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
             updateListView(activity.session, Integer.parseInt(unitRounding));
             TextView budget_estimate_sum_tv = view.findViewById(R.id.budget_estimate_sum_tv);
-            budget_estimate_sum_tv.setText(String.valueOf(activity.session.budget * (allowUserCount + 1)) + "円");
+            budget_estimate_sum_tv.setText(String.format("%,d", activity.session.budget * (allowUserCount + 1)) + "円");
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
                 try{
-                    activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
+                    activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_et.getText()).replace(",", ""));
                     // allowUserの処理
                     int allowUserCountLambda = 0;
                     for (int i = 0; i < activity.session.users.size(); i++) {
@@ -113,12 +153,12 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                             allowUserCountLambda++;
                         }
                     }
-                    updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()), allowUserCountLambda);
+                    updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_et.getText()).replace(",", ""), allowUserCountLambda);
 
                     budget_estimate_allow_user_number.setText(String.valueOf(allowUserCountLambda + 1));
 
                     int budgetSum = updateListView(activity.session, Integer.parseInt(unitRounding));
-                    budget_estimate_sum_tv.setText(String.valueOf(activity.session.budget * (allowUserCountLambda + 1)) + "円");
+                    budget_estimate_sum_tv.setText(String.format("%,d", activity.session.budget * (allowUserCountLambda + 1)) + "円");
 
                 }catch (Exception e){
                     final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
