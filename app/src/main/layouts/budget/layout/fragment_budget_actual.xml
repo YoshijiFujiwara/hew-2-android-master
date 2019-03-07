@@ -41,12 +41,12 @@
             android:layout_marginLeft="90dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="-10dp"
-            android:labelFor="@id/budget_actual_tv"
+            android:labelFor="@id/budget_actual_et"
             android:text="￥"
             android:textSize="45dp" />
 
         <EditText
-            android:id="@+id/budget_actual_tv"
+            android:id="@+id/budget_actual_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
@@ -54,7 +54,8 @@
             android:layout_marginRight="90dp"
             android:layout_marginBottom="20dp"
             android:hint="総額"
-            android:inputType="number"
+            android:inputType="numberDecimal"
+            android:digits="0123456789.,"
             android:textAlignment="center"
             android:textSize="30dp" />
 

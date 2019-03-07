@@ -83,7 +83,7 @@ public class BudgetActualListAdapter extends ArrayAdapter {
 
         // this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
-        infoTextField.setText(costArray[position].toString() + "円");
+        infoTextField.setText(String.format("%,d", costArray[position]) + "円");
         userIdField.setText(userIdArray[position]);
         // 幹事の場合
         if (position == 0) {
