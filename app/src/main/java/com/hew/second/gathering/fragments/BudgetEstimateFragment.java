@@ -83,18 +83,41 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 budget_estimate_spinner.setSelection(4);
             }
 
-            // 予算額があれば、セットする
+            // 一人あたりの予算額があれば、セットする
             budget_estimate_tv = (EditText) view.findViewById(R.id.budget_estimate_tv);
             if (activity.session.budget != 0) {
                 budget_estimate_tv.setText(Integer.toString(activity.session.budget), TextView.BufferType.EDITABLE);
             }
+            // 人数のカウント
+            int allowUserCount = 0;
+            for (int i = 0; i < activity.session.users.size(); i++) {
+                if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                    allowUserCount++;
+                }
+            }
+            TextView budget_estimate_allow_user_number = view.findViewById(R.id.budget_estimate_allow_user_number);
+            budget_estimate_allow_user_number.setText(String.valueOf(allowUserCount + 1));
+
             updateListView(activity.session, Integer.parseInt(unitRounding));
+            TextView budget_estimate_sum_tv = view.findViewById(R.id.budget_estimate_sum_tv);
+            budget_estimate_sum_tv.setText(String.valueOf(activity.session.budget * (allowUserCount + 1)) + "円");
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
                 try{
                     activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
                     updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()));
+
+                    int allowUserCountLambda = 0;
+                    for (int i = 0; i < activity.session.users.size(); i++) {
+                        if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                            allowUserCountLambda++;
+                        }
+                    }
+                    budget_estimate_allow_user_number.setText(String.valueOf(allowUserCountLambda + 1));
+
+                    int budgetSum = updateListView(activity.session, Integer.parseInt(unitRounding));
+                    budget_estimate_sum_tv.setText(String.valueOf(activity.session.budget * (allowUserCountLambda + 1)) + "円");
                 }catch (Exception e){
                     final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundColor(Color.BLACK);
@@ -186,7 +209,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 ));
     }
 
-    private void updateListView(Session session, int unitRounding) {
+    private int updateListView(Session session, int unitRounding) {
         // 予算額から、支払い予定額を計算する
         ArrayList<String> nameArray = new ArrayList<>();
         ArrayList<Integer> costArray = new ArrayList<>();
@@ -195,16 +218,21 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         ArrayList<String> userIdArray = new ArrayList<>();
         ArrayList<Boolean> allowedArray = new ArrayList<>(); // 幹事は自動でallowを適用する。その他は、join_statusを適用する
 
+        int allowUserCount = 0;
+        for (int i = 0; i < session.users.size(); i++) {
+            if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                allowUserCount++;
+            }
+        }
+
         // 実額から、支払い金額を計算する
         if (session.budget != 0) {
-            int sum = session.budget;
-            Log.v("予算額", String.valueOf(sum));
             // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
             int managerCost = 0;
-            int allowUserCount = 0;
+            // sum は、一人あたりの予算額×allowUserの数
+            int sum = session.budget * (allowUserCount + 1);
             for (int i = 0; i < session.users.size(); i++) {
                 if (new String("allow").equals(activity.session.users.get(i).join_status)) {
-                    allowUserCount++;
                     sum -= session.users.get(i).plus_minus;
                 }
             }
@@ -235,7 +263,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             for (int i = 0; i < costArray.size(); i++) {
                 costArraySum += costArray.get(i);
             }
-            costArray.set(0, costArray.get(0) + (session.budget - costArraySum));
+            costArray.set(0, costArray.get(0) + (session.budget * (allowUserCount + 1) - costArraySum));
 
             // 灰色表示の、　wait userを表示する
             for (int i = 0; i < session.users.size(); i++) {
@@ -294,6 +322,8 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, allowedParams, session.id);
         budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
         budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
+
+        return session.budget * (allowUserCount + 1);
     }
 
     // activity.session　の情報を更新する

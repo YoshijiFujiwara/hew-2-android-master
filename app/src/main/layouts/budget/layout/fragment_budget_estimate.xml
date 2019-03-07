@@ -14,7 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        android:text="予算額を入力してください"
+        android:text="一人あたりの平均予算額を入力してください"
         app:layout_constraintBottom_toTopOf="@+id/budget_estimate_upper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,12 +34,13 @@
         app:layout_constraintBottom_toTopOf="@+id/budget_update_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="90dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="-10dp"
             android:labelFor="@id/budget_estimate_tv"
@@ -48,16 +49,56 @@
 
         <EditText
             android:id="@+id/budget_estimate_tv"
-            android:layout_width="match_parent"
+            android:layout_width="114dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
+            android:layout_marginLeft="-10dp"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="90dp"
+            android:layout_marginRight="0dp"
             android:layout_marginBottom="20dp"
-            android:hint="予算額"
+            android:hint="平均額"
             android:inputType="number"
             android:textAlignment="center"
             android:textSize="30dp" />
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="-10dp"
+            android:labelFor="@id/budget_estimate_tv"
+            android:text="×"
+            android:textSize="40dp" />
+
+        <TextView
+            android:id="@+id/budget_estimate_allow_user_number"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="-10dp"
+            android:text="7"
+            android:textSize="40dp" />
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="-10dp"
+            android:text="="
+            android:textSize="40dp" />
+
+        <TextView
+            android:id="@+id/budget_estimate_sum_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="-10dp"
+            android:text="3000円"
+            android:textSize="35dp" />
+
     </LinearLayout>
 
     <LinearLayout
