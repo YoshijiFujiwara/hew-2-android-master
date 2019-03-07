@@ -72,12 +72,10 @@ public class BudgetActualListAdapter extends ArrayAdapter {
                     switchPaid(userIdArray[position]);
                 }
                 if (paidArray[position] == true) {
-                    paidImageView.setAlpha(0);
-                    ((Animatable) paidImageView.getDrawable()).stop();
+                    paidImageView.setImageResource(R.drawable.ic_check_grey);
                     paidArray[position] = false;
                 } else if (position != 0){
-                    paidImageView.setAlpha(255);
-                    ((Animatable) paidImageView.getDrawable()).start();
+                    paidImageView.setImageResource(R.drawable.ic_check_green);
                     paidArray[position] = true;
                 }
             }
@@ -92,7 +90,9 @@ public class BudgetActualListAdapter extends ArrayAdapter {
             paidImageView.setAlpha(0);
         }
         if (paidArray.length > 0 && paidArray[position] == true) {
-            ((Animatable) paidImageView.getDrawable()).start();
+            paidImageView.setImageResource(R.drawable.ic_check_green);
+        } else {
+            paidImageView.setImageResource(R.drawable.ic_check_grey);
         }
 
         return rowView;
