@@ -315,4 +315,16 @@ public class BudgetActualFragment extends SessionBaseFragment {
                         }
                 ));
     }
+
+    // このフラグメントが選ばれた時
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        // 自動で実額に適用するように見せる
+        if (activity != null) {
+            if (activity.session.actual != 0) {
+                budget_actual_tv.setText(String.valueOf(activity.session.actual));
+            }
+        }
+    }
 }

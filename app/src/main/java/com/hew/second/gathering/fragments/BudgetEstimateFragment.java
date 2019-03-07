@@ -106,18 +106,20 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             budget_update_btn.setOnClickListener((v) -> {
                 try{
                     activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
-                    updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()));
-
+                    // allowUserの処理
                     int allowUserCountLambda = 0;
                     for (int i = 0; i < activity.session.users.size(); i++) {
                         if (new String("allow").equals(activity.session.users.get(i).join_status)) {
                             allowUserCountLambda++;
                         }
                     }
+                    updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()), allowUserCountLambda);
+
                     budget_estimate_allow_user_number.setText(String.valueOf(allowUserCountLambda + 1));
 
                     int budgetSum = updateListView(activity.session, Integer.parseInt(unitRounding));
                     budget_estimate_sum_tv.setText(String.valueOf(activity.session.budget * (allowUserCountLambda + 1)) + "円");
+
                 }catch (Exception e){
                     final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundColor(Color.BLACK);
@@ -172,12 +174,17 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void updateBudget(FragmentActivity fragmentActivity, Session session, String budgetText) {
+    private void updateBudget(FragmentActivity fragmentActivity, Session session, String budgetText, int allowUserCount) {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("budget", budgetText);
+        // 実額が0の場合、総額を実額に自動適用する
+        if (session.actual == 0) {
+            body.put("actual", String.valueOf(Integer.parseInt(budgetText) * (allowUserCount + 1)));
+        }
+
         Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
