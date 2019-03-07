@@ -2,6 +2,7 @@ package com.hew.second.gathering.views.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.InputType;
@@ -40,11 +41,12 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
     private final Integer[] plusMinusArray;
     private final String[] attributeArray;
     private final String[] userIdArray;
+    private final Boolean[] allowedArray;
     private final Integer sessionId;
     private final CompositeDisposable cd = new CompositeDisposable();
 
     public BudgetEstimateListAdapter(Activity context, String[] nameArrayParam, Integer[] costArrayParam,
-                                     Integer[] plusMinusParam, String[] attributeParam, String[] userIdParam, int sessionId) {
+                                     Integer[] plusMinusParam, String[] attributeParam, String[] userIdParam, Boolean[] allowedParams, int sessionId) {
         super(context, R.layout.listview_estimate_row, userIdParam);
 
         this.context = context;
@@ -53,6 +55,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         this.plusMinusArray = plusMinusParam;
         this.attributeArray = attributeParam;
         this.userIdArray = userIdParam;
+        this.allowedArray = allowedParams;
         this.sessionId = sessionId;
     }
 
@@ -95,12 +98,17 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
             }
         });
 
-
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
-        costTextField.setText(costArray[position].toString() + "円");
+        if (allowedArray[position] == true) {
+            costTextField.setText(costArray[position].toString() + "円");
+        } else {
+            costTextField.setText("招待中");
+            costTextField.setTextColor(Color.RED);
+        }
+
         // 幹事の場合は、0固定で編集できないようにする
-        if (position == 0) {
+        if (position == 0 || allowedArray[position] == false) {
             plusMinusEditText.setText("");
             plusMinusEditText.setAlpha(0);
             plusMinusEditText.setInputType(InputType.TYPE_NULL);
@@ -108,6 +116,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
             plusMinusEditTextLabel.setText("±");
             plusMinusEditText.setText(plusMinusArray[position].toString());
         }
+
 
         attributeTextField.setText(attributeArray[position]);
         userIdField.setText(userIdArray[position]);

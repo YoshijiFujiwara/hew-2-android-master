@@ -83,18 +83,43 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 budget_estimate_spinner.setSelection(4);
             }
 
-            // 予算額があれば、セットする
+            // 一人あたりの予算額があれば、セットする
             budget_estimate_tv = (EditText) view.findViewById(R.id.budget_estimate_tv);
             if (activity.session.budget != 0) {
                 budget_estimate_tv.setText(Integer.toString(activity.session.budget), TextView.BufferType.EDITABLE);
             }
+            // 人数のカウント
+            int allowUserCount = 0;
+            for (int i = 0; i < activity.session.users.size(); i++) {
+                if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                    allowUserCount++;
+                }
+            }
+            TextView budget_estimate_allow_user_number = view.findViewById(R.id.budget_estimate_allow_user_number);
+            budget_estimate_allow_user_number.setText(String.valueOf(allowUserCount + 1));
+
             updateListView(activity.session, Integer.parseInt(unitRounding));
+            TextView budget_estimate_sum_tv = view.findViewById(R.id.budget_estimate_sum_tv);
+            budget_estimate_sum_tv.setText(String.valueOf(activity.session.budget * (allowUserCount + 1)) + "円");
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
                 try{
                     activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_tv.getText()));
-                    updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()));
+                    // allowUserの処理
+                    int allowUserCountLambda = 0;
+                    for (int i = 0; i < activity.session.users.size(); i++) {
+                        if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                            allowUserCountLambda++;
+                        }
+                    }
+                    updateBudget(fragmentActivity, activity.session, String.valueOf(budget_estimate_tv.getText()), allowUserCountLambda);
+
+                    budget_estimate_allow_user_number.setText(String.valueOf(allowUserCountLambda + 1));
+
+                    int budgetSum = updateListView(activity.session, Integer.parseInt(unitRounding));
+                    budget_estimate_sum_tv.setText(String.valueOf(activity.session.budget * (allowUserCountLambda + 1)) + "円");
+
                 }catch (Exception e){
                     final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundColor(Color.BLACK);
@@ -149,12 +174,17 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void updateBudget(FragmentActivity fragmentActivity, Session session, String budgetText) {
+    private void updateBudget(FragmentActivity fragmentActivity, Session session, String budgetText, int allowUserCount) {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("budget", budgetText);
+        // 実額が0の場合、総額を実額に自動適用する
+        if (session.actual == 0) {
+            body.put("actual", String.valueOf(Integer.parseInt(budgetText) * (allowUserCount + 1)));
+        }
+
         Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -186,27 +216,32 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 ));
     }
 
-    private void updateListView(Session session, int unitRounding) {
+    private int updateListView(Session session, int unitRounding) {
         // 予算額から、支払い予定額を計算する
         ArrayList<String> nameArray = new ArrayList<>();
         ArrayList<Integer> costArray = new ArrayList<>();
         ArrayList<Integer> plusMinusArray = new ArrayList<>();
         ArrayList<String> attributeArray = new ArrayList<>();
         ArrayList<String> userIdArray = new ArrayList<>();
+        ArrayList<Boolean> allowedArray = new ArrayList<>(); // 幹事は自動でallowを適用する。その他は、join_statusを適用する
+
+        int allowUserCount = 0;
+        for (int i = 0; i < session.users.size(); i++) {
+            if (new String("allow").equals(activity.session.users.get(i).join_status)) {
+                allowUserCount++;
+            }
+        }
 
         // 実額から、支払い金額を計算する
         if (session.budget != 0) {
-            int sum = session.budget;
-            Log.v("予算額", String.valueOf(sum));
             // 幹事の金額は、支払い総額＋それぞれのplus_minusの和を、幹事を含めた人数で割ることで求められる
             int managerCost = 0;
-            int allowUserCount = 0;
+            // sum は、一人あたりの予算額×allowUserの数
+            int sum = session.budget * (allowUserCount + 1);
             for (int i = 0; i < session.users.size(); i++) {
                 if (new String("allow").equals(activity.session.users.get(i).join_status)) {
-                    allowUserCount++;
                     sum -= session.users.get(i).plus_minus;
                 }
-
             }
             Log.v("allow user count", String.valueOf(allowUserCount));
             managerCost = ((sum / unitRounding) / (allowUserCount + 1)) * unitRounding;
@@ -217,13 +252,16 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             plusMinusArray.add(0);
             attributeArray.add("幹事");
             userIdArray.add(String.valueOf(session.manager.id));
+            allowedArray.add(true);
             for (int i = 0; i < session.users.size(); i++) {
+                // denyの人はそもそも表示しない
                 if (new String("allow").equals(activity.session.users.get(i).join_status)) {
                     nameArray.add(session.users.get(i).username);
                     costArray.add(managerCost + session.users.get(i).plus_minus);
                     plusMinusArray.add(session.users.get(i).plus_minus);
                     attributeArray.add(session.users.get(i).attribute_name);
                     userIdArray.add(String.valueOf(session.users.get(i).id));
+                    allowedArray.add(true);
                 }
             }
 
@@ -232,7 +270,20 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             for (int i = 0; i < costArray.size(); i++) {
                 costArraySum += costArray.get(i);
             }
-            costArray.set(0, costArray.get(0) + (session.budget - costArraySum));
+            costArray.set(0, costArray.get(0) + (session.budget * (allowUserCount + 1) - costArraySum));
+
+            // 灰色表示の、　wait userを表示する
+            for (int i = 0; i < session.users.size(); i++) {
+                // denyの人はそもそも表示しない
+                if (new String("wait").equals(activity.session.users.get(i).join_status)) {
+                    nameArray.add(session.users.get(i).username);
+                    costArray.add(managerCost + session.users.get(i).plus_minus);
+                    plusMinusArray.add(session.users.get(i).plus_minus);
+                    attributeArray.add(session.users.get(i).attribute_name);
+                    userIdArray.add(String.valueOf(session.users.get(i).id));
+                    allowedArray.add(false);
+                }
+            }
 
         } else {
             // 幹事情報をまずセットする
@@ -241,6 +292,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             plusMinusArray.add(0);
             attributeArray.add("幹事");
             userIdArray.add(String.valueOf(session.manager.id));
+            allowedArray.add(true);
             // session情報から,usernameのリストを生成
             for (int i = 0; i < session.users.size(); i++) {
                 if (new String("allow").equals(activity.session.users.get(i).join_status)) {
@@ -249,19 +301,36 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                     plusMinusArray.add(session.users.get(i).plus_minus);
                     attributeArray.add(session.users.get(i).attribute_name);
                     userIdArray.add(String.valueOf(session.users.get(i).id));
+                    // allow か　wait かで、背景色を分けて、わかりやすく表示するため
+                    allowedArray.add(true);
+                }
+            }
+
+            // session情報から,usernameのリストを生成
+            for (int i = 0; i < session.users.size(); i++) {
+                if (new String("wait").equals(activity.session.users.get(i).join_status)) {
+                    nameArray.add(session.users.get(i).username);
+                    costArray.add(0);
+                    plusMinusArray.add(session.users.get(i).plus_minus);
+                    attributeArray.add(session.users.get(i).attribute_name);
+                    userIdArray.add(String.valueOf(session.users.get(i).id));
+                    // allow か　wait かで、背景色を分けて、わかりやすく表示するため
+                    allowedArray.add(false);
                 }
             }
         }
-
 
         String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
         Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
         Integer[] plusMinusParams = plusMinusArray.toArray(new Integer[plusMinusArray.size()]);
         String[] attributeNameParams = attributeArray.toArray(new String[attributeArray.size()]);
         String[] userIdParams = userIdArray.toArray(new String[userIdArray.size()]);
-        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, session.id);
+        Boolean[] allowedParams = allowedArray.toArray(new Boolean[allowedArray.size()]);
+        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, allowedParams, session.id);
         budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
         budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
+
+        return session.budget * (allowUserCount + 1);
     }
 
     // activity.session　の情報を更新する
