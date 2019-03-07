@@ -193,6 +193,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         ArrayList<Integer> plusMinusArray = new ArrayList<>();
         ArrayList<String> attributeArray = new ArrayList<>();
         ArrayList<String> userIdArray = new ArrayList<>();
+        ArrayList<Boolean> allowedArray = new ArrayList<>(); // 幹事は自動でallowを適用する。その他は、join_statusを適用する
 
         // 実額から、支払い金額を計算する
         if (session.budget != 0) {
@@ -206,7 +207,6 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                     allowUserCount++;
                     sum -= session.users.get(i).plus_minus;
                 }
-
             }
             Log.v("allow user count", String.valueOf(allowUserCount));
             managerCost = ((sum / unitRounding) / (allowUserCount + 1)) * unitRounding;
@@ -217,13 +217,16 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             plusMinusArray.add(0);
             attributeArray.add("幹事");
             userIdArray.add(String.valueOf(session.manager.id));
+            allowedArray.add(true);
             for (int i = 0; i < session.users.size(); i++) {
+                // denyの人はそもそも表示しない
                 if (new String("allow").equals(activity.session.users.get(i).join_status)) {
                     nameArray.add(session.users.get(i).username);
                     costArray.add(managerCost + session.users.get(i).plus_minus);
                     plusMinusArray.add(session.users.get(i).plus_minus);
                     attributeArray.add(session.users.get(i).attribute_name);
                     userIdArray.add(String.valueOf(session.users.get(i).id));
+                    allowedArray.add(true);
                 }
             }
 
@@ -234,6 +237,19 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             }
             costArray.set(0, costArray.get(0) + (session.budget - costArraySum));
 
+            // 灰色表示の、　wait userを表示する
+            for (int i = 0; i < session.users.size(); i++) {
+                // denyの人はそもそも表示しない
+                if (new String("wait").equals(activity.session.users.get(i).join_status)) {
+                    nameArray.add(session.users.get(i).username);
+                    costArray.add(managerCost + session.users.get(i).plus_minus);
+                    plusMinusArray.add(session.users.get(i).plus_minus);
+                    attributeArray.add(session.users.get(i).attribute_name);
+                    userIdArray.add(String.valueOf(session.users.get(i).id));
+                    allowedArray.add(false);
+                }
+            }
+
         } else {
             // 幹事情報をまずセットする
             nameArray.add(session.manager.username);
@@ -241,6 +257,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
             plusMinusArray.add(0);
             attributeArray.add("幹事");
             userIdArray.add(String.valueOf(session.manager.id));
+            allowedArray.add(true);
             // session情報から,usernameのリストを生成
             for (int i = 0; i < session.users.size(); i++) {
                 if (new String("allow").equals(activity.session.users.get(i).join_status)) {
@@ -249,17 +266,32 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                     plusMinusArray.add(session.users.get(i).plus_minus);
                     attributeArray.add(session.users.get(i).attribute_name);
                     userIdArray.add(String.valueOf(session.users.get(i).id));
+                    // allow か　wait かで、背景色を分けて、わかりやすく表示するため
+                    allowedArray.add(true);
+                }
+            }
+
+            // session情報から,usernameのリストを生成
+            for (int i = 0; i < session.users.size(); i++) {
+                if (new String("wait").equals(activity.session.users.get(i).join_status)) {
+                    nameArray.add(session.users.get(i).username);
+                    costArray.add(0);
+                    plusMinusArray.add(session.users.get(i).plus_minus);
+                    attributeArray.add(session.users.get(i).attribute_name);
+                    userIdArray.add(String.valueOf(session.users.get(i).id));
+                    // allow か　wait かで、背景色を分けて、わかりやすく表示するため
+                    allowedArray.add(false);
                 }
             }
         }
-
 
         String[] nameParams = nameArray.toArray(new String[nameArray.size()]);
         Integer[] costParams = costArray.toArray(new Integer[costArray.size()]);
         Integer[] plusMinusParams = plusMinusArray.toArray(new Integer[plusMinusArray.size()]);
         String[] attributeNameParams = attributeArray.toArray(new String[attributeArray.size()]);
         String[] userIdParams = userIdArray.toArray(new String[userIdArray.size()]);
-        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, session.id);
+        Boolean[] allowedParams = allowedArray.toArray(new Boolean[allowedArray.size()]);
+        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, allowedParams, session.id);
         budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
         budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
     }
