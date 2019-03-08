@@ -17,13 +17,17 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
+import com.hew.second.gathering.api.SessionUser;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.hotpepper.Shop;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -55,10 +59,43 @@ public class GuestSessionDetailActivity extends BaseActivity {
 
         TextView shopName = findViewById(R.id.shop_name);
         shopName.setText(shop.name);
-        TextView time = findViewById(R.id.time);
-        time.setText(session.start_time + "〜" + session.end_time);
+        TextView time = findViewById(R.id.time);// 時刻表示フォーマット
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat dateOnly = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat output = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+        SimpleDateFormat outputShort = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        StringBuilder strTime = new StringBuilder();
+        if(session.start_time != null){
+            try{
+                Date start = sdf.parse(session.start_time);
+                strTime.append(output.format(start));
+                strTime.append(" 〜 ");
+                if(session.end_time != null) {
+                    Date end = sdf.parse(session.end_time);
+                    if(dateOnly.format(start).equals(dateOnly.format(end))){
+                        strTime.append(outputShort.format(end));
+                    }else{
+                        strTime.append(output.format(end));
+                    }
+                }else{
+                    strTime.append("未定");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        } else {
+            strTime.append("未定");
+        }
+        time.setText(strTime.toString());
+
         TextView countMember = findViewById(R.id.count_member);
-        countMember.setText(session.users.size() + "人");
+        int ok = 0;
+        for (SessionUser u : session.users) {
+            if (u.join_status.equals("allow")) {
+                ok++;
+            }
+        }
+        countMember.setText(Integer.toString(ok + 1) + " / " + (session.users.size() + 1) + "人");
 
         TextView genre = findViewById(R.id.textView_genre);
         genre.setText(shop.genre.name);

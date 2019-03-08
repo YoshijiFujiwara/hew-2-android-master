@@ -26,7 +26,10 @@ import com.hew.second.gathering.hotpepper.HpApiService;
 import com.hew.second.gathering.hotpepper.HpHttp;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
@@ -99,8 +102,37 @@ public class EventFinishFragment extends SessionBaseFragment {
 
         TextView shopName = activity.findViewById(R.id.shop_name);
         shopName.setText(activity.shop.name);
+
+        // 時刻表示フォーマット
         TextView time = activity.findViewById(R.id.time);
-        time.setText(activity.session.start_time + "〜" + activity.session.end_time);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat dateOnly = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat output = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+        SimpleDateFormat outputShort = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        StringBuilder strTime = new StringBuilder();
+        if(activity.session.start_time != null){
+            try{
+                Date start = sdf.parse(activity.session.start_time);
+                strTime.append(output.format(start));
+                strTime.append(" 〜 ");
+                if(activity.session.end_time != null) {
+                    Date end = sdf.parse(activity.session.end_time);
+                    if(dateOnly.format(start).equals(dateOnly.format(end))){
+                        strTime.append(outputShort.format(end));
+                    }else{
+                        strTime.append(output.format(end));
+                    }
+                }else{
+                    strTime.append("未定");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        } else {
+            strTime.append("未定");
+        }
+        time.setText(strTime.toString());
+
         TextView countMember = activity.findViewById(R.id.count_member);
         int ok = 0;
         for (SessionUser u : activity.session.users) {
@@ -115,7 +147,11 @@ public class EventFinishFragment extends SessionBaseFragment {
         TextView address = activity.findViewById(R.id.textView_address);
         address.setText(activity.shop.address);
         TextView budget = activity.findViewById(R.id.textView_budget);
-        budget.setText(Integer.toString(activity.session.budget));
+        if (activity.session.budget == 0) {
+            budget.setText("未定");
+        } else {
+            budget.setText(Integer.toString(activity.session.budget));
+        }
         TextView access = activity.findViewById(R.id.textView_access);
         access.setText(activity.shop.mobile_access);
         TextView url = activity.findViewById(R.id.textView_url);

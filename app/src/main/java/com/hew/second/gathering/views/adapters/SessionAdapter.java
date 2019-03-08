@@ -9,11 +9,15 @@ import android.widget.TextView;
 
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.SessionUser;
 import com.hew.second.gathering.hotpepper.Shop;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class SessionAdapter extends BaseAdapter {
 
@@ -67,7 +71,37 @@ public class SessionAdapter extends BaseAdapter {
         } else {
             holder.time.setText(list.get(position).start_time + "〜");
         }
-        holder.count_member.setText(list.get(position).users.size() + 1 + "名");
+
+        // 時刻表示フォーマット
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat dateOnly = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat output = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+        SimpleDateFormat outputShort = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        StringBuilder strTime = new StringBuilder();
+        String strStartTime = list.get(position).start_time;
+        String strEndTime = list.get(position).end_time;
+        if(list.get(position).start_time != null){
+            try{
+                Date start = sdf.parse(strStartTime);
+                strTime.append(output.format(start));
+                strTime.append("〜");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        } else {
+            strTime.append("未定");
+        }
+        holder.time.setText(strTime.toString());
+
+        int ok = 0;
+        ArrayList<SessionUser> users = new ArrayList<>(list.get(position).users);
+        for (SessionUser u : users) {
+            if (u.join_status.equals("allow")) {
+                ok++;
+            }
+        }
+        holder.count_member.setText(Integer.toString(ok + 1) + " / " + (users.size() + 1) + "人");
+
 
         if (shopList != null) {
             Picasso.get()
