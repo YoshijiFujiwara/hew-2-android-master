@@ -11,6 +11,7 @@ public class LoginUser {
     private static int id = -1;
     private static String uniqueId = "";
     private static String email = "";
+    private static String username = "";
     private static String password = "";
     private static String token = "";
 
@@ -23,7 +24,7 @@ public class LoginUser {
     }
 
     public static String getPassword(@Nullable SharedPreferences sharedPref) {
-        if(sharedPref == null)
+        if (sharedPref == null)
             return LoginUser.password;
         LoginUser.password = sharedPref.getString(KEY_PASSWORD, "");
         return LoginUser.password;
@@ -45,22 +46,27 @@ public class LoginUser {
         LoginUser.uniqueId = uniqueId;
     }
 
-//    public static String getUsername() {
-//        return username;
-//    }
-//
-//    public static void setUsername(String username) {
-//        LoginUser.username = username;
-//    }
-//    public static String getUsername(@Nullable SharedPreferences sharedPref) {
-//        if(sharedPref == null)
-//            return LoginUser.username;
-//        LoginUser.username = sharedPref.getString(KEY_USERNAME, "");
-//        return LoginUser.username;
-//}
+    public static String getUsername() {
+        return username;
+    }
+
+    public static void setUsername(String username) {
+        LoginUser.username = username;
+    }
+
+    public static void setEmail(@Nullable SharedPreferences sharedPref, String email) {
+        if (sharedPref == null){
+            LoginUser.email = email;
+            return;
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
+        LoginUser.email = email;
+        editor.putString(KEY_EMAIL, email);
+        editor.apply();
+    }
 
     public static String getEmail(@Nullable SharedPreferences sharedPref) {
-        if(sharedPref == null)
+        if (sharedPref == null)
             return LoginUser.email;
         LoginUser.email = sharedPref.getString(KEY_EMAIL, "");
         return LoginUser.email;

@@ -209,6 +209,11 @@ public class EditProfileActivity extends BaseActivity {
                 .subscribe(
                         list -> {
                             dialog.dismiss();
+
+                            LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), list.data.email);
+                            LoginUser.setUniqueId(list.data.unique_id);
+                            LoginUser.setUsername(list.data.username);
+
                             Intent intent = new Intent();
 //                                Intent intent = new Intent(activity.getApplication(), MainActivity.class);
                             intent.putExtra(SNACK_MESSAGE, "アカウントを更新しました。");

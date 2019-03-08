@@ -115,6 +115,20 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+        setProfile();
+    }
+
+    private void setProfile() {
+        if (!LoginUser.getUsername().isEmpty()) {
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            View header = navigationView.getHeaderView(0);
+            TextView user_name = header.findViewById(R.id.user_name);
+            TextView user_email = header.findViewById(R.id.user_email);
+            TextView uniqueId = header.findViewById(R.id.user_unique_id);
+            user_name.setText(LoginUser.getUsername());
+            user_email.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
+            uniqueId.setText("@" + LoginUser.getUniqueId());
+        }
     }
 
     private void profile(Profile data) {
@@ -127,6 +141,10 @@ public class MainActivity extends BaseActivity
         user_email.setText(data.email);
         TextView uniqueId = header.findViewById(R.id.user_unique_id);
         uniqueId.setText("@" + data.unique_id);
+
+        LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), data.email);
+        LoginUser.setUniqueId(data.unique_id);
+        LoginUser.setUsername(data.username);
     }
 
     @Override

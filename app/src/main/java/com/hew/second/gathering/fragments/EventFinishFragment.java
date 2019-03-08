@@ -1,10 +1,17 @@
 package com.hew.second.gathering.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +26,8 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.activities.MainActivity;
+import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.SessionUser;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.hotpepper.GourmetResult;
@@ -26,6 +35,9 @@ import com.hew.second.gathering.hotpepper.HpApiService;
 import com.hew.second.gathering.hotpepper.HpHttp;
 import com.squareup.picasso.Picasso;
 
+import org.parceler.Parcels;
+
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -79,6 +91,59 @@ public class EventFinishFragment extends SessionBaseFragment {
                         })
                         .negativeText("キャンセル")
                         .show();
+            });
+
+            BottomNavigationView bnv = activity.findViewById(R.id.eip_bottom_navigation);
+
+            TextView sessionTitle = activity.findViewById(R.id.session_main_image_text);
+            sessionTitle.setOnClickListener((l)->{
+                new MaterialDialog.Builder(activity)
+                        .title("イベント名")
+                        .content("タイトル")
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .inputRangeRes(1, 30, R.color.colorAccentDark)
+                        .input("イベント名", activity.session.name, (MaterialDialog dialog, CharSequence input) -> {
+                            updateSessionName(input.toString());
+                        })
+                        .negativeText("キャンセル")
+                        .show();
+            });
+
+            CardView placeIcon = activity.findViewById(R.id.cardView5);
+            placeIcon.setOnClickListener((l)->{
+                FragmentManager fragmentManager = getFragmentManager();
+                if(fragmentManager != null){
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
+                    fragmentTransaction.commit();
+                }
+            });
+
+
+            CardView timeIcon = activity.findViewById(R.id.cardView6);
+            timeIcon.setOnClickListener((l)->{
+                bnv.setSelectedItemId(R.id.navi_botto_time);
+                FragmentManager fragmentManager = getFragmentManager();
+                if(fragmentManager != null){
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.eip_container, StartTimeFragment.newInstance());
+                    fragmentTransaction.commit();
+                }
+            });
+
+
+            CardView inviteIcon = activity.findViewById(R.id.cardView3);
+            inviteIcon.setOnClickListener((l)->{
+                bnv.setSelectedItemId(R.id.navi_botto_member);
+                FragmentManager fragmentManager = getFragmentManager();
+                if(fragmentManager != null){
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.eip_container, InviteFragment.newInstance());
+                    fragmentTransaction.commit();
+                }
             });
 
             if (activity.shop == null) {
@@ -146,11 +211,13 @@ public class EventFinishFragment extends SessionBaseFragment {
         genre.setText(activity.shop.genre.name);
         TextView address = activity.findViewById(R.id.textView_address);
         address.setText(activity.shop.address);
+
+        NumberFormat nfCur = NumberFormat.getCurrencyInstance();
         TextView budget = activity.findViewById(R.id.textView_budget);
         if (activity.session.budget == 0) {
             budget.setText("未定");
         } else {
-            budget.setText(Integer.toString(activity.session.budget));
+            budget.setText(nfCur.format(activity.session.budget) + " /人");
         }
         TextView access = activity.findViewById(R.id.textView_access);
         access.setText(activity.shop.mobile_access);
@@ -221,6 +288,46 @@ public class EventFinishFragment extends SessionBaseFragment {
                             }
                         }
                 ));
+    }
+
+    private void updateSessionName(String name){
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
+
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("name", name);
+        Observable<SessionDetail> sessionDetail = service.updateSession(LoginUser.getToken(), activity.session.id, body);
+        cd.add(sessionDetail.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        (list) -> {
+                            if(dialog != null && activity != null){
+                                activity.setTitle(list.data.name);
+                                TextView title = activity.findViewById(R.id.session_main_image_text);
+                                title.setText(list.data.name);
+                                activity.session = list.data;
+                                dialog.dismiss();
+                                final Snackbar snackbar = Snackbar.make(view, "イベント名を更新しました。", Snackbar.LENGTH_SHORT);
+                                snackbar.getView().setBackgroundColor(Color.BLACK);
+                                snackbar.setActionTextColor(Color.WHITE);
+                                snackbar.show();
+                            }
+                        },
+                        (throwable) -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if(dialog != null){
+                                dialog.dismiss();
+                            }
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }));
+
     }
 
 }
