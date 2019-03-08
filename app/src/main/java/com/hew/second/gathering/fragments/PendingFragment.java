@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -207,6 +208,8 @@ public class PendingFragment extends BaseFragment {
     }
 
     private void permitFriend(int id) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         HashMap<String, Integer> body = new HashMap<>();
         body.put("user_id", id);
@@ -217,6 +220,7 @@ public class PendingFragment extends BaseFragment {
                 .subscribe(
                         () -> {
                             if (activity != null) {
+                                dialog.dismiss();
                                 final Snackbar sbYes = Snackbar.make(view, "友達になりました！", Snackbar.LENGTH_SHORT);
                                 sbYes.getView().setBackgroundColor(Color.BLACK);
                                 sbYes.setActionTextColor(Color.WHITE);
@@ -227,6 +231,7 @@ public class PendingFragment extends BaseFragment {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (activity != null && !cd.isDisposed()) {
+                                dialog.dismiss();
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
@@ -239,6 +244,8 @@ public class PendingFragment extends BaseFragment {
     }
 
     private void rejectFriend(int id) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         HashMap<String, Integer> body = new HashMap<>();
         body.put("user_id", id);
@@ -249,6 +256,7 @@ public class PendingFragment extends BaseFragment {
                 .subscribe(
                         () -> {
                             if (activity != null) {
+                                dialog.dismiss();
                                 final Snackbar sbNo = Snackbar.make(view, "申請を拒否しました。", Snackbar.LENGTH_SHORT);
                                 sbNo.getView().setBackgroundColor(Color.BLACK);
                                 sbNo.setActionTextColor(Color.WHITE);
@@ -259,6 +267,7 @@ public class PendingFragment extends BaseFragment {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (activity != null && !cd.isDisposed()) {
+                                dialog.dismiss();
                                 mSwipeRefreshLayout.setRefreshing(false);
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移

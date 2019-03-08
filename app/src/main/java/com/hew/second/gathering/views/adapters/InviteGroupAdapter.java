@@ -76,9 +76,7 @@ public class InviteGroupAdapter extends BaseAdapter {
 
         holder.name.setText(list.get(position).name);
         holder.detail.setText(list.get(position).users.size() + "名");
-        holder.deleteButton.setOnClickListener((view) -> {
-            ((GridView) parent).performItemClick(view, position, R.id.delete_group);
-        });
+        holder.deleteButton.setVisibility(View.GONE);
         if(checked.get(position)){
             convertView.setBackgroundColor(Color.parseColor("#70B98E70"));
         } else {

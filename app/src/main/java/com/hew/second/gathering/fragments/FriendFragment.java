@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -230,7 +231,8 @@ public class FriendFragment extends BaseFragment {
     }
 
     public void deleteFriend(int id) {
-
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         Completable friendList = service.deleteFriend(LoginUser.getToken(), id);
         cd.add(friendList.subscribeOn(Schedulers.io())
@@ -239,6 +241,7 @@ public class FriendFragment extends BaseFragment {
                 .subscribe(
                         () -> {
                             if (activity != null) {
+                                dialog.dismiss();
                                 final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "友達登録を解除しました。", Snackbar.LENGTH_SHORT);
                                 snackbar.getView().setBackgroundColor(Color.BLACK);
                                 snackbar.setActionTextColor(Color.WHITE);
@@ -249,6 +252,7 @@ public class FriendFragment extends BaseFragment {
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (activity != null && !cd.isDisposed()) {
+                                dialog.dismiss();
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);

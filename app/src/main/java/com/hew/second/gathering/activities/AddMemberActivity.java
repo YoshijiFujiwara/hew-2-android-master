@@ -18,12 +18,14 @@ import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.views.adapters.AddMemberAdapter;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -32,7 +34,7 @@ import retrofit2.HttpException;
 public class AddMemberActivity extends BaseActivity {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private MemberAdapter adapter = null;
+    private AddMemberAdapter adapter = null;
     private ArrayList<Friend> ar = new ArrayList<>();
     private ListView listView = null;
 
@@ -55,6 +57,8 @@ public class AddMemberActivity extends BaseActivity {
 
         listView = findViewById(R.id.member_list);
         listView.setOnItemClickListener((parent, view, position, id) -> {
+            dialog = new SpotsDialog.Builder().setContext(this).build();
+            dialog.show();
             ApiService service = Util.getService();
             HashMap<String, String> body = new HashMap<>();
             body.put("email", adapter.getList().get(position).email);
@@ -64,6 +68,7 @@ public class AddMemberActivity extends BaseActivity {
                     .unsubscribeOn(Schedulers.io())
                     .subscribe(
                             (list) -> {
+                                dialog.dismiss();
                                 fetchList();
                                 final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "友達申請を送信しました。", Snackbar.LENGTH_SHORT);
                                 snackbar.getView().setBackgroundColor(Color.BLACK);
@@ -72,7 +77,7 @@ public class AddMemberActivity extends BaseActivity {
                             }, // 終了時
                             (throwable) -> {
                                 Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-
+                                dialog.dismiss();
                                 if (!cd.isDisposed()) {
                                     if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                         //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
@@ -169,7 +174,7 @@ public class AddMemberActivity extends BaseActivity {
         ArrayList<Friend> list = new ArrayList<>(data);
         // 検索用リスト
         ar = new ArrayList<>(list);
-        adapter = new MemberAdapter(list);
+        adapter = new AddMemberAdapter(list);
         if(listView != null){
             // ListViewにadapterをセット
             listView.setAdapter(adapter);
