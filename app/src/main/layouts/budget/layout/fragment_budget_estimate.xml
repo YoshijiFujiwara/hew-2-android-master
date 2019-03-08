@@ -31,74 +31,103 @@
         android:background="@drawable/payment_in_style"
         android:elevation="5dp"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/budget_update_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="-10dp"
-            android:labelFor="@id/budget_estimate_et"
-            android:text="￥"
-            android:textSize="45dp" />
-
-        <EditText
-            android:id="@+id/budget_estimate_et"
-            android:layout_width="114dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="20dp"
-            android:hint="平均額"
-            android:inputType="numberDecimal"
-            android:digits="0123456789.,"
-            android:textAlignment="center"
-            android:textSize="30dp" />
-
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-10dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="-10dp"
-            android:labelFor="@id/budget_estimate_et"
-            android:text="×"
-            android:textSize="40dp" />
-
-        <TextView
-            android:id="@+id/budget_estimate_allow_user_number"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-15dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="-10dp"
-            android:text="0"
-            android:textSize="40dp" />
-
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-15dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="-10dp"
-            android:text="="
-            android:textSize="40dp" />
-
-        <TextView
-            android:id="@+id/budget_estimate_sum_tv"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-15dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="-10dp"
-            android:text="0"
-            android:textSize="35dp" />
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:labelFor="@id/budget_estimate_et"
+                android:text="￥"
+                android:textSize="40dp"
+                app:layout_constraintBottom_toBottomOf="@+id/budget_estimate_et"
+                app:layout_constraintEnd_toStartOf="@+id/budget_estimate_et"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:labelFor="@id/budget_estimate_et"
+                android:text="×"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/budget_estimate_allow_user_number"
+                app:layout_constraintStart_toStartOf="@+id/budget_estimate_et"
+                app:layout_constraintTop_toBottomOf="@+id/budget_estimate_et" />
+
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="="
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/budget_estimate_sum_tv"
+                app:layout_constraintStart_toEndOf="@+id/budget_estimate_allow_user_number"
+                app:layout_constraintTop_toBottomOf="@+id/budget_estimate_et" />
+
+            <EditText
+                android:id="@+id/budget_estimate_et"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:digits="0123456789.,"
+                android:hint="平均額"
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:textSize="30dp"
+                app:layout_constraintBottom_toTopOf="@+id/budget_estimate_allow_user_number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView25"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/budget_estimate_sum_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="0"
+                android:textSize="22dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView27"
+                app:layout_constraintTop_toBottomOf="@+id/budget_estimate_et" />
+
+            <TextView
+                android:id="@+id/budget_estimate_allow_user_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="0"
+                android:textSize="25dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView27"
+                app:layout_constraintStart_toEndOf="@+id/textView26" />
+        </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>
 
