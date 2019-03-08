@@ -69,6 +69,7 @@ public class GuestJoinedSessionFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.listView_guest_joined);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_guest_joined));
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(activity, GuestSessionDetailActivity.class);
             Bundle bundle = new Bundle();

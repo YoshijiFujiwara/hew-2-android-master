@@ -82,6 +82,7 @@ public class WaitingPaymentFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.listView_waitingPay);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_waiting_payment));
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(activity, EventProcessMainActivity.class);
             Bundle bundle = new Bundle();

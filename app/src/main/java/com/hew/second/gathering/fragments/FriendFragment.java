@@ -101,7 +101,7 @@ public class FriendFragment extends BaseFragment {
 
         listView = activity.findViewById(R.id.member_list);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            if(view.getId() == R.id.member_delete) {
+            if (view.getId() == R.id.member_delete) {
                 new MaterialDialog.Builder(activity)
                         .title("友達解除")
                         .content(ar.get(position).username + "さんとの友達登録を解除しますか？")
@@ -141,9 +141,7 @@ public class FriendFragment extends BaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return false;
             }
 
@@ -162,9 +160,7 @@ public class FriendFragment extends BaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return true;
             }
         });
@@ -194,6 +190,7 @@ public class FriendFragment extends BaseFragment {
                         list -> {
                             mSwipeRefreshLayout.setRefreshing(false);
                             if (activity != null && !cd.isDisposed()) {
+                                ar = new ArrayList<>(list.data);
                                 updateList(list.data);
                             }
                         },  // 成功時
@@ -219,11 +216,10 @@ public class FriendFragment extends BaseFragment {
     private void updateList(List<Friend> data) {
         // ListView生成
         listView = activity.findViewById(R.id.member_list);
-        if(listView != null) {
+        if (listView != null) {
             ArrayList<Friend> list = new ArrayList<>(data);
-            ar = new ArrayList<>(data);
             adapter = new MemberAdapter(list);
-            if(listView != null){
+            if (listView != null) {
                 // ListViewにadapterをセット
                 listView.setAdapter(adapter);
             }

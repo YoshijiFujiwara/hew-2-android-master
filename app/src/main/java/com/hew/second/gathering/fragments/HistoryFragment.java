@@ -82,6 +82,7 @@ public class HistoryFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.listView_history);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_history));
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(activity, EventProcessMainActivity.class);
             Bundle bundle = new Bundle();

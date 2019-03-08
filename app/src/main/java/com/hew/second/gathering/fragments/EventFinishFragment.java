@@ -95,7 +95,7 @@ public class EventFinishFragment extends SessionBaseFragment {
             BottomNavigationView bnv = activity.findViewById(R.id.eip_bottom_navigation);
 
             TextView sessionTitle = activity.findViewById(R.id.session_main_image_text);
-            sessionTitle.setOnClickListener((l)->{
+            sessionTitle.setOnClickListener((l) -> {
                 new MaterialDialog.Builder(activity)
                         .title("イベント名")
                         .content("タイトル")
@@ -109,39 +109,45 @@ public class EventFinishFragment extends SessionBaseFragment {
             });
 
             CardView placeIcon = activity.findViewById(R.id.cardView5);
-            placeIcon.setOnClickListener((l)->{
-                FragmentManager fragmentManager = getFragmentManager();
-                if(fragmentManager != null){
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
-                    fragmentTransaction.commit();
+            placeIcon.setOnClickListener((l) -> {
+                if (activity != null) {
+                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        //fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
                 }
             });
 
 
             CardView timeIcon = activity.findViewById(R.id.cardView6);
-            timeIcon.setOnClickListener((l)->{
+            timeIcon.setOnClickListener((l) -> {
                 bnv.setSelectedItemId(R.id.navi_botto_time);
-                FragmentManager fragmentManager = getFragmentManager();
-                if(fragmentManager != null){
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.replace(R.id.eip_container, StartTimeFragment.newInstance());
-                    fragmentTransaction.commit();
+                if(activity != null) {
+                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        //fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.eip_container, StartTimeFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
                 }
             });
 
 
             CardView inviteIcon = activity.findViewById(R.id.cardView3);
-            inviteIcon.setOnClickListener((l)->{
+            inviteIcon.setOnClickListener((l) -> {
                 bnv.setSelectedItemId(R.id.navi_botto_member);
-                FragmentManager fragmentManager = getFragmentManager();
-                if(fragmentManager != null){
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.replace(R.id.eip_container, InviteFragment.newInstance());
-                    fragmentTransaction.commit();
+                if(activity != null) {
+                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        //fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.replace(R.id.eip_container, InviteFragment.newInstance());
+                        fragmentTransaction.commit();
+                    }
                 }
             });
 
@@ -174,22 +180,22 @@ public class EventFinishFragment extends SessionBaseFragment {
         SimpleDateFormat output = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
         SimpleDateFormat outputShort = new SimpleDateFormat("HH:mm", Locale.getDefault());
         StringBuilder strTime = new StringBuilder();
-        if(activity.session.start_time != null){
-            try{
+        if (activity.session.start_time != null) {
+            try {
                 Date start = sdf.parse(activity.session.start_time);
                 strTime.append(output.format(start));
                 strTime.append(" 〜 ");
-                if(activity.session.end_time != null) {
+                if (activity.session.end_time != null) {
                     Date end = sdf.parse(activity.session.end_time);
-                    if(dateOnly.format(start).equals(dateOnly.format(end))){
+                    if (dateOnly.format(start).equals(dateOnly.format(end))) {
                         strTime.append(outputShort.format(end));
-                    }else{
+                    } else {
                         strTime.append(output.format(end));
                     }
-                }else{
+                } else {
                     strTime.append("未定");
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -289,7 +295,7 @@ public class EventFinishFragment extends SessionBaseFragment {
                 ));
     }
 
-    private void updateSessionName(String name){
+    private void updateSessionName(String name) {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
 
@@ -302,7 +308,7 @@ public class EventFinishFragment extends SessionBaseFragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         (list) -> {
-                            if(dialog != null && activity != null){
+                            if (dialog != null && activity != null) {
                                 activity.setTitle(list.data.name);
                                 TextView title = activity.findViewById(R.id.session_main_image_text);
                                 title.setText(list.data.name);
@@ -316,7 +322,7 @@ public class EventFinishFragment extends SessionBaseFragment {
                         },
                         (throwable) -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if(dialog != null){
+                            if (dialog != null) {
                                 dialog.dismiss();
                             }
                             if (activity != null && !cd.isDisposed()) {

@@ -178,6 +178,7 @@ public class PendingFragment extends BaseFragment {
                         list -> {
                             mSwipeRefreshLayout.setRefreshing(false);
                             if (activity != null) {
+                                ar = new ArrayList<>(list.data);
                                 updateList(list.data);
                             }
                         },  // 成功時
@@ -200,7 +201,6 @@ public class PendingFragment extends BaseFragment {
         listView = activity.findViewById(R.id.member_list_pending);
         if (listView != null) {
             ArrayList<Friend> list = new ArrayList<>(data);
-            ar = new ArrayList<>(data);
             adapter = new MemberAdapter(list);
             // ListViewにadapterをセット
             listView.setAdapter(adapter);

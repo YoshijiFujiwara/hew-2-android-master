@@ -3,6 +3,7 @@ package com.hew.second.gathering.views;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.view.View;
 
 public class SquareGridView extends CardView {
     boolean expanded = false;

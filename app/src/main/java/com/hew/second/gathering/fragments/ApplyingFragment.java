@@ -78,7 +78,7 @@ public class ApplyingFragment extends BaseFragment {
 
         listView = activity.findViewById(R.id.member_list_applying);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            if(view.getId() == R.id.member_delete) {
+            if (view.getId() == R.id.member_delete) {
                 new MaterialDialog.Builder(activity)
                         .title("友達申請")
                         .content(ar.get(position).username + "さんへの友達申請をやめますか？")
@@ -114,9 +114,7 @@ public class ApplyingFragment extends BaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return false;
             }
 
@@ -135,9 +133,7 @@ public class ApplyingFragment extends BaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return true;
             }
         });
@@ -168,6 +164,7 @@ public class ApplyingFragment extends BaseFragment {
                         list -> {
                             mSwipeRefreshLayout.setRefreshing(false);
                             if (activity != null) {
+                                ar = new ArrayList<>(list.data);
                                 updateList(list.data);
                             }
 
@@ -187,16 +184,15 @@ public class ApplyingFragment extends BaseFragment {
     private void updateList(List<Friend> data) {
         // ListView生成
         listView = activity.findViewById(R.id.member_list_applying);
-        if(listView != null){
+        if (listView != null) {
             ArrayList<Friend> list = new ArrayList<>(data);
-            ar = new ArrayList<>(data);
             adapter = new MemberAdapter(list);
             // ListViewにadapterをセット
             listView.setAdapter(adapter);
         }
     }
 
-    private void deleteFriendRequest(int id){
+    private void deleteFriendRequest(int id) {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
@@ -217,7 +213,7 @@ public class ApplyingFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if(activity != null && !cd.isDisposed() ){
+                            if (activity != null && !cd.isDisposed()) {
                                 dialog.dismiss();
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移

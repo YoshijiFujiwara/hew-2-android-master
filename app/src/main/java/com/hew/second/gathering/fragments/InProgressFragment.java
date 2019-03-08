@@ -85,6 +85,7 @@ public class InProgressFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.listView_event_in_progress);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_event_in_progress));
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(activity, EventProcessMainActivity.class);
             Bundle bundle = new Bundle();

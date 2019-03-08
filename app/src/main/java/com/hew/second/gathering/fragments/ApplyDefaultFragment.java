@@ -75,14 +75,15 @@ public class ApplyDefaultFragment extends SessionBaseFragment {
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             // TODO:デフォルト設定を適用して店選択へ
-            FragmentManager fragmentManager = getFragmentManager();
-
-            if(fragmentManager != null){
-                activity.defaultSetting = ar.get(position);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
-                fragmentTransaction.commit();
+            if(activity != null){
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                if(fragmentManager != null){
+                    activity.defaultSetting = ar.get(position);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
+                    fragmentTransaction.commit();
+                }
             }
         });
     }

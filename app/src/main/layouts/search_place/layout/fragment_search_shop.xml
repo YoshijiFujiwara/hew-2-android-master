@@ -70,14 +70,13 @@
         android:id="@+id/sliding_layout_search"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
         android:gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_genre"
-        app:umanoPanelHeight="48dp"
+        app:umanoPanelHeight="32dp"
         app:umanoShadowHeight="4dp">
 
         <android.support.constraint.ConstraintLayout
@@ -90,12 +89,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:text="飲み放題"
-                app:layout_constraintBottom_toTopOf="@+id/switch_course"
                 app:layout_constraintEnd_toStartOf="@+id/switch_tabe"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/label_search_result" />
 
@@ -106,10 +104,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
                 android:text="食べ放題"
-                app:layout_constraintBottom_toTopOf="@+id/switch_room"
+                app:layout_constraintBottom_toBottomOf="@+id/switch_nomi"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/switch_nomi"
-                app:layout_constraintTop_toBottomOf="@+id/label_search_result" />
+                app:layout_constraintTop_toTopOf="@+id/switch_nomi" />
 
             <Switch
                 android:id="@+id/switch_lunch"
@@ -117,23 +115,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp"
                 android:text="ランチあり"
-                app:layout_constraintBottom_toTopOf="@+id/label_range2"
+                app:layout_constraintBottom_toBottomOf="@+id/switch_parking"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/switch_parking"
-                app:layout_constraintTop_toBottomOf="@+id/switch_room" />
+                app:layout_constraintTop_toTopOf="@+id/switch_parking" />
 
             <Switch
                 android:id="@+id/switch_course"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:text="コースあり"
-                app:layout_constraintBottom_toTopOf="@+id/switch_parking"
                 app:layout_constraintEnd_toStartOf="@+id/switch_room"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switch_nomi" />
 
@@ -144,20 +141,19 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
                 android:text="個室あり"
-                app:layout_constraintBottom_toTopOf="@+id/switch_lunch"
+                app:layout_constraintBottom_toBottomOf="@+id/switch_course"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/switch_course"
-                app:layout_constraintTop_toBottomOf="@+id/switch_tabe" />
+                app:layout_constraintTop_toTopOf="@+id/switch_course" />
 
             <Switch
                 android:id="@+id/switch_parking"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:text="駐車場あり"
-                app:layout_constraintBottom_toTopOf="@+id/label_range"
                 app:layout_constraintEnd_toStartOf="@+id/switch_lunch"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switch_course" />
@@ -168,13 +164,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:gravity="center|top"
                 android:lineSpacingExtra="24sp"
                 android:text="@string/label_search_advanced"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/switch_nomi"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -185,9 +179,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:text="中心からの距離"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/spinner_range"
                 app:layout_constraintStart_toStartOf="@+id/switch_parking"
                 app:layout_constraintTop_toBottomOf="@+id/switch_parking" />

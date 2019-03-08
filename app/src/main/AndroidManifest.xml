@@ -79,7 +79,8 @@
         <activity
             android:name=".activities.EventProcessMainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.EditGroupActivity"
             android:label="@string/title_activity_edit_group"
