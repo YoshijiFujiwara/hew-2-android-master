@@ -74,8 +74,8 @@ public class InvitedListFragment extends SessionBaseFragment {
         Button inviteEnd = activity.findViewById(R.id.button_invite_end);
         inviteEnd.setOnClickListener((l) -> {
             new MaterialDialog.Builder(activity)
-                    .title("セッション")
-                    .content("セッションへの招待を打ち切りますか？")
+                    .title("イベント")
+                    .content("イベントへの招待を打ち切りますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {
                         abortInvite();
