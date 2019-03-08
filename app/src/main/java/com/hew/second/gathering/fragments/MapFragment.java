@@ -101,6 +101,9 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
     private Boolean requestingLocationUpdates;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
+    private static final LatLng defaultLatLng = new LatLng(35.39291572, 139.44288869);
+    private boolean started = true;
+
     public static MapFragment newInstance(String message) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
@@ -153,7 +156,6 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         buildLocationSettingsRequest();
 
         sup = activity.findViewById(R.id.sliding_layout);
-        sup.setAnchorPoint(0.5f);
 
         // activity_main.xmlのlistViewにListViewをセット
         listView = activity.findViewById(R.id.listView_shop_list);
@@ -172,6 +174,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
             intent.putExtras(bundle);
             startActivityForResult(intent, INTENT_SHOP_DETAIL);
         });
+
 
         Button button = activity.findViewById(R.id.search_refresh);
         button.setOnClickListener((l) -> {
@@ -218,25 +221,26 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                         bundle.putParcelable("DEFAULT_DETAIL", Parcels.wrap(activity.defaultSetting));
                     }
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    startActivityForResult(intent, INTENT_SHOP_DETAIL);
                 }
 
             }
         });
 
-        /*
-        LatLng latLng = new LatLng(34.7919367,135.34403);
-        CameraPosition cameraPos = new CameraPosition.Builder()
-                .target(latLng).bearing(0).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
-        */
         DefaultSetting d = activity.defaultSetting;
+
+        // 初回のマップ中心
+        CameraPosition cameraPos = new CameraPosition.Builder().target(defaultLatLng).bearing(0).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+
         if (d != null && d.current_location_flag != null && d.current_location_flag.equals("0")) {
             location = new Location("dummyProvider");
             location.setLatitude(Double.valueOf(d.latitude));
             location.setLongitude(Double.valueOf(d.longitude));
-            onSetCenter();
+            started = true;
+            onSetCenter(false);
         } else {
+            started = false;
             startLocationUpdates();
         }
     }
@@ -248,7 +252,8 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 location = locationResult.getLastLocation();
-                onSetCenter();
+                onSetCenter(started);
+                started = true;
             }
         };
     }
@@ -348,14 +353,20 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         onGetCenter(mapView);
     }
 
-    public void onSetCenter() {
+    public void onSetCenter(boolean afterSecond) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        SearchArgs.lat = (float) latLng.latitude;
+        SearchArgs.lng = (float) latLng.longitude;
+
         CameraPosition cameraPos = new CameraPosition.Builder()
                 .target(latLng).zoom(15.0f)
                 .bearing(0).tilt(60).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
-        SearchArgs.lat = (float) latLng.latitude;
-        SearchArgs.lng = (float) latLng.longitude;
+        if (afterSecond) {
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+        } else {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+            fetchShopList();
+        }
 
     }
 

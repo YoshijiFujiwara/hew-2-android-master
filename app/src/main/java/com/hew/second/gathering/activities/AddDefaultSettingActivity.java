@@ -90,17 +90,25 @@ public class AddDefaultSettingActivity extends BaseActivity {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            groupList = new ArrayList<>(list.data);
-                            ArrayList<String> data = new ArrayList<>();
-                            for (Group g : groupList) {
-                                data.add(g.name);
-                            }
-                            spinner = findViewById(R.id.group_spinner);
-                            ArrayAdapter adapter =
-                                    new ArrayAdapter(this, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinner.setAdapter(adapter);
                             dialog.dismiss();
+                            // グループ所持判定
+                            if(list.data.isEmpty()){
+                                Intent intent = new Intent();
+                                intent.putExtra(SNACK_MESSAGE, "先にグループを作成してください。");
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }else{
+                                groupList = new ArrayList<>(list.data);
+                                ArrayList<String> data = new ArrayList<>();
+                                for (Group g : groupList) {
+                                    data.add(g.name);
+                                }
+                                spinner = findViewById(R.id.group_spinner);
+                                ArrayAdapter adapter =
+                                        new ArrayAdapter(this, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                spinner.setAdapter(adapter);
+                            }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -236,7 +244,6 @@ public class AddDefaultSettingActivity extends BaseActivity {
                         list -> {
                             dialog.dismiss();
                             Intent intent = new Intent();
-//                                Intent intent = new Intent(activity.getApplication(), MainActivity.class);
                             intent.putExtra(SNACK_MESSAGE, "デフォルトを作成しました。");
                             setResult(RESULT_OK, intent);
                             finish();

@@ -101,6 +101,8 @@ public class DefaultMapActivity extends BaseActivity implements OnMapReadyCallba
     private Boolean requestingLocationUpdates;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
+    private static final LatLng defaultLatLng = new LatLng(35.39291572, 139.44288869);
+    private boolean started = true;
 
     // リクエストを受け取る
     @Override
@@ -179,12 +181,18 @@ public class DefaultMapActivity extends BaseActivity implements OnMapReadyCallba
         String lat = beforeIntent.getStringExtra("lat");//設定したkeyで取り出す
         String lng = beforeIntent.getStringExtra("lng");
 
+        // 初回のマップ中心
+        CameraPosition cameraPos = new CameraPosition.Builder().target(defaultLatLng).bearing(0).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+
         if (lat != null && lng != null) {
             location = new Location("dummy");
             location.setLatitude(Double.valueOf(lat));
             location.setLongitude(Double.valueOf(lng));
-            onSetCenter();
+            onSetCenter(false);
+            started = true;
         } else {
+            started = false;
             startLocationUpdates();
         }
     }
@@ -196,7 +204,8 @@ public class DefaultMapActivity extends BaseActivity implements OnMapReadyCallba
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 location = locationResult.getLastLocation();
-                onSetCenter();
+                onSetCenter(started);
+                started = true;
             }
         };
     }
@@ -296,12 +305,16 @@ public class DefaultMapActivity extends BaseActivity implements OnMapReadyCallba
         onGetCenter(mapView);
     }
 
-    public void onSetCenter() {
+    public void onSetCenter(boolean animate) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraPosition cameraPos = new CameraPosition.Builder()
                 .target(latLng).zoom(15.0f)
                 .bearing(0).tilt(60).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+        if (animate) {
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+        } else {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+        }
 
     }
 

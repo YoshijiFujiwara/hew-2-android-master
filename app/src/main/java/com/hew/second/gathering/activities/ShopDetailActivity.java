@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import dmax.dialog.SpotsDialog;
@@ -140,7 +141,7 @@ public class ShopDetailActivity extends BaseActivity {
         HashMap<String, String> body = new HashMap<>();
         body.put("name", title);
         body.put("shop_id", shop.id);
-        if(defaultSetting == null) {
+        if (defaultSetting == null) {
             Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
             cd.add(session.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -169,29 +170,32 @@ public class ShopDetailActivity extends BaseActivity {
                             }));
         } else {
             // Date型のフォーマットの設定
-            SimpleDateFormat sdf = new SimpleDateFormat("dd:HH:mm");
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            long date = 0;
-            long now = new Date().getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd:HH:mm", Locale.getDefault());
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            long lDate = 0;
+            Date date;
+            Date now = new Date();
+            long lNow = now.getTime();
             try {
-                date = sdf.parse(defaultSetting.timer).getTime();
-            } catch(ParseException e) {
+                date = sdf.parse(defaultSetting.timer);
+                lDate = date.getTime() + 1000 * 24 * 60 * 60;
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
-            now += date;
+            lNow += lDate;
             // 日時を加算する
             Date start = new Date();
-            start.setTime(now);
+            start.setTime(lNow);
             body.put("start_time", sdf2.format(start));
             Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
             Bundle bundle = new Bundle();
             final Session[] s = new Session[1];
 
             cd.add(session.subscribeOn(Schedulers.io())
-                    .flatMap((v)->{
+                    .flatMap((v) -> {
                         s[0] = v.data;
-                        return service.createSessionGroup(LoginUser.getToken(),v.data.id,defaultSetting.group.id);
+                        return service.createSessionGroup(LoginUser.getToken(), v.data.id, defaultSetting.group.id);
                     })
                     .observeOn(AndroidSchedulers.mainThread())
                     .unsubscribeOn(Schedulers.io())

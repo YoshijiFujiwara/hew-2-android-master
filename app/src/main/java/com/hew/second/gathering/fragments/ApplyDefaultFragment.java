@@ -33,6 +33,7 @@ import com.hew.second.gathering.views.adapters.DefaultSettingAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -93,6 +94,8 @@ public class ApplyDefaultFragment extends SessionBaseFragment {
     }
 
     private void fetchList() {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         Observable<DefaultSettingList> token = service.getDefaultSettingList(LoginUser.getToken());
         cd.add(token.subscribeOn(Schedulers.io())
@@ -102,10 +105,16 @@ public class ApplyDefaultFragment extends SessionBaseFragment {
                         list -> {
                             if (activity != null) {
                                 updateList(list.data);
+                                if(dialog != null){
+                                    dialog.dismiss();
+                                }
                             }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if(dialog != null){
+                                dialog.dismiss();
+                            }
                             if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
