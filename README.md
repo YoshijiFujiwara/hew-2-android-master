@@ -122,12 +122,53 @@ github上からプルリクエストを作ってdevelopとマージ
 
 ## バックエンドメモ
 
-### テストユーザー
+### プレゼン用データ
+id 1~4を、プレゼン用データとして追加しました。(テスト太郎を始めとするテストデータは、依然として残しております。)  
+パスワードは全員「hoisulu」  
+幹事役 １人（id: 1）
+```
+浜田　太郎
+hamada@hew.com
+```
+先生役 ２人(id: 2, 3)
+```
+山田　忠明
+yamada@hew.com
+```
+```
+田中　信也
+tanaka@hew.com
+```
+学生役 1人(id: 3)
+```
+山本　京介
+yamamoto@hew.com
+```
+ 
+### デモ機用データ
+id 5~7を、プレゼン用データとして追加しました。(テスト太郎を始めとするテストデータは、依然として残しております。)  
+パスワードは全員「hoisulu」  
+幹事役 １人（id: 5）
+```
+浜田　太郎(デモ)
+demo5@hew.com
+```
+先生役 ２人(id: 6, 7)
+```
+山田　忠明(デモ)
+demo6@hew.com
+```
+```
+田中　信也(デモ)
+demo7@hew.com
+```  
+  
+### 開発用テストユーザー(一時的に無効!!!!!!!!!!!!!!)
 ```
 testuser@example.com  
 hoisulu 
 ```
-### テストユーザー(プロフィールを変更するなど、サブで使用する用)
+### 開発用テストユーザー(一時的に無効!!!!!!!!!!!!!!!。プロフィールを変更するなど、サブで使用する用)
 ```
 testuser48@example.com  
 hoisulu  
@@ -139,29 +180,7 @@ hoisulu
 ```
 testuser50@example.com  
 hoisulu  
-```
-### 本番用データ
-id 1~6を、本番用データとして追加しました。(テスト太郎を始めとするテストデータは、依然として残しております。)  
-パスワードは全員「hoisulu」  
-幹事役 １人（id: 1）
-```
-hamada@hew.com
-```
- 上司役 ２人(id: 2, 5)
- ```
- yamamoto@hew.com
- sakamoto@hew.com
- ```
- 同僚役 1人(id: 3)
- ```
- harada@hew.com
- ```
- 女性役 2人(id: 4, 6)
- ```
- wakamatsu@hew.com
- itho@hew.com
- ```
-  
+```  
 ### APIURL
 
 <https://laravel-dot-eventer-1543384121468.appspot.com/>
