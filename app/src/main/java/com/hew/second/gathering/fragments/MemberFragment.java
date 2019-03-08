@@ -51,7 +51,7 @@ public class MemberFragment extends BaseFragment {
         ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
-        activity.setTitle("メンバー一覧");
+        activity.setTitle("友達一覧");
 
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);

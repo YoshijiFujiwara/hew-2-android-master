@@ -76,7 +76,7 @@ public class AddMemberActivity extends BaseActivity {
                                 if (!cd.isDisposed()) {
                                     if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                         //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
-                                        final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "すでにフレンドか、申請中です。", Snackbar.LENGTH_LONG);
+                                        final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "すでに友達か、申請中です。", Snackbar.LENGTH_LONG);
                                         snackbar.getView().setBackgroundColor(Color.BLACK);
                                         snackbar.setActionTextColor(Color.WHITE);
                                         snackbar.show();
