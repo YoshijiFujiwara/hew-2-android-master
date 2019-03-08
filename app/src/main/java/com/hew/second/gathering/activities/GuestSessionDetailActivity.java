@@ -40,7 +40,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
         Shop shop = Parcels.unwrap(getIntent().getParcelableExtra("SHOP_DETAIL"));
         Session session = Parcels.unwrap(getIntent().getParcelableExtra("SESSION_DETAIL"));
         String status = getIntent().getStringExtra("STATUS");
-        setTitle("セッション詳細");
+        setTitle("イベント詳細");
 
         intent = new Intent();
 
@@ -141,7 +141,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
                 .subscribe(
                         (list) -> {
                             //遷移
-                            intent.putExtra(SNACK_MESSAGE, "セッションに参加しました。");
+                            intent.putExtra(SNACK_MESSAGE, "イベントに参加しました。");
                             setResult(RESULT_OK, intent);
                             finish();
                         },
@@ -168,7 +168,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
                 .subscribe(
                         (list) -> {
                             //遷移
-                            intent.putExtra(SNACK_MESSAGE, "セッションへの参加を断りました。");
+                            intent.putExtra(SNACK_MESSAGE, "イベントへの参加を断りました。");
                             setResult(RESULT_OK, intent);
                             finish();
                         },
