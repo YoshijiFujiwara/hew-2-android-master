@@ -113,7 +113,7 @@ public class ShopDetailActivity extends BaseActivity {
                         .content("タイトル")
                         .inputType(InputType.TYPE_CLASS_TEXT)
                         .inputRangeRes(1, 30, R.color.colorAccentDark)
-                        .input("ヒント", "新規イベント", (MaterialDialog dialog, CharSequence input) -> {
+                        .input("新規イベント名", "", (MaterialDialog dialog, CharSequence input) -> {
                             createSession(input.toString(), shop);
                         })
                         .negativeText("キャンセル")

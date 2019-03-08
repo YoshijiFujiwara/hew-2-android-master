@@ -139,9 +139,20 @@ public class StartTimeFragment extends SessionBaseFragment {
                 hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
                 minute = calendar.get(Calendar.MINUTE);
 
-//               開始時間のTextView表示
+                // 開始時間のTextView表示
                 startDateText.setText(sdfDate.format(date));
                 startTimeText.setText(sdfTime.format(date));
+
+                // 終了時間仮設定
+                endDateText.setText(sdfDate.format(date));
+                calendar.add(Calendar.HOUR_OF_DAY , 1);
+                endTimeText.setText(sdfTime.format(calendar.getTime()));
+
+                endYear = calendar.get(Calendar.YEAR);
+                endMonthOfYear = calendar.get(Calendar.MONTH);
+                endDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                endHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+                endMinute = calendar.get(Calendar.MINUTE);
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -150,7 +161,7 @@ public class StartTimeFragment extends SessionBaseFragment {
             //strStartTime = sdFormat.format(calendar.getTime());
             strStartTime = "未定";
         }
-        //      終了時間が設定されていたら
+        // 終了時間が設定されていたら
         if (activity.session.end_time != null) {
             strEndTime = activity.session.end_time;
 
@@ -175,6 +186,8 @@ public class StartTimeFragment extends SessionBaseFragment {
         } else {
 //          設定なし（値がなかった）の場合
             //strEndTime = sdFormat.format(addHour(1).getTime());
+            endDateText.setAlpha(0.5f);
+            endTimeText.setAlpha(0.5f);
             strEndTime = "未定";
         }
 
@@ -242,25 +255,28 @@ public class StartTimeFragment extends SessionBaseFragment {
                 TextView startTimeText = activity.findViewById(R.id.start_timer);
                 TextView endDateText = activity.findViewById(R.id.end_date);
                 TextView endTimeText = activity.findViewById(R.id.end_timer);
-                if (startDateText.getText().equals("未定") || startTimeText.getText().equals("未定")
-                        || endDateText.getText().equals("未定") || endTimeText.getText().equals("未定")) {
-                    snackbar.show();
-                    return;
+                if (startDateText.getText().equals("未定") || startTimeText.getText().equals("未定")){
+                    strStartTime = null;
+                }
+                if(endDateText.getText().equals("未定") || endTimeText.getText().equals("未定")) {
+                    strEndTime = null;
                 }
 
 //              日付比較　０
                 int diff = setStartCalender[0].compareTo(setEndCalender[0]);
 
 
-                if (diff == 0) {
+                if (diff == 0 && strEndTime != null) {
                     Log.d("calenderComparison", "TheSame 同じ");
                     snackbar.show();
-                } else if (diff > 0) {
+                } else if (diff > 0 && strEndTime != null) {
                     Log.d("calenderComparison", "開始時間のほうが終了時間より先に進んでいます");
                     snackbar.show();
 
                 } else {
                     Log.d("calenderComparison", "開始時間は終了時間より過去です");
+                    endDateText.setAlpha(1.0f);
+                    endTimeText.setAlpha(1.0f);
                     updateDate(activity.session, strStartTime, strEndTime);
                 }
             }
@@ -301,7 +317,7 @@ public class StartTimeFragment extends SessionBaseFragment {
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute);
 
-            String text = (String) DateFormat.format("kk時mm分", calendar);
+            String text = (String) DateFormat.format("HH時mm分", calendar);
             textView.setText(text);
         }
     }
@@ -352,8 +368,6 @@ public class StartTimeFragment extends SessionBaseFragment {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Log.v("sStartTime", list.data.start_time);
-                            Log.v("sessionTime", list.data.end_time);
                             if (activity != null) {
                                 activity.session.start_time = list.data.start_time;
                                 activity.session.end_time = list.data.end_time;
