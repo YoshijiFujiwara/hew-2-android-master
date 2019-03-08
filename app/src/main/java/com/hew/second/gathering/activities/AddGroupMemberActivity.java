@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -65,6 +66,8 @@ public class AddGroupMemberActivity extends BaseActivity {
 
         listView = findViewById(R.id.member_list);
         listView.setOnItemClickListener((parent, view, position, id) -> {
+            dialog = new SpotsDialog.Builder().setContext(this).build();
+            dialog.show();
             ApiService service = Util.getService();
             HashMap<String, Integer> body = new HashMap<>();
             body.put("user_id", adapter.getList().get(position).id);
@@ -75,6 +78,7 @@ public class AddGroupMemberActivity extends BaseActivity {
                     .subscribe(
                             () -> {
                                 fetchList();
+                                dialog.dismiss();
                                 final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "グループに追加しました。", Snackbar.LENGTH_SHORT);
                                 snackbar.getView().setBackgroundColor(Color.BLACK);
                                 snackbar.setActionTextColor(Color.WHITE);
@@ -82,6 +86,7 @@ public class AddGroupMemberActivity extends BaseActivity {
                             }, // 終了時
                             (throwable) -> {
                                 Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                                dialog.dismiss();
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                     //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
                                     final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "既に追加されています。", Snackbar.LENGTH_LONG);
@@ -161,6 +166,7 @@ public class AddGroupMemberActivity extends BaseActivity {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            mSwipeRefreshLayout.setRefreshing(false);
                             // ログインアクティビティへ遷移
                             if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(getApplication(), LoginActivity.class);

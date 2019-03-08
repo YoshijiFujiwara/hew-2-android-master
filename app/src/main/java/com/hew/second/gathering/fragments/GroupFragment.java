@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -77,7 +79,16 @@ public class GroupFragment extends BaseFragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createGroup();
+                new MaterialDialog.Builder(activity)
+                        .title("グループ名")
+                        .content("タイトル")
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .inputRangeRes(1, 30, R.color.colorAccentDark)
+                        .input("グループ名", "", (MaterialDialog dialog, CharSequence input) -> {
+                            createGroup(input.toString());
+                        })
+                        .negativeText("キャンセル")
+                        .show();
             }
         });
 
@@ -137,10 +148,10 @@ public class GroupFragment extends BaseFragment {
         fetchList();
     }
 
-    private void createGroup() {
+    private void createGroup(String name) {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
-        body.put("name", "グループ");
+        body.put("name", name);
         Observable<GroupDetail> token = service.createGroup(LoginUser.getToken(),body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -150,6 +161,7 @@ public class GroupFragment extends BaseFragment {
                             if (activity != null) {
                                 Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
                                 intent.putExtra("GROUP_ID", list.data.id);
+                                intent.putExtra("NEW_GROUP", true);
                                 startActivityForResult(intent, INTENT_EDIT_GROUP);
                             }
                         },  // 成功時
@@ -202,6 +214,8 @@ public class GroupFragment extends BaseFragment {
     }
 
     private void deleteGroup(int id){
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         Completable token = service.deleteGroup(LoginUser.getToken(), id);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -211,7 +225,8 @@ public class GroupFragment extends BaseFragment {
                         () -> {
                             if (activity != null) {
                                 fetchList();
-                                final Snackbar snackbar = Snackbar.make(getView(), "グループを削除しました", Snackbar.LENGTH_LONG);
+                                dialog.dismiss();
+                                final Snackbar snackbar = Snackbar.make(getView(), "グループを削除しました。", Snackbar.LENGTH_LONG);
                                 snackbar.getView().setBackgroundColor(Color.BLACK);
                                 snackbar.setActionTextColor(Color.WHITE);
                                 snackbar.show();
@@ -219,10 +234,11 @@ public class GroupFragment extends BaseFragment {
                         }, // 終了時
                         (throwable) -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
                             if (activity != null && !cd.isDisposed()) {
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                     //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
-                                    final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているデフォルト設定があるので、削除できません", Snackbar.LENGTH_LONG);
+                                    final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているデフォルト設定があるので、削除できません。", Snackbar.LENGTH_LONG);
                                     snackbar.getView().setBackgroundColor(Color.BLACK);
                                     snackbar.setActionTextColor(Color.WHITE);
                                     snackbar.show();

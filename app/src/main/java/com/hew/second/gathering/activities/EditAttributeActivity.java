@@ -1,17 +1,13 @@
 package com.hew.second.gathering.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
@@ -19,11 +15,7 @@ import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Attribute;
 import com.hew.second.gathering.api.AttributeDetail;
-import com.hew.second.gathering.api.JWT;
-import com.hew.second.gathering.api.Session;
-import com.hew.second.gathering.api.SessionUser;
 import com.hew.second.gathering.api.Util;
-import com.hew.second.gathering.fragments.EditGroupFragment;
 
 import org.parceler.Parcels;
 
