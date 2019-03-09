@@ -413,7 +413,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         param.put("body", options);
 
         Observable<ShopIdList> recommendList = Util.getService()
-                .getRecommendShopIdList(LoginUser.getToken(), param, 3);
+                .getRecommendShopIdList(param, 3);
         shopList = new ArrayList<>();
         cd.add(recommendList.subscribeOn(Schedulers.io())
                 .flatMap((result) -> {
