@@ -104,7 +104,7 @@ public class BudgetActualListAdapter extends ArrayAdapter {
      */
     private void switchPaid(String userId) {
         ApiService service = Util.getService();
-        Observable<SessionUserDetail> token = service.sessionUserSwitchPaid(LoginUser.getToken(), sessionId, Integer.parseInt(userId));
+        Observable<SessionUserDetail> token = service.sessionUserSwitchPaid(sessionId, Integer.parseInt(userId));
         cd.add(token.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .unsubscribeOn(Schedulers.io())

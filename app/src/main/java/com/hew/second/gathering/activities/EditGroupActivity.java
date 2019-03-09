@@ -134,7 +134,7 @@ public class EditGroupActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
         ApiService service = Util.getService();
-        Observable<GroupDetail> token = service.getGroupDetail(LoginUser.getToken(), groupId);
+        Observable<GroupDetail> token = service.getGroupDetail(groupId);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -175,7 +175,7 @@ public class EditGroupActivity extends BaseActivity {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
-        Observable<GroupDetail> token = service.updateGroupName(LoginUser.getToken(), groupId, body);
+        Observable<GroupDetail> token = service.updateGroupName(groupId, body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -206,7 +206,7 @@ public class EditGroupActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable token = service.deleteGroupUser(LoginUser.getToken(), groupId, id);
+        Completable token = service.deleteGroupUser(groupId, id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -235,7 +235,7 @@ public class EditGroupActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable token = service.deleteGroup(LoginUser.getToken(), groupId);
+        Completable token = service.deleteGroup(groupId);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

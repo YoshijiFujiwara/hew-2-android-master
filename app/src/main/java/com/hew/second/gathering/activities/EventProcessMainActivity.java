@@ -133,7 +133,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         });
 
         ApiService service = Util.getService();
-        Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
+        Observable<ProfileDetail> profile = service.getProfile();
         cd.add(profile.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

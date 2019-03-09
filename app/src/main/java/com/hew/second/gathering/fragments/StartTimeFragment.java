@@ -362,7 +362,7 @@ public class StartTimeFragment extends SessionBaseFragment {
         HashMap<String, String> body = new HashMap<>();
         body.put("start_time", startTime);
         body.put("end_time", endTime);
-        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
+        Observable<SessionDetail> token = service.updateSession(session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

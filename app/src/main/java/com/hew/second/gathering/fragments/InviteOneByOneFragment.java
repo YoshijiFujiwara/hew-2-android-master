@@ -186,7 +186,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<FriendList> friendList = service.getAddableToSessionFriendList(LoginUser.getToken(), activity.session.id);
+        Observable<FriendList> friendList = service.getAddableToSessionFriendList(activity.session.id);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -241,7 +241,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
             if(sba.get(i)){
                 HashMap<String, String> body = new HashMap<>();
                 body.put("user_id", String.valueOf(work.get(i).id));
-                addList.add(service.createSessionUser(LoginUser.getToken(), activity.session.id, body));
+                addList.add(service.createSessionUser(activity.session.id, body));
             }
         }
         cd.add(Observable

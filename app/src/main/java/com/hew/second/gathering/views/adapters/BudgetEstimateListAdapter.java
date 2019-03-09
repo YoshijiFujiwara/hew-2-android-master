@@ -131,7 +131,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("plus_minus", plusMinus);
-        Observable<SessionUserDetail> token = service.updateSessionUser(LoginUser.getToken(), sessionId, Integer.parseInt(userId), body);
+        Observable<SessionUserDetail> token = service.updateSessionUser(sessionId, Integer.parseInt(userId), body);
         cd.add(token.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .unsubscribeOn(Schedulers.io())

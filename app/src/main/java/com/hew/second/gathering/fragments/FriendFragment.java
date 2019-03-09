@@ -182,7 +182,7 @@ public class FriendFragment extends BaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<FriendList> friendList = service.getFriendList(LoginUser.getToken());
+        Observable<FriendList> friendList = service.getFriendList();
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -230,7 +230,7 @@ public class FriendFragment extends BaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable friendList = service.deleteFriend(LoginUser.getToken(), id);
+        Completable friendList = service.deleteFriend(id);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

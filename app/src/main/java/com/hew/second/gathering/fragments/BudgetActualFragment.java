@@ -186,7 +186,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Observable<SessionDetail> token = service.getSessionDetail(LoginUser.getToken(), session.id);
+        Observable<SessionDetail> token = service.getSessionDetail(session.id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -224,7 +224,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
         body.put("actual", budgetActualText);
         body.put("start_time", session.start_time);
         body.put("end_time", session.end_time);
-        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
+        Observable<SessionDetail> token = service.updateSession(session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -334,7 +334,7 @@ public class BudgetActualFragment extends SessionBaseFragment {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("unit_rounding_actual", String.valueOf(unitRounding));
-        Observable<SessionDetail> token = service.updateSession(LoginUser.getToken(), session.id, body);
+        Observable<SessionDetail> token = service.updateSession(session.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

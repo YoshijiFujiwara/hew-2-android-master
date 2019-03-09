@@ -156,7 +156,7 @@ public class ApplyingFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<FriendList> friendList;
-        friendList = service.getApplyingFriendList(LoginUser.getToken());
+        friendList = service.getApplyingFriendList();
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -196,7 +196,7 @@ public class ApplyingFragment extends BaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable friendList = service.cancelFriendInvitation(LoginUser.getToken(), id);
+        Completable friendList = service.cancelFriendInvitation(id);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

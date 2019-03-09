@@ -109,7 +109,7 @@ public class WaitingPaymentFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         HpApiService hpService = HpHttp.getService();
-        Observable<SessionList> token = service.getSessionNotPaymentComplete(LoginUser.getToken());
+        Observable<SessionList> token = service.getSessionNotPaymentComplete();
         List<Shop> shops = new ArrayList<>();
         cd.add(token.subscribeOn(Schedulers.io())
                 .flatMap((list) -> {

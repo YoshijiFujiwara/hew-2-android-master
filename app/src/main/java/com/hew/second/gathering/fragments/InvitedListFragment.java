@@ -105,7 +105,7 @@ public class InvitedListFragment extends SessionBaseFragment {
         if (id == -1) {
             return;
         }
-        Observable<SessionUserList> token = service.getSessionUserList(LoginUser.getToken(), id);
+        Observable<SessionUserList> token = service.getSessionUserList(id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -149,7 +149,7 @@ public class InvitedListFragment extends SessionBaseFragment {
         ArrayList<Completable> addList = new ArrayList<>();
         for (SessionUser s : ar) {
             if (!s.join_status.equals("allow")) {
-                addList.add(service.deleteSessionUser(LoginUser.getToken(), activity.session.id, s.id));
+                addList.add(service.deleteSessionUser(activity.session.id, s.id));
             }
         }
         cd.add(Completable

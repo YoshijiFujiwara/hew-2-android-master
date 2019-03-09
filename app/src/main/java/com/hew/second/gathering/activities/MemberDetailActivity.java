@@ -96,7 +96,7 @@ public class MemberDetailActivity extends BaseActivity {
     private void getAttributeList() {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
-        Observable<AttributeList> attributeList = Util.getService().getAttributeList(LoginUser.getToken());
+        Observable<AttributeList> attributeList = Util.getService().getAttributeList();
         cd.add(attributeList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -155,7 +155,7 @@ public class MemberDetailActivity extends BaseActivity {
         }
         HashMap<String, String> body = new HashMap<>();
         body.put("attribute_id", attrId == null ? null : attrId.toString());
-        Observable<FriendDetail> attributeList = Util.getService().updateFriendAttribute(LoginUser.getToken(), friend.id, body);
+        Observable<FriendDetail> attributeList = Util.getService().updateFriendAttribute(friend.id, body);
         cd.add(attributeList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

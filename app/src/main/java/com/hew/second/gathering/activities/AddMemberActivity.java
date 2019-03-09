@@ -62,7 +62,7 @@ public class AddMemberActivity extends BaseActivity {
             ApiService service = Util.getService();
             HashMap<String, String> body = new HashMap<>();
             body.put("email", adapter.getList().get(position).email);
-            Observable<Friend> token = service.requestAddFriend(LoginUser.getToken(), body);
+            Observable<Friend> token = service.requestAddFriend(body);
             cd.add(token.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .unsubscribeOn(Schedulers.io())
@@ -147,7 +147,7 @@ public class AddMemberActivity extends BaseActivity {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<FriendList> token = service.getAddableFriendList(LoginUser.getToken());
+        Observable<FriendList> token = service.getAddableFriendList();
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

@@ -152,7 +152,7 @@ public class GroupFragment extends BaseFragment {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
-        Observable<GroupDetail> token = service.createGroup(LoginUser.getToken(),body);
+        Observable<GroupDetail> token = service.createGroup(body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -178,7 +178,7 @@ public class GroupFragment extends BaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<GroupList> token = service.getGroupList(LoginUser.getToken());
+        Observable<GroupList> token = service.getGroupList();
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -217,7 +217,7 @@ public class GroupFragment extends BaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable token = service.deleteGroup(LoginUser.getToken(), id);
+        Completable token = service.deleteGroup(id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
