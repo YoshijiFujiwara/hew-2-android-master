@@ -1,11 +1,16 @@
 package com.hew.second.gathering.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -14,8 +19,26 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.hew.second.gathering.LogUtil;
+import com.hew.second.gathering.LoginApiService;
+import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
+import com.hew.second.gathering.api.ApiService;
+import com.hew.second.gathering.api.DeviceTokenDetail;
+import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
+
+import java.util.HashMap;
+
+import dmax.dialog.SpotsDialog;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 public class SignUpActivity extends BaseActivity {
 
@@ -46,7 +69,7 @@ public class SignUpActivity extends BaseActivity {
         sign_up_btn.setOnClickListener((v) -> register());
 
         go_to_login_btn.setOnClickListener((v) -> {
-            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+            onBackPressed();
         });
     }
 
@@ -86,7 +109,31 @@ public class SignUpActivity extends BaseActivity {
             return;
         }
 
-        // TODO:registerAPIを叩いて、sharedPreferenceに格納する
+        // sharedPreferenceに格納する
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
+
+        LoginApiService service = LoginUser.getService();
+        Observable<JWT> token = service.createUser(email, username, password);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            dialog.dismiss();
+                            finishCreate(list);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
+                            // ログイン情報初期化
+                            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+                            final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "登録に失敗しました。入力内容をご確認ください。", Snackbar.LENGTH_SHORT);
+                            snackbar.getView().setBackgroundColor(Color.BLACK);
+                            snackbar.setActionTextColor(Color.WHITE);
+                            snackbar.show();
+                        }
+                ));
     }
 
     @Override
@@ -122,7 +169,58 @@ public class SignUpActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
+    }
 
-        // TODO:ログインしてたらry
+    private void finishCreate(JWT token) {
+        // ログイン情報を保存
+        LoginUser.setUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE),
+                email_et.getText().toString(), password_et.getText().toString(), token.access_token);
+        // androidデバイストークン送信
+        sendTokenToServer();
+        // TOP画面へ
+        Intent intent = new Intent(getApplication(), StartActivity.class);
+        intent.putExtra(SNACK_MESSAGE, "アカウントを作成しました。");
+        startActivityForResult(intent, INTENT_LOGIN);
+    }
+
+    private void sendTokenToServer() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("tag", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        postToken(token);
+                    }
+                });
+    }
+
+    private void postToken(String deviceToken) {
+        // 取得したデバイストークンを、サーバーに投げる
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("device_token", deviceToken);
+        Observable<DeviceTokenDetail> token = service.storeDeviceToken(body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        (list) -> {
+                            Log.d("api", "デバイストークンの送信完了");
+                        }, // 終了時
+                        (throwable) -> {
+                            Log.d("api", "デバイストークンの送信失敗");
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }));
     }
 }

@@ -21,6 +21,7 @@ import com.hew.second.gathering.api.Util;
 
 import java.util.HashMap;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -79,6 +80,8 @@ public class StartActivity extends BaseActivity {
     }
 
     private void postToken(String deviceToken) {
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+        dialog.show();
         // 取得したデバイストークンを、サーバーに投げる
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
@@ -89,9 +92,11 @@ public class StartActivity extends BaseActivity {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         (list) -> {
+                            dialog.dismiss();
                             Log.d("api", "デバイストークンの送信完了");
                         }, // 終了時
                         (throwable) -> {
+                            dialog.dismiss();
                             Log.d("api", "デバイストークンの送信失敗");
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {

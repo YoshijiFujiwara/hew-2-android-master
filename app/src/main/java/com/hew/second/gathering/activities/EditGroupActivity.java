@@ -51,7 +51,6 @@ public class EditGroupActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_group);
-        setTitle("友達追加");
 
         // Backボタンを有効にする
         if (getSupportActionBar() != null) {

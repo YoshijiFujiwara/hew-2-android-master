@@ -23,6 +23,7 @@ import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.fragments.GroupFragment;
 import com.hew.second.gathering.fragments.MemberFragment;
+import com.hew.second.gathering.views.adapters.GroupMemberListAdapter;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import retrofit2.HttpException;
 public class AddGroupMemberActivity extends BaseActivity {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private MemberAdapter adapter = null;
+    private GroupMemberListAdapter adapter = null;
     private ArrayList<Friend> ar = new ArrayList<>();
     private ListView listView = null;
     private int groupId;
@@ -181,7 +182,7 @@ public class AddGroupMemberActivity extends BaseActivity {
         ArrayList<Friend> list = new ArrayList<>(data);
         // 検索用リスト
         ar = new ArrayList<>(list);
-        adapter = new MemberAdapter(list);
+        adapter = new GroupMemberListAdapter(list);
         if(listView != null){
             // ListViewにadapterをセット
             listView.setAdapter(adapter);

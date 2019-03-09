@@ -80,14 +80,15 @@
         />
 
     <TextView
+        android:id="@+id/go_to_login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:text="すでにアカウントをお持ちですか？ログインする"
+        android:gravity="center"
+        android:text="すでにアカウントをお持ちですか？\nログインする"
         android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:id="@+id/go_to_login_btn" />
+        android:textSize="16sp" />
 
 
 </LinearLayout>

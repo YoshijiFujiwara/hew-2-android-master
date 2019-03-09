@@ -81,6 +81,7 @@ public class LoginActivity extends BaseActivity {
         if (!LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)).equals("")) {
             email_et.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
             password_et.setText(LoginUser.getPassword(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
+            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
             //checkLogin(LoginUser.getEmail(null), LoginUser.getPassword(null));
         }
 
@@ -169,7 +170,7 @@ public class LoginActivity extends BaseActivity {
         sendTokenToServer();
         // TOP画面へ
         Intent intent = new Intent(getApplication(), StartActivity.class);
-        intent.putExtra(SNACK_MESSAGE, "ログインに成功しました。");
+        intent.putExtra(SNACK_MESSAGE, "ログインしました。");
         startActivityForResult(intent, INTENT_LOGIN);
     }
 
