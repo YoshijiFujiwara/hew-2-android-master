@@ -33,6 +33,9 @@ public class StartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        // androidデバイストークン送信
+        sendTokenToServer();
+
         ImageButton now_button = (ImageButton) findViewById(R.id.now_button);
         ImageButton plan_button = (ImageButton) findViewById(R.id.plan_button);
         now_button.setOnClickListener(new View.OnClickListener() {
@@ -55,5 +58,46 @@ public class StartActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void sendTokenToServer() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("tag", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        postToken(token);
+                    }
+                });
+    }
+
+    private void postToken(String deviceToken) {
+        // 取得したデバイストークンを、サーバーに投げる
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("device_token", deviceToken);
+        Observable<DeviceTokenDetail> token = service.storeDeviceToken(body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        (list) -> {
+                            Log.d("api", "デバイストークンの送信完了");
+                        }, // 終了時
+                        (throwable) -> {
+                            Log.d("api", "デバイストークンの送信失敗");
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }));
     }
 }

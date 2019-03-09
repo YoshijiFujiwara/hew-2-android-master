@@ -203,7 +203,7 @@ public class MainActivity extends BaseActivity
             startActivityForResult(intent, INTENT_PROFILE);
         } else if (id == R.id.action_logout) {
             // ログイン情報初期化
-            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+            //LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
             // ログイン画面へ
             Intent intent = new Intent(getApplication(), LoginActivity.class);
             startActivity(intent);

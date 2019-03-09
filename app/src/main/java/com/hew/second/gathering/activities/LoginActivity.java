@@ -77,12 +77,13 @@ public class LoginActivity extends BaseActivity {
         });
 
 
-        // ログイン情報があるならすぐに遷移
+        // ログイン情報があるなら格納
         if (!LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)).equals("")) {
             email_et.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
             password_et.setText(LoginUser.getPassword(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE)));
-            checkLogin(LoginUser.getEmail(null), LoginUser.getPassword(null));
+            //checkLogin(LoginUser.getEmail(null), LoginUser.getPassword(null));
         }
+
     }
 
 
@@ -182,8 +183,6 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-
-
     private void sendTokenToServer() {
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -224,5 +223,6 @@ public class LoginActivity extends BaseActivity {
                             }
                         }));
     }
+
 }
 
