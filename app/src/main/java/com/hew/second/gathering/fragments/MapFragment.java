@@ -44,11 +44,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.hew.second.gathering.LogUtil;
+import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.SearchArgs;
 import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.activities.ShopDetailActivity;
 import com.hew.second.gathering.api.DefaultSetting;
+import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.ShopIdList;
+import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.hotpepper.GourmetResult;
 import com.hew.second.gathering.hotpepper.HpHttp;
 import com.hew.second.gathering.hotpepper.Shop;
@@ -59,6 +63,9 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -394,8 +401,6 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
 
     private void fetchShopList() {
         HashMap<String, String> options = new HashMap<>();
-        HashMap<String, Float> pos = new HashMap<>();
-        //options.put("keyword", SearchArgs.keyword);
         options.put("keyword", SearchArgs.keyword);
         options.put("lat", Float.valueOf(SearchArgs.lat).toString());
         options.put("lng", Float.valueOf(SearchArgs.lng).toString());
@@ -403,16 +408,62 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
             options.put("genre", SearchArgs.genre);
         }
         options.put("range", SearchArgs.range.toString());
-        Observable<GourmetResult> ShopList = HpHttp.getService().getShopList(options);
-        cd.add(ShopList.subscribeOn(Schedulers.io())
+
+        HashMap<String, HashMap<String, String>> param = new HashMap<>();
+        param.put("body", options);
+
+        Observable<ShopIdList> recommendList = Util.getService()
+                .getRecommendShopIdList(LoginUser.getToken(), param, 3);
+        shopList = new ArrayList<>();
+        cd.add(recommendList.subscribeOn(Schedulers.io())
+                .flatMap((result) -> {
+                    List<Observable<GourmetResult>> list = new ArrayList<>();
+                    if (!result.data.isEmpty()) {
+                        HashMap<String, String> recommend = new HashMap<>();
+                        StringBuilder strId = new StringBuilder();
+                        String prefix = "";
+                        for (String s : result.data) {
+                            strId.append(prefix);
+                            prefix = ",";
+                            strId.append(s);
+                        }
+                        recommend.put("id", strId.toString());
+                        list.add(HpHttp.getService().getShopList(recommend));
+                    }
+                    list.add(HpHttp.getService().getShopList(options));
+                    return Observable.concat(list);
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            if (list.results.shop != null && activity != null) {
+                            if (list.results.shop != null) {
+                                shopList.addAll(list.results.shop);
+                            }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        },
+                        () -> {
+                            if (activity != null) {
                                 listView = activity.findViewById(R.id.listView_shop_list);
-                                shopList = new ArrayList<>(list.results.shop);
-                                ArrayList<Shop> data = new ArrayList<>(list.results.shop);
+                                // 重複削除
+                                ArrayList<Shop> data = new ArrayList<>();
+                                ArrayList<String> strShops = new ArrayList<>();
+                                for (Shop s : shopList) {
+                                    if(!strShops.contains(s.id)){
+                                        data.add(s);
+                                        strShops.add(s.id);
+                                    }
+                                }
+                                shopList = new ArrayList<>(data);
                                 adapter = new ShopListAdapter(data);
                                 if (listView != null) {
                                     listView.setAdapter(adapter);
@@ -429,16 +480,6 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                                     shopListMarker.add(googleMap.addMarker(mo));
                                 }
                                 onGetCenter(mapView);
-                            }
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                    // ログインアクティビティへ遷移
-                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                    startActivity(intent);
-                                }
                             }
                         }
                 ));

@@ -6,6 +6,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -64,6 +65,7 @@ public interface ApiService {
 
     @PUT("api/friends/{friend}/attribute")
     Observable<FriendDetail> updateFriendAttribute(@Header("Authorization") String authorization, @Path("friend") int userId, @Body HashMap<String, String> body);
+
     /*
      * グループ系API
      */
@@ -188,12 +190,16 @@ public interface ApiService {
      */
     @GET("api/guest/sessions")
     Observable<SessionList> getGuestSessionList(@Header("Authorization") String authorization);
+
     @GET("api/guest/sessions/wait")
     Observable<SessionList> getGuestSessionWaitList(@Header("Authorization") String authorization);
+
     @GET("api/guest/sessions/allow")
     Observable<SessionList> getGuestSessionAllowList(@Header("Authorization") String authorization);
+
     @PUT("api/guest/sessions/{session}")
     Observable<SessionDetail> updateGuestSession(@Header("Authorization") String authorization, @Path("session") int sessionId, @Body HashMap<String, String> body);
+
     @GET("api/guest/sessions/{session}")
     Observable<SessionDetail> getGuestSessionDetail(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
@@ -212,10 +218,13 @@ public interface ApiService {
     @GET("api/sessions/{session}/groups/can_add")
     Observable<GroupList> getAddableToSessionGroupList(@Header("Authorization") String authorization, @Path("session") int sessionId);
 
-//    /*
+    //    /*
 //     * ユーザープロフィール系API
 //     */
     @PUT("api/profile/update")
     Observable<ProfileDetail> updateProfileUser(@Header("Authorization") String authorization, @Body HashMap<String, String> body);
+
+    @POST("api/hotpepper/recommend")
+    Observable<ShopIdList> getRecommendShopIdList(@Header("Authorization") String authorization, @Body HashMap<String, HashMap<String, String>> body, @Query("count") int count);
 
 }
