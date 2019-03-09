@@ -121,11 +121,7 @@ public class LoginUser {
 
     protected static OkHttpClient getHttpClientWithHeader() {
         if (httpClient == null) {
-
-            int cacheSize = 10 * 1024 * 1024; // 10 MB
-            Cache cache = new Cache(Util.cacheDir, cacheSize);
-
-            httpClient = new OkHttpClient.Builder().cache(cache);
+            httpClient = new OkHttpClient.Builder();
             httpClient.addInterceptor(new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -134,7 +130,6 @@ public class LoginUser {
                     Request request = original.newBuilder()
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
-                            .header("Cache-Control", "public, max-stale=10, max-age=10")
                             .method(original.method(), original.body())
                             .build();
 
