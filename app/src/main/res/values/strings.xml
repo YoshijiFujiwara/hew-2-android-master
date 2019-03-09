@@ -7,7 +7,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="name_hint_text">名前</string>
-    <string name="search_member_hint_text">メンバー検索</string>
+    <string name="search_member_hint_text">友達検索</string>
     <string name="search_default_hint_text">デフォルト検索</string>
     <string name="title_activity_login">Sign in</string>
 

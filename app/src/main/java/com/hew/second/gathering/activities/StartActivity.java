@@ -38,7 +38,7 @@ public class StartActivity extends BaseActivity {
         now_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 新規セッション作成へ
+                // 新規イベント作成へ
                 Intent intent = new Intent(getApplication(), EventProcessMainActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("FRAGMENT", "DEFAULT");
