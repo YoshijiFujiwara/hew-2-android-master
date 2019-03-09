@@ -71,7 +71,7 @@ public class AddGroupMemberActivity extends BaseActivity {
             ApiService service = Util.getService();
             HashMap<String, Integer> body = new HashMap<>();
             body.put("user_id", adapter.getList().get(position).id);
-            Completable token = service.addUserToGroup(LoginUser.getToken(), groupId, body);
+            Completable token = service.addUserToGroup(groupId, body);
             cd.add(token.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .unsubscribeOn(Schedulers.io())
@@ -155,7 +155,7 @@ public class AddGroupMemberActivity extends BaseActivity {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<FriendList> token = service.getAddableToGroupFriendList(LoginUser.getToken(),groupId);
+        Observable<FriendList> token = service.getAddableToGroupFriendList(groupId);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

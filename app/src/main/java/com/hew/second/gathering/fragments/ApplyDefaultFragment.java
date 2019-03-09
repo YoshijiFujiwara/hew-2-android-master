@@ -98,7 +98,7 @@ public class ApplyDefaultFragment extends SessionBaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Observable<DefaultSettingList> token = service.getDefaultSettingList(LoginUser.getToken());
+        Observable<DefaultSettingList> token = service.getDefaultSettingList();
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -116,6 +116,7 @@ public class ApplyDefaultFragment extends SessionBaseFragment {
                             if(dialog != null){
                                 dialog.dismiss();
                             }
+
                             if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);

@@ -130,7 +130,7 @@ public class AttributeFragment extends BaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<AttributeList> friendList = service.getAttributeList(LoginUser.getToken());
+        Observable<AttributeList> friendList = service.getAttributeList();
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -178,7 +178,7 @@ public class AttributeFragment extends BaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable at = service.deleteAttribute(LoginUser.getToken(), id);
+        Completable at = service.deleteAttribute(id);
         cd.add(at.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

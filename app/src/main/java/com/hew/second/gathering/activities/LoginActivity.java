@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.hew.second.gathering.LogUtil;
+import com.hew.second.gathering.LoginApiService;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.ApiService;
@@ -136,7 +137,7 @@ public class LoginActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
 
-        ApiService service = Util.getService();
+        LoginApiService service = LoginUser.getService();
         Observable<JWT> token = service.getToken(email, password);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -206,7 +207,7 @@ public class LoginActivity extends BaseActivity {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("device_token", deviceToken);
-        Observable<DeviceTokenDetail> token = service.storeDeviceToken(LoginUser.getToken(), body);
+        Observable<DeviceTokenDetail> token = service.storeDeviceToken(body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

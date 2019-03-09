@@ -170,7 +170,7 @@ public class PendingFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<FriendList> friendList;
-        friendList = service.getPendedFriendList(LoginUser.getToken());
+        friendList = service.getPendedFriendList();
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -213,7 +213,7 @@ public class PendingFragment extends BaseFragment {
         ApiService service = Util.getService();
         HashMap<String, Integer> body = new HashMap<>();
         body.put("user_id", id);
-        Completable friendList = service.permitFriendRequest(LoginUser.getToken(), body);
+        Completable friendList = service.permitFriendRequest(body);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -249,7 +249,7 @@ public class PendingFragment extends BaseFragment {
         ApiService service = Util.getService();
         HashMap<String, Integer> body = new HashMap<>();
         body.put("user_id", id);
-        Completable friendList = service.rejectFriendRequest(LoginUser.getToken(), body);
+        Completable friendList = service.rejectFriendRequest(body);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

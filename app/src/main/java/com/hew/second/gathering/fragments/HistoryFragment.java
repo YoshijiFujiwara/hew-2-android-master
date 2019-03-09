@@ -109,7 +109,7 @@ public class HistoryFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         HpApiService hpService = HpHttp.getService();
-        Observable<SessionList> token = service.getSessionComplete(LoginUser.getToken());
+        Observable<SessionList> token = service.getSessionComplete();
         List<Shop> shops = new ArrayList<>();
         cd.add(token.subscribeOn(Schedulers.io())
                 .flatMap((list) -> {
@@ -119,7 +119,7 @@ public class HistoryFragment extends BaseFragment {
                     for (Session s : list.data) {
                         headers.add("完了したイベント");
                     }
-                    return service.getSessionHistory(LoginUser.getToken());
+                    return service.getSessionHistory();
                 })
                 .flatMap((list) -> {
                     // 始まっていないセッション

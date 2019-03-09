@@ -142,7 +142,7 @@ public class ShopDetailActivity extends BaseActivity {
         body.put("name", title);
         body.put("shop_id", shop.id);
         if (defaultSetting == null) {
-            Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
+            Observable<SessionDetail> session = service.createSession(body);
             cd.add(session.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .unsubscribeOn(Schedulers.io())
@@ -188,14 +188,14 @@ public class ShopDetailActivity extends BaseActivity {
             Date start = new Date();
             start.setTime(lNow);
             body.put("start_time", sdf2.format(start));
-            Observable<SessionDetail> session = service.createSession(LoginUser.getToken(), body);
+            Observable<SessionDetail> session = service.createSession(body);
             Bundle bundle = new Bundle();
             final Session[] s = new Session[1];
 
             cd.add(session.subscribeOn(Schedulers.io())
                     .flatMap((v) -> {
                         s[0] = v.data;
-                        return service.createSessionGroup(LoginUser.getToken(), v.data.id, defaultSetting.group.id);
+                        return service.createSessionGroup(v.data.id, defaultSetting.group.id);
                     })
                     .observeOn(AndroidSchedulers.mainThread())
                     .unsubscribeOn(Schedulers.io())
@@ -231,7 +231,7 @@ public class ShopDetailActivity extends BaseActivity {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("shop_id", shop.id);
-        Observable<SessionDetail> sessionDetail = service.updateSession(LoginUser.getToken(), session.id, body);
+        Observable<SessionDetail> sessionDetail = service.updateSession(session.id, body);
         cd.add(sessionDetail.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

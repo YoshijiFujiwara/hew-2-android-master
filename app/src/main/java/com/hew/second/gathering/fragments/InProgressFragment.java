@@ -112,7 +112,7 @@ public class InProgressFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         HpApiService hpService = HpHttp.getService();
-        Observable<SessionList> token = service.getSessionOnGoingList(LoginUser.getToken());
+        Observable<SessionList> token = service.getSessionOnGoingList();
         List<Shop> shops = new ArrayList<>();
         cd.add(token.subscribeOn(Schedulers.io())
                 .flatMap((list) -> {
@@ -122,7 +122,7 @@ public class InProgressFragment extends BaseFragment {
                     for (Session s : list.data) {
                         headers.add("進行中のイベント");
                     }
-                    return service.getSessionNotStartList(LoginUser.getToken());
+                    return service.getSessionNotStartList();
                 })
                 .flatMap((list) -> {
                     // 始まっていないセッション

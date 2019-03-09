@@ -88,7 +88,7 @@ public class EditDefaultSettingActivity extends BaseActivity {
 
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
-        Observable<GroupList> token = service.getGroupList(LoginUser.getToken());
+        Observable<GroupList> token = service.getGroupList();
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -162,7 +162,7 @@ public class EditDefaultSettingActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
         ApiService service = Util.getService();
-        Observable<DefaultSettingDetail> token = service.getDefaultSettingDetail(LoginUser.getToken(), defaultSettingId);
+        Observable<DefaultSettingDetail> token = service.getDefaultSettingDetail(defaultSettingId);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -287,7 +287,7 @@ public class EditDefaultSettingActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
         ApiService service = Util.getService();
-        Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(LoginUser.getToken(), defaultSettingId, body);
+        Observable<DefaultSettingDetail> token = service.updateDefaultSettingName(defaultSettingId, body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

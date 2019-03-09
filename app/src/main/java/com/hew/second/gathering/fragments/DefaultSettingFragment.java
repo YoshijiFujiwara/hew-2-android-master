@@ -154,7 +154,7 @@ public class DefaultSettingFragment extends BaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<DefaultSettingList> token = service.getDefaultSettingList(LoginUser.getToken());
+        Observable<DefaultSettingList> token = service.getDefaultSettingList();
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -192,7 +192,7 @@ public class DefaultSettingFragment extends BaseFragment {
 
     private void deleteDefault(int id){
         ApiService service = Util.getService();
-        Completable token = service.deleteDefaultSetting(LoginUser.getToken(), id);
+        Completable token = service.deleteDefaultSetting(id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

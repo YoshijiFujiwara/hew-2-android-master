@@ -267,7 +267,7 @@ public class EventFinishFragment extends SessionBaseFragment {
     private void finishSession() {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
-        Completable session = Util.getService().deleteSession(LoginUser.getToken(), activity.session.id);
+        Completable session = Util.getService().deleteSession(activity.session.id);
         cd.add(session
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -302,7 +302,7 @@ public class EventFinishFragment extends SessionBaseFragment {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
-        Observable<SessionDetail> sessionDetail = service.updateSession(LoginUser.getToken(), activity.session.id, body);
+        Observable<SessionDetail> sessionDetail = service.updateSession(activity.session.id, body);
         cd.add(sessionDetail.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

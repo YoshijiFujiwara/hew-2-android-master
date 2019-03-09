@@ -113,9 +113,9 @@ public class EditAttributeActivity extends BaseActivity {
         body.put("name", strName);
         body.put("plus_minus", strPlusMinus);
         if (attribute != null) {
-            attr = service.updateAttribute(LoginUser.getToken(), attribute.id, body);
+            attr = service.updateAttribute(attribute.id, body);
         } else {
-            attr = service.createAttribute(LoginUser.getToken(), body);
+            attr = service.createAttribute(body);
         }
         cd.add(attr
                 .subscribeOn(Schedulers.io())

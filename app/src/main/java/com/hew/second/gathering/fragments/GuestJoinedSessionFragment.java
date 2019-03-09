@@ -98,7 +98,7 @@ public class GuestJoinedSessionFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         HpApiService hpService = HpHttp.getService();
-        Observable<SessionList> sessionList = service.getGuestSessionAllowList(LoginUser.getToken());
+        Observable<SessionList> sessionList = service.getGuestSessionAllowList();
         cd.add(sessionList.subscribeOn(Schedulers.io())
                 .flatMap((list) -> {
                     ar = new ArrayList<>(list.data);

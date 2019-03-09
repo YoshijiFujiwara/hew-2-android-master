@@ -86,7 +86,7 @@ public class EditProfileActivity extends BaseActivity {
         dialog.show();
 
         ApiService service = Util.getService();
-        Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
+        Observable<ProfileDetail> profile = service.getProfile();
         cd.add(profile.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -202,7 +202,7 @@ public class EditProfileActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
 
-        Observable<ProfileDetail> token = service.updateProfileUser(LoginUser.getToken(), body);
+        Observable<ProfileDetail> token = service.updateProfileUser(body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
