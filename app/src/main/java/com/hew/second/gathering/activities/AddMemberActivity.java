@@ -100,7 +100,20 @@ public class AddMemberActivity extends BaseActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                searchView.clearFocus();
+                List<Friend> filteredItems;
+                // フィルター処理
+                if (s.isEmpty()) {
+                    filteredItems = new ArrayList<>(ar);
+                } else {
+                    filteredItems = new ArrayList<>();
+                    for (Friend item : ar) {
+                        if (item.unique_id.toLowerCase().contains(s.toLowerCase()) || item.username.toLowerCase().contains(s.toLowerCase())) { // テキストがqueryを含めば検索にHITさせる
+                            filteredItems.add(item);
+                        }
+                    }
+                }
+                // adapterの更新処理
+                updateList(filteredItems);
                 return false;
             }
 
@@ -119,9 +132,7 @@ public class AddMemberActivity extends BaseActivity {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return true;
             }
         });
@@ -154,10 +165,12 @@ public class AddMemberActivity extends BaseActivity {
                 .subscribe(
                         list -> {
                             mSwipeRefreshLayout.setRefreshing(false);
-                            updateList(list.data);
+                            ar = new ArrayList<>(list.data);
+                            updateList(ar);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            mSwipeRefreshLayout.setRefreshing(false);
                             // ログインアクティビティへ遷移
                             if (!cd.isDisposed()) {
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
@@ -173,7 +186,6 @@ public class AddMemberActivity extends BaseActivity {
         // ListView生成
         ArrayList<Friend> list = new ArrayList<>(data);
         // 検索用リスト
-        ar = new ArrayList<>(list);
         adapter = new AddMemberAdapter(list);
         if(listView != null){
             // ListViewにadapterをセット

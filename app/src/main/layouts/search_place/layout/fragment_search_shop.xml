@@ -71,13 +71,16 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/search_shop_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_genre"
+        app:umanoDragView="@id/textView12"
         app:umanoPanelHeight="32dp"
-        app:umanoShadowHeight="4dp">
+        app:umanoParallaxOffset="32dp"
+        app:umanoShadowHeight="32dp">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -163,7 +166,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center|top"
                 android:lineSpacingExtra="24sp"
                 android:text="@string/label_search_advanced"
@@ -176,37 +179,32 @@
                 android:id="@+id/label_range"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="中心からの距離"
+                app:layout_constraintBottom_toBottomOf="@+id/label_search_result"
                 app:layout_constraintEnd_toStartOf="@+id/spinner_range"
-                app:layout_constraintStart_toStartOf="@+id/switch_parking"
-                app:layout_constraintTop_toBottomOf="@+id/switch_parking" />
+                app:layout_constraintTop_toTopOf="@+id/label_search_result" />
 
             <TextView
                 android:id="@+id/label_range2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="86dp"
+                android:layout_marginEnd="16dp"
                 android:text="m"
                 app:layout_constraintBottom_toBottomOf="@+id/spinner_range"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/spinner_range"
                 app:layout_constraintTop_toTopOf="@+id/spinner_range" />
 
             <Spinner
                 android:id="@+id/spinner_range"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:entries="@array/spinner_range_values"
                 app:layout_constraintBottom_toBottomOf="@+id/label_range"
                 app:layout_constraintEnd_toStartOf="@+id/label_range2"
-                app:layout_constraintStart_toEndOf="@+id/label_range"
                 app:layout_constraintTop_toTopOf="@+id/label_range" />
+
 
         </android.support.constraint.ConstraintLayout>
 
@@ -231,4 +229,24 @@
 
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+    <Button
+        android:id="@+id/search_shop_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_style"
+        android:elevation="10dp"
+        android:padding="5dp"
+        android:text="この条件で店を検索"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

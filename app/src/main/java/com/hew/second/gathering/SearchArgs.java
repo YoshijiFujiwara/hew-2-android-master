@@ -23,6 +23,8 @@ public class SearchArgs {
     public static boolean lunch = false;
     public static Integer range = 3;
 
+    public static boolean reload = false;
+
     public static ArrayList<Integer> rangeList = new ArrayList<>(Arrays.asList(0, 300, 500, 1000, 2000, 3000));
 
     //map

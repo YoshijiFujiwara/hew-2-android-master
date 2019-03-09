@@ -48,6 +48,7 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.SearchArgs;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.activities.ShopDetailActivity;
 import com.hew.second.gathering.api.DefaultSetting;
 import com.hew.second.gathering.api.Session;
@@ -99,6 +100,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
     private ArrayList<Shop> shopList;
     private ListView listView;
     private ShopListAdapter adapter;
+    private boolean loadingShop = false;
 
     private Marker here = null;
     private ArrayList<Marker> shopListMarker = new ArrayList<>();
@@ -183,17 +185,37 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         });
 
 
-        Button button = activity.findViewById(R.id.search_refresh);
-        button.setOnClickListener((l) -> {
+        Button searchBtn = activity.findViewById(R.id.search_refresh);
+        searchBtn.setOnClickListener((l) -> {
             if (sup.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
                 sup.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }
+            if(!loadingShop){
+                loadingShop = true;
+                for (Marker m : shopListMarker) {
+                    m.remove();
+                }
+                shopListMarker.clear();
+                fetchShopList();
+            }
+        });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if(SearchArgs.reload && activity != null && isVisibleToUser){
+            SearchArgs.reload = false;
+            if (sup.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
+                sup.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+            }
+            loadingShop = true;
             for (Marker m : shopListMarker) {
                 m.remove();
             }
             shopListMarker.clear();
             fetchShopList();
-        });
+        }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     @Override
@@ -444,6 +466,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             if (activity != null && !cd.isDisposed()) {
+                                loadingShop = false;
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
@@ -480,6 +503,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                                     shopListMarker.add(googleMap.addMarker(mo));
                                 }
                                 onGetCenter(mapView);
+                                loadingShop = false;
                             }
                         }
                 ));

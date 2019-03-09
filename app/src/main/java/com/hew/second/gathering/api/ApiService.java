@@ -21,7 +21,7 @@ public interface ApiService {
     @POST("api/auth/refresh")
     Observable<JWT> getRefreshToken();
 
-    @POST("api/auth/me")
+    @GET("api/auth/me")
     Observable<ProfileDetail> getProfile();
 
     /**

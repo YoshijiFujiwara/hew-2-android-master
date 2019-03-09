@@ -175,6 +175,12 @@ public class FriendFragment extends BaseFragment {
     // Resumeの代わり
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        if(isVisibleToUser && activity != null){
+            if(((MainActivity)activity).requestUpdateFriend){
+                fetchList();
+                ((MainActivity)activity).requestUpdateFriend = false;
+            }
+        }
         super.setUserVisibleHint(isVisibleToUser);
     }
 

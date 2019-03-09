@@ -22,6 +22,7 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.AddMemberActivity;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
@@ -221,6 +222,7 @@ public class PendingFragment extends BaseFragment {
                         () -> {
                             if (activity != null) {
                                 dialog.dismiss();
+                                ((MainActivity)activity).requestUpdateFriend = true;
                                 final Snackbar sbYes = Snackbar.make(view, "友達になりました！", Snackbar.LENGTH_SHORT);
                                 sbYes.getView().setBackgroundColor(Color.BLACK);
                                 sbYes.setActionTextColor(Color.WHITE);

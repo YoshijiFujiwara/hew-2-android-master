@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 
@@ -40,6 +42,7 @@ import com.hew.second.gathering.hotpepper.HpHttp;
 import com.hew.second.gathering.views.adapters.GroupAdapter;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +146,16 @@ public class SearchShopFragment extends SessionBaseFragment {
             public boolean onQueryTextChange(String s) {
                 SearchArgs.keyword = s;
                 return true;
+            }
+        });
+
+        Button search = activity.findViewById(R.id.search_shop_btn);
+        search.setOnClickListener((l)->{
+            SearchArgs.reload = true;
+            TabLayout tabLayout = activity.findViewById(R.id.tabLayout);
+            TabLayout.Tab tab = tabLayout.getTabAt(0);
+            if(tab != null){
+                tab.select();
             }
         });
 

@@ -1,5 +1,6 @@
 package com.hew.second.gathering.activities;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Handler mHandler;
+    public boolean requestUpdateFriend = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,10 @@ public class MainActivity extends BaseActivity
 
         mHandler = new Handler();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -62,23 +64,19 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ApiService service = Util.getService();
-        Observable<ProfileDetail> profile = service.getProfile();
-        cd.add(profile.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            profile(list.data);
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                Intent intent = new Intent(getApplication(), LoginActivity.class);
-                                startActivity(intent);
-                            }
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (newState == DrawerLayout.STATE_SETTLING) {
+                    if (!drawer.isDrawerOpen(R.id.drawer_layout)) {
+                        if(LoginUser.getUsername().isEmpty()){
+                            updateProfile();
                         }
-                ));
+                    }
+                }
+            }
+        });
+
 
         if (savedInstanceState == null) {
             Intent intent = getIntent();
@@ -129,6 +127,25 @@ public class MainActivity extends BaseActivity
             user_email.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
             uniqueId.setText("@" + LoginUser.getUniqueId());
         }
+    }
+    private void updateProfile(){
+        ApiService service = Util.getService();
+        Observable<ProfileDetail> profile = service.getProfile();
+        cd.add(profile.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            profile(list.data);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
     }
 
     private void profile(Profile data) {
