@@ -41,7 +41,6 @@ public class TokenRefreshAuthenticator implements Authenticator {
             return response.request()
                     .newBuilder()
                     .header("Authorization", LoginUser.getToken())
-                    .method(response.request().method(), response.request().body())
                     .build();
         }
 

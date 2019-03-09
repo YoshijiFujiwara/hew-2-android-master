@@ -91,7 +91,7 @@ public class ApplyDefaultFragment extends SessionBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        fetchList();
+         fetchList();
     }
 
     private void fetchList() {

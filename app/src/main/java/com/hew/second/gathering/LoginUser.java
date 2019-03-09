@@ -51,6 +51,7 @@ public class LoginUser {
     public static String getToken() {
         synchronized (LoginUser.lockObj) {
             // クリティカルセッション
+
             return "Bearer " + token;
         }
     }
