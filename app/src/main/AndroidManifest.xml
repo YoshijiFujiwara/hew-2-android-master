@@ -81,6 +81,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ShowQrCodeActivity"
+            android:label="友達検索用QRコード"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.EventProcessMainActivity"
@@ -108,12 +109,12 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ShopDetailActivity"
-            android:label="@string/app_name"
+            android:label="店舗詳細"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.GuestActivity"
-            android:label="@string/app_name"
+            android:label="招待されたイベント一覧"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
