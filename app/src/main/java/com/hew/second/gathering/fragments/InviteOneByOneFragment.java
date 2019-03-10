@@ -106,7 +106,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                 return;
             }
             new MaterialDialog.Builder(activity)
-                    .title("イベントへ追加")
+                    .title(activity.session.name)
                     .content(adapter.getCheckedCount() + "名をイベントに招待しますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {

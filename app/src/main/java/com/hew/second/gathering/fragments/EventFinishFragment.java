@@ -82,8 +82,8 @@ public class EventFinishFragment extends SessionBaseFragment {
             Button button = activity.findViewById(R.id.session_finish_btn);
             button.setOnClickListener((l) -> {
                 new MaterialDialog.Builder(activity)
-                        .title("イベント")
-                        .content(activity.session.name + "を終了しますか？")
+                        .title(activity.session.name)
+                        .content("イベントを終了しますか？")
                         .positiveText("OK")
                         .onPositive((dialog, which) -> {
                             finishSession();

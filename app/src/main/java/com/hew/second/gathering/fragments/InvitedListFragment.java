@@ -17,6 +17,7 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.EventProcessMainActivity;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MemberDetailActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
@@ -25,6 +26,8 @@ import com.hew.second.gathering.api.SessionUserList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.MemberAdapter;
 import com.hew.second.gathering.views.adapters.SessionMemberAdapter;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +39,8 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
+
+import static com.hew.second.gathering.activities.BaseActivity.INTENT_FRIEND_DETAIL;
 
 public class InvitedListFragment extends SessionBaseFragment {
 
@@ -74,7 +79,7 @@ public class InvitedListFragment extends SessionBaseFragment {
         Button inviteEnd = activity.findViewById(R.id.button_invite_end);
         inviteEnd.setOnClickListener((l) -> {
             new MaterialDialog.Builder(activity)
-                    .title("イベント")
+                    .title(activity.session.name)
                     .content("イベントへの招待を打ち切りますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {
@@ -83,6 +88,22 @@ public class InvitedListFragment extends SessionBaseFragment {
                     .negativeText("キャンセル")
                     .show();
         });
+
+        listView = activity.findViewById(R.id.member_list_invited);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            if (view.getId() == R.id.member_delete) {
+                new MaterialDialog.Builder(activity)
+                        .title(activity.session.name)
+                        .content(ar.get(position).username + "さんの招待をとりやめますか？")
+                        .positiveText("OK")
+                        .onPositive((dialog, which) -> {
+                            deleteSessionUser(ar.get(position).id);
+                        })
+                        .negativeText("キャンセル")
+                        .show();
+            }
+        });
+
         fetchList();
     }
 
@@ -101,10 +122,7 @@ public class InvitedListFragment extends SessionBaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        int id = ((EventProcessMainActivity) activity).session.id;
-        if (id == -1) {
-            return;
-        }
+        int id = activity.session.id;
         Observable<SessionUserList> token = service.getSessionUserList(id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -154,6 +172,38 @@ public class InvitedListFragment extends SessionBaseFragment {
         }
         cd.add(Completable
                 .concat(addList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if (activity != null) {
+                                dialog.dismiss();
+                                fetchList();
+                            }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                                dialog.dismiss();
+                                fetchList();
+                            }
+                        }
+                ));
+    }
+    private void deleteSessionUser(int id) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
+        activity.requestUpdateInviteGroup = true;
+        activity.requestUpdateInviteOne = true;
+        ApiService service = Util.getService();
+        Completable deleteUser = service.deleteSessionUser(activity.session.id, id);
+
+        cd.add(deleteUser
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

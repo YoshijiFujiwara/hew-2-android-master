@@ -71,7 +71,7 @@ public class Util {
                             .method(original.method(), original.body());
 
                     if (hasNetwork()) {
-                        requestBuilder.header("Cache-Control", "public, max-age=" + 10);
+                        requestBuilder.header("Cache-Control", "public, max-age=" + 3);
                     } else {
                         requestBuilder.header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60);
                     }

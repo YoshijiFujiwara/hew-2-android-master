@@ -95,7 +95,7 @@ public class InviteGroupFragment extends SessionBaseFragment {
                 return;
             }
             new MaterialDialog.Builder(activity)
-                    .title("イベントへ追加")
+                    .title(activity.session.name)
                     .content(ar.get(adapter.getCheckedPos()).name + "をイベントに招待しますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {
