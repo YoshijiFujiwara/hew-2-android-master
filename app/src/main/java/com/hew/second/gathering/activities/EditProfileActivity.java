@@ -159,6 +159,10 @@ public class EditProfileActivity extends BaseActivity {
             usernameFlag = false;
         }
         usernameSearchFlag.setChecked(usernameFlag);
+
+        LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), data.email);
+        LoginUser.setUniqueId(data.unique_id);
+        LoginUser.setUsername(data.username);
     }
 
     public void saveProfile() {

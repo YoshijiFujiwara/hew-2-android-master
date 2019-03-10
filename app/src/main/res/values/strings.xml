@@ -67,4 +67,8 @@
         <item>1000</item>
         <item>10000</item>
     </string-array>
+
+    <string name="shortcut_short_label_guest">招待イベント一覧</string>
+    <string name="shortcut_long_label_guest">招待されているイベントの一覧</string>
+    <string name="shortcut_disabled_message_guest">無効</string>
 </resources>

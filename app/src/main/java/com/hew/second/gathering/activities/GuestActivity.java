@@ -28,7 +28,7 @@ public class GuestActivity extends BaseActivity {
         ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
-        setTitle("招待画面");
+        setTitle("招待されたイベント一覧");
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);

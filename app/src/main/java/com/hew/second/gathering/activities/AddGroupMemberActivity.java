@@ -49,6 +49,7 @@ public class AddGroupMemberActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group_member);
+        setTitle("グループに追加");
 
         // Backボタンを有効にする
         if(getSupportActionBar() != null){

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="guest"
+        android:enabled="true"
+        android:icon="@mipmap/ic_logo"
+        android:shortcutShortLabel="@string/shortcut_short_label_guest"
+        android:shortcutLongLabel="@string/shortcut_long_label_guest"
+        android:shortcutDisabledMessage="@string/shortcut_disabled_message_guest">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.hew.second.gathering"
+            android:targetClass="com.hew.second.gathering.activities.GuestActivity" />
+
+    </shortcut>
+</shortcuts>

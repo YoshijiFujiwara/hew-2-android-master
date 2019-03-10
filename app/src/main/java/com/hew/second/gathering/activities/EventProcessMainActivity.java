@@ -92,6 +92,20 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_event);
         navigationView.setNavigationItemSelectedListener(this);
 
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (newState == DrawerLayout.STATE_SETTLING) {
+                    if (!drawer.isDrawerOpen(R.id.drawer_layout)) {
+                        if(LoginUser.getUsername().isEmpty()){
+                            updateProfile();
+                        }
+                    }
+                }
+            }
+        });
+        updateProfile();
+
         BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
         //ボトムバー選択時
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -132,23 +146,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             }
         });
 
-        ApiService service = Util.getService();
-        Observable<ProfileDetail> profile = service.getProfile();
-        cd.add(profile.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            profile(list.data);
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                Intent intent = new Intent(getApplication(), LoginActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                ));
 
         // 遷移周り
         Intent intent = getIntent();
@@ -356,6 +353,26 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             user_email.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
             uniqueId.setText("@" + LoginUser.getUniqueId());
         }
+    }
+
+    private void updateProfile(){
+        ApiService service = Util.getService();
+        Observable<ProfileDetail> profile = service.getProfile();
+        cd.add(profile.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            profile(list.data);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
     }
 
     private void profile(Profile data) {

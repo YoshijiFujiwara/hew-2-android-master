@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity
             }
         });
 
+        updateProfile();
 
         if (savedInstanceState == null) {
             Intent intent = getIntent();
