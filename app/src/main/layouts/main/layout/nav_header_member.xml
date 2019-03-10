@@ -14,7 +14,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageView_logo"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="16dp"
@@ -41,7 +41,7 @@
         app:layout_constraintBottom_toTopOf="@+id/user_email"
         app:layout_constraintEnd_toStartOf="@+id/user_unique_id"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView_logo" />
 
     <TextView
         android:id="@+id/user_unique_id"

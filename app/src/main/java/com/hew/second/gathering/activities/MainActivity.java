@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.LogUtil;
@@ -76,8 +77,14 @@ public class MainActivity extends BaseActivity
                 }
             }
         });
-
         updateProfile();
+
+        View header = navigationView.getHeaderView(0);
+        ImageView logo = header.findViewById(R.id.imageView_logo);
+        logo.setOnClickListener((l)->{
+            Intent intent = new  Intent(getApplication(),ShowQrCodeActivity.class);
+            startActivity(intent);
+        });
 
         if (savedInstanceState == null) {
             Intent intent = getIntent();

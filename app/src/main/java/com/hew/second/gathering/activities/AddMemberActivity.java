@@ -3,6 +3,7 @@ package com.hew.second.gathering.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ListView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
@@ -55,6 +58,9 @@ public class AddMemberActivity extends BaseActivity {
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccentDark);
         // Listenerをセット
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener((l) -> new IntentIntegrator(AddMemberActivity.this).initiateScan());
 
         listView = findViewById(R.id.member_list);
         listView.setEmptyView(findViewById(R.id.emptyView_add_member));
@@ -138,6 +144,7 @@ public class AddMemberActivity extends BaseActivity {
                 return true;
             }
         });
+        fetchList();
     }
 
     @Override
@@ -150,13 +157,28 @@ public class AddMemberActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        fetchList();
     }
     @Override
     public boolean onSupportNavigateUp(){
         onBackPressed();
         return true;
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            Log.d("readQR", result.getContents());
+            SearchView searchView = findViewById(R.id.searchView);
+            searchView.setQuery(result.getContents(),true);
+            searchView.setFocusable(true);
+            searchView.setIconified(false);
+            searchView.requestFocusFromTouch();
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();

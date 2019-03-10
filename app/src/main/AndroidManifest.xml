@@ -80,6 +80,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.ShowQrCodeActivity"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".activities.EventProcessMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
