@@ -118,7 +118,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        // ログイン画面では戻れない
+        // ログイン画面で戻ったらアプリ終了
+        moveTaskToBack(true);
     }
 
 

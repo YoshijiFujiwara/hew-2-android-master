@@ -74,13 +74,10 @@ public class SessionAdapter extends BaseAdapter {
 
         // 時刻表示フォーマット
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        SimpleDateFormat dateOnly = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         SimpleDateFormat output = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
-        SimpleDateFormat outputShort = new SimpleDateFormat("HH:mm", Locale.getDefault());
         StringBuilder strTime = new StringBuilder();
         String strStartTime = list.get(position).start_time;
-        String strEndTime = list.get(position).end_time;
-        if(list.get(position).start_time != null){
+        if(strStartTime != null){
             try{
                 Date start = sdf.parse(strStartTime);
                 strTime.append(output.format(start));

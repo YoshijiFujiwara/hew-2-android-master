@@ -2,6 +2,7 @@ package com.hew.second.gathering.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,6 +43,18 @@ public class StartActivity extends BaseActivity {
         now_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                plan_button.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        plan_button.setEnabled(true);
+                    }
+                }, 1000);
+                now_button.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        now_button.setEnabled(true);
+                    }
+                }, 1000);
                 // 新規セッション作成へ
                 Intent intent = new Intent(getApplication(), EventProcessMainActivity.class);
                 Bundle bundle = new Bundle();
@@ -54,13 +67,24 @@ public class StartActivity extends BaseActivity {
         plan_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                plan_button.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        plan_button.setEnabled(true);
+                    }
+                }, 1000);
+                now_button.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        now_button.setEnabled(true);
+                    }
+                }, 1000);
                 //  今から飲むモードへ
                 Intent intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);
             }
         });
     }
-
     private void sendTokenToServer() {
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
