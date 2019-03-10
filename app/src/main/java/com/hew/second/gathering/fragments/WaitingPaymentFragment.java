@@ -290,6 +290,7 @@ public class WaitingPaymentFragment extends BaseFragment {
         HashMap<String, String> body = new HashMap<>();
         body.put("name", title);
         body.put("shop_id", shop.id);
+        body.put("budget",String.valueOf(originalSession.budget));
         Observable<SessionDetail> session = service.createSession(body);
         final Session[] s = new Session[1];
         cd.add(session.subscribeOn(Schedulers.io())
