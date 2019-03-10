@@ -67,6 +67,7 @@ public class AddGroupMemberActivity extends BaseActivity {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = findViewById(R.id.member_list);
+        listView.setEmptyView(findViewById(R.id.emptyView_add_group_member));
         listView.setOnItemClickListener((parent, view, position, id) -> {
             dialog = new SpotsDialog.Builder().setContext(this).build();
             dialog.show();

@@ -77,14 +77,15 @@ public class ApplyingFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.member_list_applying);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_applying));
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            if (view.getId() == R.id.member_delete) {
+            if (view.getId() == R.id.member_delete && adapter != null) {
                 new MaterialDialog.Builder(activity)
                         .title("友達申請")
-                        .content(ar.get(position).username + "さんへの友達申請をやめますか？")
+                        .content(adapter.getList().get(position).username + "さんへの友達申請をやめますか？")
                         .positiveText("OK")
                         .onPositive((dialog, which) -> {
-                            deleteFriendRequest(ar.get(position).id);
+                            deleteFriendRequest(adapter.getList().get(position).id);
                         })
                         .negativeText("キャンセル")
                         .show();

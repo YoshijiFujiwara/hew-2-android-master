@@ -50,7 +50,12 @@ public class MemberAdapter extends BaseAdapter {
         } else {
             holder = (GroupMemberAdapter.ViewHolder) convertView.getTag();
         }
+        if(list.get(position) == null){
+            convertView.setVisibility(View.GONE);
+            return convertView;
+        }
 
+        convertView.setVisibility(View.VISIBLE);
         holder.userName.setText(list.get(position).username);
         holder.uniqueName.setText(list.get(position).unique_id);
         holder.deleteButton.setOnClickListener((view) -> {

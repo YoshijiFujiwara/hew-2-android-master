@@ -93,6 +93,7 @@ public class AttributeFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.attribute_list);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_attribute));
         listView.setOnItemClickListener((parent, view, position, id) -> {
             if(view.getId() == R.id.attribute_delete) {
                 new MaterialDialog.Builder(activity)
@@ -165,6 +166,9 @@ public class AttributeFragment extends BaseFragment {
         listView = activity.findViewById(R.id.attribute_list);
         if(listView != null) {
             ArrayList<Attribute> list = new ArrayList<>(data);
+            if (!list.isEmpty()) {
+                list.add(null);
+            }
             ar = new ArrayList<>(data);
             adapter = new AttributeAdapter(list);
             if(listView != null){

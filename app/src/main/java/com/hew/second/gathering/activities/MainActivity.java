@@ -172,16 +172,8 @@ public class MainActivity extends BaseActivity
                 MemberFragment fragment = (MemberFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
-            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment) {
-                GroupFragment fragment = (GroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-                fragment.removeFocus();
-            }
             if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditShopFragment) {
                 EditShopFragment fragment = (EditShopFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-                fragment.removeFocus();
-            }
-            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof DefaultSettingFragment) {
-                DefaultSettingFragment fragment = (DefaultSettingFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
 

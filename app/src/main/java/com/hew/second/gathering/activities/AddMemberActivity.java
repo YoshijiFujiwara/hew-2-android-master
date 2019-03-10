@@ -41,7 +41,8 @@ public class AddMemberActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_group_member);
+        setContentView(R.layout.activity_add_member);
+        setTitle("友達申請");
 
         // Backボタンを有効にする
         if(getSupportActionBar() != null){
@@ -56,6 +57,7 @@ public class AddMemberActivity extends BaseActivity {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = findViewById(R.id.member_list);
+        listView.setEmptyView(findViewById(R.id.emptyView_add_member));
         listView.setOnItemClickListener((parent, view, position, id) -> {
             dialog = new SpotsDialog.Builder().setContext(this).build();
             dialog.show();
@@ -185,6 +187,9 @@ public class AddMemberActivity extends BaseActivity {
     private void updateList(List<Friend> data) {
         // ListView生成
         ArrayList<Friend> list = new ArrayList<>(data);
+        if (!list.isEmpty()) {
+            list.add(null);
+        }
         // 検索用リスト
         adapter = new AddMemberAdapter(list);
         if(listView != null){

@@ -100,23 +100,26 @@ public class FriendFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.member_list);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_friend));
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            if (view.getId() == R.id.member_delete) {
-                new MaterialDialog.Builder(activity)
-                        .title("友達解除")
-                        .content(ar.get(position).username + "さんとの友達登録を解除しますか？")
-                        .positiveText("OK")
-                        .onPositive((dialog, which) -> {
-                            deleteFriend(ar.get(position).id);
-                        })
-                        .negativeText("キャンセル")
-                        .show();
-            } else {
-                Intent intent = new Intent(activity.getApplication(), MemberDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("FRIEND_DETAIL", Parcels.wrap(ar.get(position)));
-                intent.putExtras(bundle);
-                startActivityForResult(intent, INTENT_FRIEND_DETAIL);
+            if(adapter != null){
+                if (view.getId() == R.id.member_delete) {
+                    new MaterialDialog.Builder(activity)
+                            .title("友達解除")
+                            .content(adapter.getList().get(position).username + "さんとの友達登録を解除しますか？")
+                            .positiveText("OK")
+                            .onPositive((dialog, which) -> {
+                                deleteFriend(adapter.getList().get(position).id);
+                            })
+                            .negativeText("キャンセル")
+                            .show();
+                } else {
+                    Intent intent = new Intent(activity.getApplication(), MemberDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("FRIEND_DETAIL", Parcels.wrap(adapter.getList().get(position)));
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, INTENT_FRIEND_DETAIL);
+                }
             }
         });
 
@@ -175,10 +178,10 @@ public class FriendFragment extends BaseFragment {
     // Resumeの代わり
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        if(isVisibleToUser && activity != null){
-            if(((MainActivity)activity).requestUpdateFriend){
+        if (isVisibleToUser && activity != null) {
+            if (((MainActivity) activity).requestUpdateFriend) {
                 fetchList();
-                ((MainActivity)activity).requestUpdateFriend = false;
+                ((MainActivity) activity).requestUpdateFriend = false;
             }
         }
         super.setUserVisibleHint(isVisibleToUser);
@@ -224,6 +227,9 @@ public class FriendFragment extends BaseFragment {
         listView = activity.findViewById(R.id.member_list);
         if (listView != null) {
             ArrayList<Friend> list = new ArrayList<>(data);
+            if (!list.isEmpty()) {
+                list.add(null);
+            }
             adapter = new MemberAdapter(list);
             if (listView != null) {
                 // ListViewにadapterをセット

@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -54,6 +55,11 @@ public class AttributeAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        if(list.get(position) == null){
+            convertView.setVisibility(View.GONE);
+            return convertView;
+        }
+        convertView.setVisibility(View.VISIBLE);
         holder.userName.setText(list.get(position).name);
         holder.plus_minus.setText(list.get(position).plus_minus == null ? "¥0" : "¥" + list.get(position).plus_minus.toString());
         holder.deleteButton.setOnClickListener((view) -> {

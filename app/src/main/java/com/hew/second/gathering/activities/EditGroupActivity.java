@@ -89,11 +89,12 @@ public class EditGroupActivity extends BaseActivity {
         });
 
         GridView gridView = findViewById(R.id.gridView_group);
+        gridView.setEmptyView(findViewById(R.id.emptyView_edit_group));
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             switch (view.getId()) {
                 case R.id.delete_group_member:
                     new MaterialDialog.Builder(this)
-                            .title("メンバー削除")
+                            .title(groupName.getText())
                             .content(adapter.getList().get(position).username + "をグループから削除しますか？")
                             .positiveText("OK")
                             .onPositive((dialog, which) -> {

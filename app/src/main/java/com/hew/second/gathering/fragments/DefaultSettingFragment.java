@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -73,11 +74,6 @@ public class DefaultSettingFragment extends BaseFragment {
         return view;
     }
 
-    public void removeFocus() {
-        SearchView searchView = activity.findViewById(R.id.searchView);
-        searchView.clearFocus();
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -98,26 +94,7 @@ public class DefaultSettingFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         GridView gridView = activity.findViewById(R.id.gridView_default);
-
-        SearchView searchView = activity.findViewById(R.id.searchView);
-        searchView.setOnClickListener((v) -> {
-            searchView.setIconified(false);
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                // 送信
-                // focusout
-                searchView.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                // テキスト変更
-                return false;
-            }
-        });
+        gridView.setEmptyView(activity.findViewById(R.id.emptyView_default_setting));
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             switch (view.getId()) {
@@ -191,6 +168,8 @@ public class DefaultSettingFragment extends BaseFragment {
     }
 
     private void deleteDefault(int id){
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         Completable token = service.deleteDefaultSetting(id);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -199,6 +178,7 @@ public class DefaultSettingFragment extends BaseFragment {
                 .subscribe(
                         () -> {
                             if (activity != null) {
+                                dialog.dismiss();
                                 fetchList();
                                 final Snackbar snackbar = Snackbar.make(getView(), "デフォルトを削除しました", Snackbar.LENGTH_LONG);
                                 snackbar.getView().setBackgroundColor(Color.BLACK);
@@ -208,6 +188,7 @@ public class DefaultSettingFragment extends BaseFragment {
                         }, // 終了時
                         (throwable) -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
                             if (activity != null && !cd.isDisposed()) {
                                 Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                                 if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {

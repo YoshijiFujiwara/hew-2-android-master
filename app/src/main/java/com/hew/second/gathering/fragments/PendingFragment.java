@@ -82,28 +82,31 @@ public class PendingFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.member_list_pending);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_pending));
         // 申請受諾
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            if (view.getId() == R.id.member_delete) {
-                new MaterialDialog.Builder(activity)
-                        .title("友達申請")
-                        .content(ar.get(position).username + "さんからの友達申請を断りますか？")
-                        .positiveText("OK")
-                        .onPositive((dialog, which) -> {
-                            rejectFriend(ar.get(position).id);
-                        })
-                        .negativeText("キャンセル")
-                        .show();
-            } else {
-                new MaterialDialog.Builder(activity)
-                        .title("友達申請")
-                        .content(ar.get(position).username + "さんと友達になりますか？")
-                        .positiveText("OK")
-                        .onPositive((dialog, which) -> {
-                            permitFriend(ar.get(position).id);
-                        })
-                        .negativeText("キャンセル")
-                        .show();
+            if(adapter != null){
+                if (view.getId() == R.id.member_delete) {
+                    new MaterialDialog.Builder(activity)
+                            .title("友達申請")
+                            .content(adapter.getList().get(position).username + "さんからの友達申請を断りますか？")
+                            .positiveText("OK")
+                            .onPositive((dialog, which) -> {
+                                rejectFriend(adapter.getList().get(position).id);
+                            })
+                            .negativeText("キャンセル")
+                            .show();
+                } else {
+                    new MaterialDialog.Builder(activity)
+                            .title("友達申請")
+                            .content(adapter.getList().get(position).username + "さんと友達になりますか？")
+                            .positiveText("OK")
+                            .onPositive((dialog, which) -> {
+                                permitFriend(adapter.getList().get(position).id);
+                            })
+                            .negativeText("キャンセル")
+                            .show();
+                }
             }
         });
         // 申請拒否
@@ -187,6 +190,10 @@ public class PendingFragment extends BaseFragment {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             mSwipeRefreshLayout.setRefreshing(false);
                             if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof NullPointerException){
+                                    ar = new ArrayList<>();
+                                    updateList(ar);
+                                }
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);

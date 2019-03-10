@@ -65,11 +65,6 @@ public class GroupFragment extends BaseFragment {
         return view;
     }
 
-    public void removeFocus() {
-        SearchView searchView = activity.findViewById(R.id.searchView);
-        searchView.clearFocus();
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -99,26 +94,7 @@ public class GroupFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         GridView gridView = activity.findViewById(R.id.gridView_group);
-
-        SearchView searchView = activity.findViewById(R.id.searchView);
-        searchView.setOnClickListener((v) -> {
-            searchView.setIconified(false);
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                // 送信
-                // focusout
-                searchView.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                // テキスト変更
-                return false;
-            }
-        });
+        gridView.setEmptyView(activity.findViewById(R.id.emptyView_group));
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             switch (view.getId()) {
@@ -149,6 +125,8 @@ public class GroupFragment extends BaseFragment {
     }
 
     private void createGroup(String name) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
@@ -159,6 +137,7 @@ public class GroupFragment extends BaseFragment {
                 .subscribe(
                         list -> {
                             if (activity != null) {
+                                dialog.dismiss();
                                 Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
                                 intent.putExtra("GROUP_ID", list.data.id);
                                 intent.putExtra("NEW_GROUP", true);
@@ -167,6 +146,7 @@ public class GroupFragment extends BaseFragment {
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
                             if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
