@@ -190,7 +190,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
             if (sup.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
                 sup.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }
-            if(!loadingShop){
+            if (!loadingShop) {
                 loadingShop = true;
                 for (Marker m : shopListMarker) {
                     m.remove();
@@ -203,7 +203,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        if(SearchArgs.reload && activity != null && isVisibleToUser){
+        if (SearchArgs.reload && activity != null && isVisibleToUser) {
             SearchArgs.reload = false;
             if (sup.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
                 sup.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
@@ -431,6 +431,13 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         }
         options.put("range", SearchArgs.range.toString());
 
+        options.put("free_drink", SearchArgs.nomi ? "1" : "0");
+        options.put("free_food", SearchArgs.tabe ? "1" : "0");
+        options.put("course", SearchArgs.course ? "1" : "0");
+        options.put("private_room", SearchArgs.room ? "1" : "0");
+        options.put("parking", SearchArgs.parking ? "1" : "0");
+        options.put("lunch", SearchArgs.lunch ? "1" : "0");
+
         HashMap<String, HashMap<String, String>> param = new HashMap<>();
         param.put("body", options);
 
@@ -481,7 +488,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                                 ArrayList<Shop> data = new ArrayList<>();
                                 ArrayList<String> strShops = new ArrayList<>();
                                 for (Shop s : shopList) {
-                                    if(!strShops.contains(s.id)){
+                                    if (!strShops.contains(s.id)) {
                                         data.add(s);
                                         strShops.add(s.id);
                                     }

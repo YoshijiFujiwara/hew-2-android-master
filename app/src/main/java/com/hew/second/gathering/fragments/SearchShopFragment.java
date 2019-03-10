@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
@@ -150,15 +151,27 @@ public class SearchShopFragment extends SessionBaseFragment {
         });
 
         Button search = activity.findViewById(R.id.search_shop_btn);
-        search.setOnClickListener((l)->{
+        search.setOnClickListener((l) -> {
             SearchArgs.reload = true;
             TabLayout tabLayout = activity.findViewById(R.id.tabLayout);
             TabLayout.Tab tab = tabLayout.getTabAt(0);
-            if(tab != null){
+            if (tab != null) {
                 tab.select();
             }
         });
 
+        Switch switchNomi = activity.findViewById(R.id.switch_nomi);
+        switchNomi.setOnCheckedChangeListener((buttonView, isChecked) -> SearchArgs.nomi = isChecked);
+        Switch switchTabe = activity.findViewById(R.id.switch_tabe);
+        switchTabe.setOnCheckedChangeListener((buttonView, isChecked) -> SearchArgs.tabe = isChecked);
+        Switch switchCourse = activity.findViewById(R.id.switch_course);
+        switchCourse.setOnCheckedChangeListener((buttonView, isChecked) -> SearchArgs.course = isChecked);
+        Switch switchRoom = activity.findViewById(R.id.switch_room);
+        switchRoom.setOnCheckedChangeListener((buttonView, isChecked) -> SearchArgs.room = isChecked);
+        Switch switchParking = activity.findViewById(R.id.switch_parking);
+        switchParking.setOnCheckedChangeListener((buttonView, isChecked) -> SearchArgs.parking = isChecked);
+        Switch switchLunch = activity.findViewById(R.id.switch_lunch);
+        switchLunch.setOnCheckedChangeListener((buttonView, isChecked) -> SearchArgs.lunch = isChecked);
 
         HashMap<String, String> body = new HashMap<>();
         Observable<GenreResult> GenreResult = HpHttp.getService().getGenreList();
@@ -178,7 +191,7 @@ public class SearchShopFragment extends SessionBaseFragment {
                                 ArrayAdapter adapter =
                                         new ArrayAdapter(activity, android.R.layout.simple_spinner_item, data.toArray(new String[0]));
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                if(spinner != null){
+                                if (spinner != null) {
                                     spinner.setAdapter(adapter);
                                 }
                             }
