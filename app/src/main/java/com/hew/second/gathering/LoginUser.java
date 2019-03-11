@@ -23,6 +23,8 @@ public class LoginUser {
 
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_UNIQUE_ID = "unique_id";
 
     private static int id = -1;
     private static String uniqueId = "";
@@ -62,20 +64,40 @@ public class LoginUser {
         }
     }
 
-    public static String getUniqueId() {
-        return uniqueId;
+    public static String getUniqueId(@Nullable SharedPreferences sharedPref) {
+        if (sharedPref == null)
+            return LoginUser.uniqueId;
+        LoginUser.uniqueId = sharedPref.getString(KEY_UNIQUE_ID, "");
+        return LoginUser.uniqueId;
     }
 
-    public static void setUniqueId(String uniqueId) {
+    public static void setUniqueId(@Nullable SharedPreferences sharedPref,String uniqueId) {
+        if (sharedPref == null) {
+            LoginUser.uniqueId = uniqueId;
+            return;
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
         LoginUser.uniqueId = uniqueId;
+        editor.putString(KEY_UNIQUE_ID, uniqueId);
+        editor.apply();
     }
 
-    public static String getUsername() {
-        return username;
+    public static String getUsername(@Nullable SharedPreferences sharedPref) {
+        if (sharedPref == null)
+            return LoginUser.username;
+        LoginUser.username = sharedPref.getString(KEY_USERNAME, "");
+        return LoginUser.username;
     }
 
-    public static void setUsername(String username) {
+    public static void setUsername(@Nullable SharedPreferences sharedPref, String username) {
+        if (sharedPref == null) {
+            LoginUser.username = username;
+            return;
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
         LoginUser.username = username;
+        editor.putString(KEY_USERNAME, username);
+        editor.apply();
     }
 
     public static void setEmail(@Nullable SharedPreferences sharedPref, String email) {

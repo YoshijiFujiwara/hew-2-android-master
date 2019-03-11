@@ -1,5 +1,6 @@
 package com.hew.second.gathering.views.adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +18,43 @@ import java.util.List;
 public class GroupMemberListAdapter extends BaseAdapter {
 
     protected List<Friend> list;
-
+    private List<Boolean> checked;
     static public class ViewHolder {
         TextView userName;
         TextView uniqueName;
         TextView deleteButton;
     }
-    protected GroupMemberListAdapter(){
-        list = null;
+    public boolean getChecked(int pos) {
+        return checked.get(pos);
     }
-    public GroupMemberListAdapter(Friend[] names){
-        list = Arrays.asList(names);
+    public List<Boolean> getCheckedList() {
+        return checked;
+    }
+    public Integer getCheckedCount() {
+        Integer i = 0;
+        for(Boolean b : checked){
+            if(b){
+                i++;
+            }
+        }
+        return i;
+    }
+    public void setChecked(int pos,Boolean checked) {
+        this.checked.set(pos,checked);
+    }
+
+    public void clearChecked(){
+        checked = new ArrayList<>();
+        for (Friend g: list){
+            checked.add(false);
+        }
     }
     public GroupMemberListAdapter(ArrayList<Friend> names){
         list = new ArrayList<>(names);
+        checked = new ArrayList<>();
+        for (Friend g: list){
+            checked.add(false);
+        }
     }
 
     @Override
@@ -53,7 +77,11 @@ public class GroupMemberListAdapter extends BaseAdapter {
         holder.userName.setText(list.get(position).username);
         holder.uniqueName.setText(list.get(position).unique_id);
         holder.deleteButton.setVisibility(View.GONE);
-
+        if(checked.get(position)){
+            convertView.setBackgroundColor(Color.parseColor("#70B98E70"));
+        } else {
+            convertView.setBackgroundColor(Color.TRANSPARENT);
+        }
         return convertView;
     }
 

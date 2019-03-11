@@ -60,7 +60,10 @@ public class AddMemberActivity extends BaseActivity {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener((l) -> new IntentIntegrator(AddMemberActivity.this).initiateScan());
+        fab.setOnClickListener((l) -> {
+            Intent intent = new  Intent(getApplication(),ShowQrCodeActivity.class);
+            startActivity(intent);
+        });
 
         listView = findViewById(R.id.member_list);
         listView.setEmptyView(findViewById(R.id.emptyView_add_member));
@@ -144,7 +147,6 @@ public class AddMemberActivity extends BaseActivity {
                 return true;
             }
         });
-        fetchList();
     }
 
     @Override
@@ -157,30 +159,13 @@ public class AddMemberActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+        fetchList();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null && data != null) {
-            Log.d("readQR", result.getContents());
-            SearchView searchView = findViewById(R.id.searchView);
-            searchView.setQuery(result.getContents(), false);
-            searchView.setFocusable(true);
-            searchView.setIconified(false);
-            searchView.requestFocusFromTouch();
-            mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
-            mSwipeRefreshLayout.setRefreshing(false);
-
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
     private void fetchList() {

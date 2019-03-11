@@ -87,7 +87,7 @@ public interface ApiService {
     Completable deleteGroup(@Path("group") int groupId);
 
     @POST("api/groups/{group}/users")
-    Completable addUserToGroup(@Path("group") int groupId, @Body HashMap<String, Integer> body);
+    Observable<GroupUserList> addUserToGroup(@Path("group") int groupId, @Body HashMap<String, Integer> body);
 
     /*
      * セッション系API

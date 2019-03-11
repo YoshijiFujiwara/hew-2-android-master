@@ -32,6 +32,8 @@ import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +114,9 @@ public class GroupFragment extends BaseFragment {
                 default:
                     // メンバ編集画面へグループIDを渡す
                     Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
-                    intent.putExtra("GROUP_ID", ar.get(position).id);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("GROUP_DETAIL", Parcels.wrap(ar.get(position)));
+                    intent.putExtras(bundle);
                     startActivityForResult(intent, INTENT_EDIT_GROUP);
             }
         });
@@ -139,8 +143,10 @@ public class GroupFragment extends BaseFragment {
                             if (activity != null) {
                                 dialog.dismiss();
                                 Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
-                                intent.putExtra("GROUP_ID", list.data.id);
-                                intent.putExtra("NEW_GROUP", true);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("GROUP_DETAIL", Parcels.wrap(list.data));
+                                bundle.putBoolean("NEW_GROUP", true);
+                                intent.putExtras(bundle);
                                 startActivityForResult(intent, INTENT_EDIT_GROUP);
                             }
                         },  // 成功時

@@ -161,8 +161,8 @@ public class EditProfileActivity extends BaseActivity {
         usernameSearchFlag.setChecked(usernameFlag);
 
         LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), data.email);
-        LoginUser.setUniqueId(data.unique_id);
-        LoginUser.setUsername(data.username);
+        LoginUser.setUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE),data.unique_id);
+        LoginUser.setUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE),data.username);
     }
 
     public void saveProfile() {
@@ -215,8 +215,8 @@ public class EditProfileActivity extends BaseActivity {
                             dialog.dismiss();
 
                             LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), list.data.email);
-                            LoginUser.setUniqueId(list.data.unique_id);
-                            LoginUser.setUsername(list.data.username);
+                            LoginUser.setUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE),list.data.unique_id);
+                            LoginUser.setUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE),list.data.username);
 
                             Intent intent = new Intent();
 //                                Intent intent = new Intent(activity.getApplication(), MainActivity.class);

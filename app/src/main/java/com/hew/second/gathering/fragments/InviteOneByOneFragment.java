@@ -137,9 +137,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return false;
             }
 
@@ -158,9 +156,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return true;
             }
         });

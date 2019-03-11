@@ -115,7 +115,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/ic_menu_camera"
+        android:src="@drawable/qr"
         android:tint="@android:color/white"
         app:backgroundTint="@color/colorPrimary"
         app:elevation="6dp"

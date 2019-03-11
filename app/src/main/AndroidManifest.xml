@@ -82,6 +82,7 @@
         <activity
             android:name=".activities.ShowQrCodeActivity"
             android:label="友達検索用QRコード"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.EventProcessMainActivity"
@@ -91,6 +92,7 @@
         <activity
             android:name=".activities.EditGroupActivity"
             android:label="@string/title_activity_edit_group"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.EditDefaultSettingActivity"

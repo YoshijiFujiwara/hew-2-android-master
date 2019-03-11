@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -70,17 +71,18 @@ public class MainActivity extends BaseActivity
             public void onDrawerStateChanged(int newState) {
                 if (newState == DrawerLayout.STATE_SETTLING) {
                     if (!drawer.isDrawerOpen(R.id.drawer_layout)) {
-                        if(LoginUser.getUsername().isEmpty()){
+                        if(LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)).isEmpty()){
                             updateProfile();
                         }
                     }
                 }
             }
         });
+        setProfile();
         updateProfile();
 
         View header = navigationView.getHeaderView(0);
-        ImageView logo = header.findViewById(R.id.imageView_logo);
+        FloatingActionButton logo = header.findViewById(R.id.fab_qr);
         logo.setOnClickListener((l)->{
             Intent intent = new  Intent(getApplication(),ShowQrCodeActivity.class);
             startActivity(intent);
@@ -125,15 +127,15 @@ public class MainActivity extends BaseActivity
     }
 
     private void setProfile() {
-        if (!LoginUser.getUsername().isEmpty()) {
+        if (!LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)).isEmpty()) {
             NavigationView navigationView = findViewById(R.id.nav_view);
             View header = navigationView.getHeaderView(0);
             TextView user_name = header.findViewById(R.id.user_name);
             TextView user_email = header.findViewById(R.id.user_email);
             TextView uniqueId = header.findViewById(R.id.user_unique_id);
-            user_name.setText(LoginUser.getUsername());
+            user_name.setText(LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)));
             user_email.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
-            uniqueId.setText("@" + LoginUser.getUniqueId());
+            uniqueId.setText("@" + LoginUser.getUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
         }
     }
     private void updateProfile(){
@@ -168,8 +170,8 @@ public class MainActivity extends BaseActivity
         uniqueId.setText("@" + data.unique_id);
 
         LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), data.email);
-        LoginUser.setUniqueId(data.unique_id);
-        LoginUser.setUsername(data.username);
+        LoginUser.setUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE),data.unique_id);
+        LoginUser.setUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE),data.username);
     }
 
     @Override

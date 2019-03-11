@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,13 +30,17 @@ import com.hew.second.gathering.api.GroupUser;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.api.Util;
+import com.hew.second.gathering.fragments.EventFinishFragment;
 import com.hew.second.gathering.hotpepper.Budget;
 import com.hew.second.gathering.views.adapters.GroupMemberAdapter;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import dmax.dialog.SpotsDialog;
+import icepick.State;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -43,7 +49,8 @@ import retrofit2.HttpException;
 
 public class EditGroupActivity extends BaseActivity {
 
-    private int groupId = -1;
+    @State
+    public Group group = null;
     private GroupMemberAdapter adapter = null;
     private boolean newGroup = false;
 
@@ -60,16 +67,27 @@ public class EditGroupActivity extends BaseActivity {
         setTitle("グループ編集");
 
         Intent beforeIntent = getIntent();
-        groupId = beforeIntent.getIntExtra("GROUP_ID", -1);
-        newGroup = beforeIntent.getBooleanExtra("NEW_GROUP", false);
+        if (beforeIntent != null) {
+            Bundle bundle = beforeIntent.getExtras();
+            if (bundle != null) {
+                group = Parcels.unwrap(getIntent().getParcelableExtra("GROUP_DETAIL"));
+                newGroup = bundle.getBoolean("NEW_GROUP", false);
+            }
+        }
+        if (group == null) {
+            finish();
+        }
 
         FloatingActionButton fab = findViewById(R.id.fab_addUserToGroup);
         fab.setOnClickListener((v) -> {
             Intent intent = new Intent(getApplication(), AddGroupMemberActivity.class);
-            intent.putExtra("GROUP_ID", groupId);
-            startActivity(intent);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("GROUP_DETAIL", Parcels.wrap(group));
+            intent.putExtras(bundle);
+            startActivityForResult(intent, INTENT_ADD_GROUP_MEMBER);
         });
         TextView groupName = findViewById(R.id.group_name);
+        groupName.setText(group.name);
         groupName.setOnClickListener((l) -> {
             new MaterialDialog.Builder(this)
                     .title("グループ名")
@@ -105,7 +123,7 @@ public class EditGroupActivity extends BaseActivity {
                     break;
             }
         });
-
+        updateList(group);
     }
 
 
@@ -127,21 +145,19 @@ public class EditGroupActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        fetchList();
     }
 
     private void fetchList() {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
         ApiService service = Util.getService();
-        Observable<GroupDetail> token = service.getGroupDetail(groupId);
+        Observable<GroupDetail> token = service.getGroupDetail(group.id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            TextView groupName = findViewById(R.id.group_name);
-                            groupName.setText(list.data.name);
+                            group = list.data;
                             updateList(list.data);
                             dialog.dismiss();
                         },  // 成功時
@@ -175,12 +191,13 @@ public class EditGroupActivity extends BaseActivity {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
-        Observable<GroupDetail> token = service.updateGroupName(groupId, body);
+        Observable<GroupDetail> token = service.updateGroupName(group.id, body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
+                            group = list.data;
                             TextView groupName = findViewById(R.id.group_name);
                             groupName.setText(list.data.name);
                             dialog.dismiss();
@@ -206,7 +223,7 @@ public class EditGroupActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable token = service.deleteGroupUser(groupId, id);
+        Completable token = service.deleteGroupUser(group.id, id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -235,12 +252,13 @@ public class EditGroupActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable token = service.deleteGroup(groupId);
+        Completable token = service.deleteGroup(group.id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         () -> {
+                            group = null;
                             dialog.dismiss();
                             finish();
                         }, // 終了時
@@ -260,6 +278,22 @@ public class EditGroupActivity extends BaseActivity {
                             }
                         }
                 ));
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            //店検索から戻ってきた場合
+            case (INTENT_ADD_GROUP_MEMBER):
+                Group temp = Parcels.unwrap(data.getParcelableExtra("GROUP_DETAIL"));
+                if (temp != null) {
+                    this.group = temp;
+                }
+                updateList(group);
+                break;
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }
