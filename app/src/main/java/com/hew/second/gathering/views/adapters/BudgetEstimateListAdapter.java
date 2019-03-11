@@ -1,6 +1,7 @@
 package com.hew.second.gathering.views.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -90,6 +93,18 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
 //                }
 //            }
 //        });
+
+        plusMinusEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         plusMinusEditText.addTextChangedListener(new TextWatcher() {
             @Override

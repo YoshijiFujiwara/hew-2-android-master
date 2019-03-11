@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -14,9 +15,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -98,6 +102,19 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                 budget_estimate_et.setText(String.format("%,d", activity.session.budget), TextView.BufferType.EDITABLE);
             }
 
+            budget_estimate_et.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+
             // 3桁区切り
             budget_estimate_et.addTextChangedListener(new TextWatcher() {
                 boolean isEdiging;
@@ -148,6 +165,13 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
+                budget_update_btn.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        budget_update_btn.setEnabled(true);
+                    }
+                }, 1000);
+                removeFocus();
                 try {
                     activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_et.getText()).replace(",", ""));
                     // allowUserの処理
@@ -246,16 +270,11 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
         cd.add(Observable.merge(plusMinus)
                 .subscribeOn(Schedulers.io())
-                .flatMap((l) -> {
-                    return service.updateSession(session.id, body);
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            if (activity != null) {
-                                activity.session = list.data;
-                            }
+
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -265,7 +284,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
-                                if (activity != null) {
+                                if (dialog != null) {
                                     dialog.dismiss();
                                 }
                             }
@@ -273,8 +292,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                         ()->{
                             Log.v("sessioninfo", activity.session.name);
                             if (activity != null) {
-                                updateListView(activity.session, Integer.parseInt(activity.session.unit_rounding_budget));
-                                dialog.dismiss();
+                                updateSessionInfo(session.id ,body);
                                 //updateSessionInfo(activity.session, Integer.parseInt(budget_estimate_spinner.getSelectedItem().toString()));
                             }
                         }
@@ -398,6 +416,41 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         return session.budget * (allowUserCount + 1);
     }
 
+    // activity.session　の情報を更新する
+    public void updateSessionInfo(int id,HashMap<String,String> body) {
+        ApiService service = Util.getService();
+        Observable<SessionDetail> token = service.updateSession(id,body);
+        cd.add(token.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            Log.v("sessioninfo", list.data.name);
+                            if (activity != null) {
+                                activity.session = list.data;
+                                updateListView(list.data, Integer.parseInt(list.data.unit_rounding_budget));
+                                if (dialog != null) {
+                                    dialog.dismiss();
+                                }
+                            }
+
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                if (dialog != null) {
+                                    dialog.dismiss();
+                                }
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
+    }
+
     private void updateUnitRoundingEstimate(Session session, int unitRounding) {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
@@ -421,5 +474,9 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                             }
                         }
                 ));
+    }
+    public void removeFocus() {
+        InputMethodManager inputMethodMgr = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+        inputMethodMgr.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

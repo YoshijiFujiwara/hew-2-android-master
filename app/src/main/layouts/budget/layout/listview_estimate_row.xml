@@ -65,6 +65,7 @@
                 android:inputType="numberDecimal|numberSigned"
                 android:textAlignment="center"
                 android:textSize="15dp"
+                android:imeOptions="actionDone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/budgetEstimateListCost"
                 app:layout_constraintStart_toEndOf="@+id/budgetEstimateListPlusMinusLabel"

@@ -1,10 +1,12 @@
 package com.hew.second.gathering.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Animatable;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -12,9 +14,12 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -92,6 +97,18 @@ public class BudgetActualFragment extends SessionBaseFragment {
                 budget_actual_et.setText(String.format("%,d", activity.session.actual), TextView.BufferType.EDITABLE);
             }
 
+            budget_actual_et.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
             // 3桁区切り
             budget_actual_et.addTextChangedListener(new TextWatcher() {
                 boolean isEdiging;
@@ -131,6 +148,13 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
             budget_actual_update_btn = view.findViewById(R.id.budget_actual_update_btn);
             budget_actual_update_btn.setOnClickListener((v) -> {
+                budget_actual_update_btn.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        budget_actual_update_btn.setEnabled(true);
+                    }
+                }, 1000);
+                removeFocus();
                 if(budget_actual_et.getText().toString().isEmpty()){
                     final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundColor(Color.BLACK);
@@ -183,8 +207,6 @@ public class BudgetActualFragment extends SessionBaseFragment {
 
     // activity.session　の情報を更新する
     public void updateSessionInfo(Session session, int unitRounding) {
-        dialog = new SpotsDialog.Builder().setContext(activity).build();
-        dialog.show();
         ApiService service = Util.getService();
         Observable<SessionDetail> token = service.getSessionDetail(session.id);
         cd.add(token.subscribeOn(Schedulers.io())
@@ -194,8 +216,10 @@ public class BudgetActualFragment extends SessionBaseFragment {
                         list -> {
                             Log.v("sessioninfo", list.data.name);
                             if(activity != null){
-                                dialog.dismiss();
                                 updateListView(list.data, unitRounding);
+                                if (dialog != null) {
+                                    dialog.dismiss();
+                                }
                             }
 
                         },  // 成功時
@@ -207,7 +231,9 @@ public class BudgetActualFragment extends SessionBaseFragment {
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
-                                dialog.dismiss();
+                                if (dialog != null) {
+                                    dialog.dismiss();
+                                }
                             }
                         }
                 ));
@@ -232,7 +258,6 @@ public class BudgetActualFragment extends SessionBaseFragment {
                         list -> {
                             Log.v("sessioninfo", list.data.name);
                             if(activity != null){
-                                dialog.dismiss();
                                 updateSessionInfo(activity.session,  Integer.parseInt(budget_actual_spinner.getSelectedItem().toString()));
                                 activity.session = list.data;
                             }
@@ -365,5 +390,9 @@ public class BudgetActualFragment extends SessionBaseFragment {
                 budget_actual_et.setText(String.valueOf(activity.session.actual));
             }
         }
+    }
+    public void removeFocus() {
+        InputMethodManager inputMethodMgr = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+        inputMethodMgr.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

@@ -96,6 +96,7 @@
                 android:inputType="numberDecimal"
                 android:textAlignment="center"
                 android:textSize="30dp"
+                android:imeOptions="actionDone"
                 app:layout_constraintBottom_toTopOf="@+id/budget_estimate_allow_user_number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView25"
