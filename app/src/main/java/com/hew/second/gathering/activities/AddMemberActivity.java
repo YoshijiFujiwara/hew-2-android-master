@@ -48,7 +48,7 @@ public class AddMemberActivity extends BaseActivity {
         setTitle("友達申請");
 
         // Backボタンを有効にする
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
@@ -158,21 +158,25 @@ public class AddMemberActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
     }
+
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
+        if (result != null && data != null) {
             Log.d("readQR", result.getContents());
             SearchView searchView = findViewById(R.id.searchView);
-            searchView.setQuery(result.getContents(),true);
+            searchView.setQuery(result.getContents(), false);
             searchView.setFocusable(true);
             searchView.setIconified(false);
             searchView.requestFocusFromTouch();
+            mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
+            mSwipeRefreshLayout.setRefreshing(false);
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -211,10 +215,13 @@ public class AddMemberActivity extends BaseActivity {
         ArrayList<Friend> list = new ArrayList<>(data);
         if (!list.isEmpty()) {
             list.add(null);
+        } else {
+            mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
         // 検索用リスト
         adapter = new AddMemberAdapter(list);
-        if(listView != null){
+        if (listView != null) {
             // ListViewにadapterをセット
             listView.setAdapter(adapter);
         }
