@@ -53,7 +53,7 @@ public class AddDefaultSettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_add_default);
-        setTitle("デフォルト追加");
+        setTitle("テンプレート追加");
 
         // Backボタンを有効にする
         if (getSupportActionBar() != null) {
@@ -169,7 +169,7 @@ public class AddDefaultSettingActivity extends BaseActivity {
         RadioGroup mRadioGroup = findViewById(R.id.RadioGroup);
 
         if (TextUtils.isEmpty(defaultName.getText().toString())) {
-            defaultName.setError("デフォルト名を入力してください。");
+            defaultName.setError("テンプレート名を入力してください。");
             defaultName.requestFocus();
             return;
         }
@@ -244,7 +244,7 @@ public class AddDefaultSettingActivity extends BaseActivity {
                         list -> {
                             dialog.dismiss();
                             Intent intent = new Intent();
-                            intent.putExtra(SNACK_MESSAGE, "デフォルトを作成しました。");
+                            intent.putExtra(SNACK_MESSAGE, "テンプレートを作成しました。");
                             setResult(RESULT_OK, intent);
                             finish();
                         },  // 成功時

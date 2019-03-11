@@ -86,7 +86,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:text="デフォルト設定を作成してください！" />
+                android:text="テンプレート設定を作成してください！" />
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 

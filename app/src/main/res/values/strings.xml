@@ -8,7 +8,7 @@
     <string name="action_settings">Settings</string>
     <string name="name_hint_text">名前</string>
     <string name="search_member_hint_text">メンバー検索</string>
-    <string name="search_default_hint_text">デフォルト検索</string>
+    <string name="search_default_hint_text">テンプレート検索</string>
     <string name="title_activity_login">Sign in</string>
 
 
@@ -16,7 +16,7 @@
     <string name="title_ing">進行中</string>
     <string name="title_home">ホーム</string>
     <string name="title_group">グループ</string>
-    <string name="title_default">デフォルト設定</string>
+    <string name="title_default">テンプレート設定</string>
     <string name="title_activity_default_setting">DefaultSetting</string>
     <string name="title">タイトル</string>
     <string name="title_bottom_main">メイン</string>
@@ -31,7 +31,7 @@
     <string name="event_name">イベント名</string>
 
     <string name="next">Next</string>
-    <string name="default_name">デフォルト名</string>
+    <string name="default_name">テンプレート名</string>
     <string name="username">ユーザーネーム</string>
 
     <!-- Strings related to login -->
@@ -50,7 +50,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_edit_group">グループ編集</string>
-    <string name="title_activity_edit_defaultSetting">デフォルト設定編集</string>
+    <string name="title_activity_edit_defaultSetting">テンプレート設定編集</string>
     <string name="cross">×</string>
     <string name="title_activity_gurunavi_maps">Map</string>
     <string name="invite_end">招待を打ち切る</string>

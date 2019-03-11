@@ -218,7 +218,7 @@ public class GroupFragment extends BaseFragment {
                             if (activity != null && !cd.isDisposed()) {
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                     //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
-                                    final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているデフォルト設定があるので、削除できません。", Snackbar.LENGTH_LONG);
+                                    final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているテンプレート設定があるので、削除できません。", Snackbar.LENGTH_LONG);
                                     snackbar.getView().setBackgroundColor(Color.BLACK);
                                     snackbar.setActionTextColor(Color.WHITE);
                                     snackbar.show();

@@ -54,7 +54,7 @@ public class EditDefaultSettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_edit_default);
-        setTitle("デフォルト編集");
+        setTitle("テンプレート編集");
 
         // Backボタンを有効にする
         if (getSupportActionBar() != null) {
@@ -220,7 +220,7 @@ public class EditDefaultSettingActivity extends BaseActivity {
         RadioGroup mRadioGroup = findViewById(R.id.RadioGroup);
 
         if (TextUtils.isEmpty(defaultName.getText().toString())) {
-            defaultName.setError("デフォルト名を入力してください。");
+            defaultName.setError("テンプレート名を入力してください。");
             defaultName.requestFocus();
             return;
         }
@@ -296,7 +296,7 @@ public class EditDefaultSettingActivity extends BaseActivity {
                             dialog.dismiss();
                             Intent intent = new Intent();
 //                                Intent intent = new Intent(activity.getApplication(), MainActivity.class);
-                            intent.putExtra(SNACK_MESSAGE, "デフォルトを更新しました。");
+                            intent.putExtra(SNACK_MESSAGE, "テンプレートを更新しました。");
                             setResult(RESULT_OK, intent);
                             finish();
                         },  // 成功時
@@ -306,7 +306,7 @@ public class EditDefaultSettingActivity extends BaseActivity {
                             if (!cd.isDisposed()) {
                                 Intent intent = new Intent();
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
-                                    intent.putExtra(SNACK_MESSAGE, "デフォルトの変更はありません。");
+                                    intent.putExtra(SNACK_MESSAGE, "テンプレートの変更はありません。");
                                 } else if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     Intent intent2 = new Intent(getApplication(), LoginActivity.class);
                                     startActivity(intent2);

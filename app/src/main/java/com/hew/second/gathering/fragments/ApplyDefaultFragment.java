@@ -69,12 +69,12 @@ public class ApplyDefaultFragment extends SessionBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.setTitle("デフォルト設定選択");
+        activity.setTitle("テンプレート設定選択");
 
         GridView gridView = activity.findViewById(R.id.gridView_default);
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
-            // TODO:デフォルト設定を適用して店選択へ
+            // テンプレート設定を適用して店選択へ
             if(activity != null){
                 FragmentManager fragmentManager = activity.getSupportFragmentManager();
                 if(fragmentManager != null){

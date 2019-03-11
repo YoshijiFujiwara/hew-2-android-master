@@ -77,7 +77,7 @@ public class DefaultSettingFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.setTitle("デフォルト設定");
+        activity.setTitle("テンプレート設定");
 
         FloatingActionButton fab = activity.findViewById(R.id.fab_newDefault);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +100,7 @@ public class DefaultSettingFragment extends BaseFragment {
             switch (view.getId()) {
                 case R.id.delete_default:
                     new MaterialDialog.Builder(activity)
-                            .title("デフォルト設定削除")
+                            .title("テンプレート設定削除")
                             .content(adapter.getList().get(position).name+ "を削除しますか？")
                             .positiveText("OK")
                             .onPositive((dialog, which) -> {
@@ -110,7 +110,7 @@ public class DefaultSettingFragment extends BaseFragment {
                             .show();
                     break;
                 default:
-                    // 編集画面にデフォルトIDを渡す
+                    // 編集画面にテンプレートIDを渡す
                     Intent intent = new Intent(activity.getApplication(), EditDefaultSettingActivity.class);
                     intent.putExtra("DEFAULTSETTING_ID", ar.get(position).id);
                     startActivityForResult(intent, INTENT_EDIT_DEFAULT);
@@ -180,7 +180,7 @@ public class DefaultSettingFragment extends BaseFragment {
                             if (activity != null) {
                                 dialog.dismiss();
                                 fetchList();
-                                final Snackbar snackbar = Snackbar.make(getView(), "デフォルトを削除しました", Snackbar.LENGTH_LONG);
+                                final Snackbar snackbar = Snackbar.make(getView(), "テンプレートを削除しました", Snackbar.LENGTH_LONG);
                                 snackbar.getView().setBackgroundColor(Color.BLACK);
                                 snackbar.setActionTextColor(Color.WHITE);
                                 snackbar.show();

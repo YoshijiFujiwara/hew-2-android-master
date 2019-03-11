@@ -143,7 +143,7 @@ public interface ApiService {
 
 
     /*
-     * デフォルト設定系API
+     * テンプレート設定系API
      */
     @GET("api/default_settings")
     Observable<DefaultSettingList> getDefaultSettingList();
