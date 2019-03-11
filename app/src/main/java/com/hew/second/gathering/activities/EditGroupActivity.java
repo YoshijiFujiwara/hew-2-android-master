@@ -267,7 +267,7 @@ public class EditGroupActivity extends BaseActivity {
                             dialog.dismiss();
                             if (!cd.isDisposed()) {
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
-                                    final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "このグループを使用しているテンプレート設定があるので、削除できません。", Snackbar.LENGTH_LONG);
+                                    final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "このグループを使用しているテンプレートがあるので、削除できません。", Snackbar.LENGTH_LONG);
                                     snackbar.getView().setBackgroundColor(Color.BLACK);
                                     snackbar.setActionTextColor(Color.WHITE);
                                     snackbar.show();

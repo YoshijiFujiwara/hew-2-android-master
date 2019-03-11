@@ -2,14 +2,17 @@ package com.hew.second.gathering.fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.InputType;
 import android.util.Log;
@@ -114,7 +117,7 @@ public class EventFinishFragment extends SessionBaseFragment {
                     FragmentManager fragmentManager = activity.getSupportFragmentManager();
                     if (fragmentManager != null) {
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        //fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
                         fragmentTransaction.commit();
                     }
@@ -229,6 +232,15 @@ public class EventFinishFragment extends SessionBaseFragment {
         TextView url = activity.findViewById(R.id.textView_url);
         url.setText(activity.shop.urls.pc);
         url.setTextColor(getResources().getColor(R.color.colorPrimary));
+        url.setOnClickListener((l) -> {
+            final CustomTabsIntent tabsIntent = new CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .setToolbarColor(ContextCompat.getColor(activity.getApplication(), R.color.colorPrimary))
+                    .setStartAnimations(activity.getApplication(), R.anim.slide_in_right, R.anim.slide_out_left)
+                    .setExitAnimations(activity.getApplication(), android.R.anim.slide_in_left, android.R.anim.slide_out_right).build();
+            Uri uri = Uri.parse(url.getText().toString());
+            tabsIntent.launchUrl(activity, uri);
+        });
     }
 
     private void fetchShop() {

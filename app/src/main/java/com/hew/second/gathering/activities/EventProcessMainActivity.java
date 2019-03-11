@@ -124,30 +124,35 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                 int id = menuItem.getItemId();
                 if (id == R.id.navi_boto_main) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_budget) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, BudgetFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_reservation) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, ReservationPhoneFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_member) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, InviteFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_time) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, StartTimeFragment.newInstance());
                     fragmentTransaction.commit();
@@ -222,7 +227,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             if (fragmentManager != null) {
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.addToBackStack(null);
+                                //fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
                                 fragmentTransaction.commit();
                             }

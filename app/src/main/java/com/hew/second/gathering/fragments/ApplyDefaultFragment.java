@@ -69,18 +69,18 @@ public class ApplyDefaultFragment extends SessionBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.setTitle("テンプレート設定選択");
+        activity.setTitle("テンプレート選択");
 
         GridView gridView = activity.findViewById(R.id.gridView_default);
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             // テンプレート設定を適用して店選択へ
             if(activity != null){
-                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentManager fragmentManager = getFragmentManager();
                 if(fragmentManager != null){
                     activity.defaultSetting = ar.get(position);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.addToBackStack(null);
+                    //fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
                     fragmentTransaction.commit();
                 }

@@ -100,7 +100,7 @@ public class DefaultSettingFragment extends BaseFragment {
             switch (view.getId()) {
                 case R.id.delete_default:
                     new MaterialDialog.Builder(activity)
-                            .title("テンプレート設定削除")
+                            .title("テンプレート削除")
                             .content(adapter.getList().get(position).name+ "を削除しますか？")
                             .positiveText("OK")
                             .onPositive((dialog, which) -> {

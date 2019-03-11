@@ -173,7 +173,11 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(activity, ShopDetailActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(position)));
+            if (adapter != null) {
+                bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(adapter.getList().get(position)));
+            } else {
+                return;
+            }
             if (activity.session != null) {
                 bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(activity.session));
             }
@@ -443,15 +447,12 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
 
         Observable<GourmetResult> recommendList = Util.getService()
                 .getRecommendShopIdList(param, 3);
-        shopList = new ArrayList<>();
         cd.add(recommendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            if (list.results.shop != null) {
-                                shopList.addAll(list.results.shop);
-                            }
+                            shopList = new ArrayList<>(list.results.shop);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -467,7 +468,6 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                         () -> {
                             if (activity != null) {
                                 listView = activity.findViewById(R.id.listView_shop_list);
-                                // 重複削除
                                 ArrayList<Shop> data = new ArrayList<>(shopList);
                                 adapter = new ShopListAdapter(data);
                                 if (listView != null) {
