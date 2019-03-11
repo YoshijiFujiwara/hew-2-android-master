@@ -127,8 +127,8 @@ id 1~4を、プレゼン用データとして追加しました。(テスト太�
 パスワードは全員「hoisulu」  
 幹事役 １人（id: 1）
 ```
-浜田　太郎
-hamada@hew.com
+松坂 一穂
+matsu@hew.com
 ```
 先生役 ２人(id: 2, 3)
 ```
@@ -141,8 +141,8 @@ tanaka@hew.com
 ```
 学生役 1人(id: 3)
 ```
-山本　京介
-yamamoto@hew.com
+藤原 吉司
+fuji@hew.com
 ```
  
 ### デモ機用データ
