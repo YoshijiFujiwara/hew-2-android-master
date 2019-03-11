@@ -9,7 +9,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ToggleButton;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -40,6 +42,7 @@ public class AddMemberActivity extends BaseActivity {
     private AddMemberAdapter adapter = null;
     private ArrayList<Friend> ar = new ArrayList<>();
     private ListView listView = null;
+    private ToggleButton searchArgs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +60,12 @@ public class AddMemberActivity extends BaseActivity {
         // 色設定
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccentDark);
         // Listenerをセット
-        mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mSwipeRefreshLayout.setRefreshing(false));
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((l) -> {
-            Intent intent = new  Intent(getApplication(),ShowQrCodeActivity.class);
+            Intent intent = new Intent(getApplication(), ShowQrCodeActivity.class);
             startActivity(intent);
         });
 
@@ -80,7 +84,6 @@ public class AddMemberActivity extends BaseActivity {
                     .subscribe(
                             (list) -> {
                                 dialog.dismiss();
-                                fetchList();
                                 final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "友達申請を送信しました。", Snackbar.LENGTH_SHORT);
                                 snackbar.getView().setBackgroundColor(Color.BLACK);
                                 snackbar.setActionTextColor(Color.WHITE);
@@ -104,6 +107,7 @@ public class AddMemberActivity extends BaseActivity {
                             }));
         });
 
+        searchArgs = findViewById(R.id.toggleButton_search_args);
         SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnClickListener((v) -> {
             searchView.setIconified(false);
@@ -111,42 +115,40 @@ public class AddMemberActivity extends BaseActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                List<Friend> filteredItems;
-                // フィルター処理
-                if (s.isEmpty()) {
-                    filteredItems = new ArrayList<>(ar);
-                } else {
-                    filteredItems = new ArrayList<>();
-                    for (Friend item : ar) {
-                        if (item.unique_id.toLowerCase().contains(s.toLowerCase()) || item.username.toLowerCase().contains(s.toLowerCase())) { // テキストがqueryを含めば検索にHITさせる
-                            filteredItems.add(item);
-                        }
-                    }
+                // 検索API
+                if(s.isEmpty()){
+                    final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "検索ワードを入力してください。", Snackbar.LENGTH_SHORT);
+                    snackbar.getView().setBackgroundColor(Color.BLACK);
+                    snackbar.setActionTextColor(Color.WHITE);
+                    snackbar.show();
+                    return false;
                 }
-                // adapterの更新処理
-                updateList(filteredItems);
+                searchArgs = findViewById(R.id.toggleButton_search_args);
+                searchFriend(s,searchArgs.isChecked());
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                List<Friend> filteredItems;
-                // フィルター処理
-                if (s.isEmpty()) {
-                    filteredItems = new ArrayList<>(ar);
-                } else {
-                    filteredItems = new ArrayList<>();
-                    for (Friend item : ar) {
-                        if (item.unique_id.toLowerCase().contains(s.toLowerCase()) || item.username.toLowerCase().contains(s.toLowerCase())) { // テキストがqueryを含めば検索にHITさせる
-                            filteredItems.add(item);
-                        }
-                    }
-                }
-                // adapterの更新処理
-                updateList(filteredItems);
                 return true;
             }
         });
+
+        Button search = findViewById(R.id.search_button_add_member);
+        search.setOnClickListener((l) -> {
+            if(searchView.getQuery().toString().isEmpty()){
+                final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "検索ワードを入力してください。", Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(Color.BLACK);
+                snackbar.setActionTextColor(Color.WHITE);
+                snackbar.show();
+                return;
+            }
+            // 検索API
+            searchArgs = findViewById(R.id.toggleButton_search_args);
+            searchFriend(searchView.getQuery().toString(),searchArgs.isChecked());
+        });
+
+
     }
 
     @Override
@@ -159,7 +161,6 @@ public class AddMemberActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        fetchList();
     }
 
     @Override
@@ -168,28 +169,41 @@ public class AddMemberActivity extends BaseActivity {
         return true;
     }
 
-    private void fetchList() {
+    private void searchFriend(String param, boolean isId) {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<FriendList> token = service.getAddableFriendList();
-        cd.add(token.subscribeOn(Schedulers.io())
+        Observable<FriendList> friendList;
+        HashMap<String, String> body = new HashMap<>();
+        if (isId) {
+            body.put("unique_id",param);
+            friendList = service.searchUserByUniqueId(body);
+        } else {
+            body.put("username",param);
+            friendList = service.searchUserByUsername(body);
+        }
+        cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            mSwipeRefreshLayout.setRefreshing(false);
                             ar = new ArrayList<>(list.data);
                             updateList(ar);
+                            mSwipeRefreshLayout.setRefreshing(false);
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            mSwipeRefreshLayout.setRefreshing(false);
+
                             // ログインアクティビティへ遷移
                             if (!cd.isDisposed()) {
+                                if (throwable instanceof NullPointerException){
+                                    ar = new ArrayList<>();
+                                    updateList(ar);
+                                }
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     Intent intent = new Intent(getApplication(), LoginActivity.class);
                                     startActivity(intent);
                                 }
+                                mSwipeRefreshLayout.setRefreshing(false);
                             }
                         }
                 ));

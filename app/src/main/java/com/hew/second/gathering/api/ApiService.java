@@ -213,6 +213,11 @@ public interface ApiService {
     @GET("api/sessions/{session}/groups/can_add")
     Observable<GroupList> getAddableToSessionGroupList(@Path("session") int sessionId);
 
+    @POST("api/search/forward_by_username")
+    Observable<FriendList> searchUserByUsername(@Body HashMap<String, String> body);
+    @POST("api/search/forward_by_unique_id")
+    Observable<FriendList> searchUserByUniqueId(@Body HashMap<String, String> body);
+
     /*
     * ユーザープロフィール系API
     */
