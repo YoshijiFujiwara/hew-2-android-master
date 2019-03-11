@@ -1,5 +1,7 @@
 package com.hew.second.gathering.api;
 
+import com.hew.second.gathering.hotpepper.GourmetResult;
+
 import java.util.HashMap;
 
 import io.reactivex.Completable;
@@ -218,6 +220,6 @@ public interface ApiService {
     Observable<ProfileDetail> updateProfileUser(@Body HashMap<String, String> body);
 
     @POST("api/hotpepper/recommend")
-    Observable<ShopIdList> getRecommendShopIdList(@Body HashMap<String, HashMap<String, String>> body, @Query("count") int count);
+    Observable<GourmetResult> getRecommendShopIdList(@Body HashMap<String, HashMap<String, String>> body, @Query("count") int count);
 
 }

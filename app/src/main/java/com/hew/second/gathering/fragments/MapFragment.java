@@ -441,27 +441,10 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         HashMap<String, HashMap<String, String>> param = new HashMap<>();
         param.put("body", options);
 
-        Observable<ShopIdList> recommendList = Util.getService()
+        Observable<GourmetResult> recommendList = Util.getService()
                 .getRecommendShopIdList(param, 3);
         shopList = new ArrayList<>();
         cd.add(recommendList.subscribeOn(Schedulers.io())
-                .flatMap((result) -> {
-                    List<Observable<GourmetResult>> list = new ArrayList<>();
-                    if (!result.data.isEmpty()) {
-                        HashMap<String, String> recommend = new HashMap<>();
-                        StringBuilder strId = new StringBuilder();
-                        String prefix = "";
-                        for (String s : result.data) {
-                            strId.append(prefix);
-                            prefix = ",";
-                            strId.append(s);
-                        }
-                        recommend.put("id", strId.toString());
-                        list.add(HpHttp.getService().getShopList(recommend));
-                    }
-                    list.add(HpHttp.getService().getShopList(options));
-                    return Observable.concat(list);
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
@@ -485,15 +468,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                             if (activity != null) {
                                 listView = activity.findViewById(R.id.listView_shop_list);
                                 // 重複削除
-                                ArrayList<Shop> data = new ArrayList<>();
-                                ArrayList<String> strShops = new ArrayList<>();
-                                for (Shop s : shopList) {
-                                    if (!strShops.contains(s.id)) {
-                                        data.add(s);
-                                        strShops.add(s.id);
-                                    }
-                                }
-                                shopList = new ArrayList<>(data);
+                                ArrayList<Shop> data = new ArrayList<>(shopList);
                                 adapter = new ShopListAdapter(data);
                                 if (listView != null) {
                                     listView.setAdapter(adapter);
