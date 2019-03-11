@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.LogUtil;
@@ -105,6 +106,13 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             }
         });
         updateProfile();
+
+        View header = navigationView.getHeaderView(0);
+        ImageView logo = header.findViewById(R.id.imageView_logo);
+        logo.setOnClickListener((l)->{
+            Intent intent = new  Intent(getApplication(),ShowQrCodeActivity.class);
+            startActivity(intent);
+        });
 
         BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
         //ボトムバー選択時
@@ -289,10 +297,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             }
             if (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof ApplyDefaultFragment) {
                 ApplyDefaultFragment fragment = (ApplyDefaultFragment) getSupportFragmentManager().findFragmentById(R.id.eip_container);
-                fragment.removeFocus();
-            }
-            if (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof BudgetFragment) {
-                BudgetFragment fragment = (BudgetFragment) getSupportFragmentManager().findFragmentById(R.id.eip_container);
                 fragment.removeFocus();
             }
 

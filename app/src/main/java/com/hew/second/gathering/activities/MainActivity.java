@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity
                 } else if (fragment.equals("SESSION")) {
                     fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
                 } else if (fragment.equals("FRIEND")) {
-                    fragmentTransaction.replace(R.id.container, FriendFragment.newInstance());
+                    fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
                 } else if (fragment.equals("GROUP")) {
                     fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
                 } else if (fragment.equals("ATTRIBUTE")) {

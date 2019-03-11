@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -30,12 +31,14 @@ import com.hew.second.gathering.activities.LoginActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
 import com.hew.second.gathering.api.SessionDetail;
+import com.hew.second.gathering.api.SessionUserDetail;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.views.adapters.BudgetEstimateListAdapter;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -52,6 +55,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
     Button budget_update_btn;
     String attributeName;
     Spinner budget_estimate_spinner;
+    BudgetEstimateListAdapter budgetEstimateListAdapter;
 
     public static BudgetEstimateFragment newInstance() {
         return new BudgetEstimateFragment();
@@ -144,7 +148,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
 
             budget_update_btn = view.findViewById(R.id.budget_update_btn);
             budget_update_btn.setOnClickListener((v) -> {
-                try{
+                try {
                     activity.session.budget = Integer.parseInt(String.valueOf(budget_estimate_et.getText()).replace(",", ""));
                     // allowUserの処理
                     int allowUserCountLambda = 0;
@@ -160,7 +164,7 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                     int budgetSum = updateListView(activity.session, Integer.parseInt(unitRounding));
                     budget_estimate_sum_tv.setText(String.format("%,d", activity.session.budget * (allowUserCountLambda + 1)) + "円");
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     final Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), "金額を入力してください。", Snackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundColor(Color.BLACK);
                     snackbar.setActionTextColor(Color.WHITE);
@@ -217,28 +221,41 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
     private void updateBudget(FragmentActivity fragmentActivity, Session session, String budgetText, int allowUserCount) {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
+
+        ArrayList<Integer> plusMinusList = new ArrayList<>(Arrays.asList(budgetEstimateListAdapter.getPlusMinusArray()));
+        ArrayList<String> userIdList = new ArrayList<>(Arrays.asList(budgetEstimateListAdapter.getUserIdArray()));
+        plusMinusList.remove(0);
+        userIdList.remove(0);
+
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("budget", budgetText);
+        body.put("unit_rounding_budget", budget_estimate_spinner.getSelectedItem().toString());
         // 実額が0の場合、総額を実額に自動適用する
         if (session.actual == 0) {
             body.put("actual", String.valueOf(Integer.parseInt(budgetText) * (allowUserCount + 1)));
         }
 
-        Observable<SessionDetail> token = service.updateSession(session.id, body);
-        cd.add(token.subscribeOn(Schedulers.io())
+        ArrayList<Observable<SessionUserDetail>> plusMinus = new ArrayList<>();
+        for (int i = 0; i < plusMinusList.size(); i++) {
+            HashMap<String, String> param = new HashMap<>();
+            param.put("plus_minus", plusMinusList.get(i).toString());
+            plusMinus.add(service.updateSessionUser(session.id, Integer.parseInt(userIdList.get(i)), param));
+        }
+
+
+        cd.add(Observable.merge(plusMinus)
+                .subscribeOn(Schedulers.io())
+                .flatMap((l) -> {
+                    return service.updateSession(session.id, body);
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            Log.v("sessioninfo", list.data.name);
                             if (activity != null) {
                                 activity.session = list.data;
-                                dialog.dismiss();
-                                updateSessionInfo(activity.session, Integer.parseInt(budget_estimate_spinner.getSelectedItem().toString()));
                             }
-
-
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
@@ -251,6 +268,14 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
                                 if (activity != null) {
                                     dialog.dismiss();
                                 }
+                            }
+                        },
+                        ()->{
+                            Log.v("sessioninfo", activity.session.name);
+                            if (activity != null) {
+                                updateListView(activity.session, Integer.parseInt(activity.session.unit_rounding_budget));
+                                dialog.dismiss();
+                                //updateSessionInfo(activity.session, Integer.parseInt(budget_estimate_spinner.getSelectedItem().toString()));
                             }
                         }
                 ));
@@ -366,42 +391,11 @@ public class BudgetEstimateFragment extends SessionBaseFragment {
         String[] attributeNameParams = attributeArray.toArray(new String[attributeArray.size()]);
         String[] userIdParams = userIdArray.toArray(new String[userIdArray.size()]);
         Boolean[] allowedParams = allowedArray.toArray(new Boolean[allowedArray.size()]);
-        BudgetEstimateListAdapter budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, allowedParams, session.id);
+        budgetEstimateListAdapter = new BudgetEstimateListAdapter(activity, nameParams, costParams, plusMinusParams, attributeNameParams, userIdParams, allowedParams, session.id);
         budget_estimate_lv = (ListView) view.findViewById(R.id.budget_estimate_list);
         budget_estimate_lv.setAdapter(budgetEstimateListAdapter);
 
         return session.budget * (allowUserCount + 1);
-    }
-
-    // activity.session　の情報を更新する
-    public void updateSessionInfo(Session session, int unitRounding) {
-        dialog = new SpotsDialog.Builder().setContext(activity).build();
-        dialog.show();
-        ApiService service = Util.getService();
-        Observable<SessionDetail> token = service.getSessionDetail(session.id);
-        cd.add(token.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            Log.v("sessioninfo", list.data.name);
-                            if (activity != null) {
-                                updateListView(list.data, unitRounding);
-                                dialog.dismiss();
-                            }
-
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                    // ログインアクティビティへ遷移
-                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                    startActivity(intent);
-                                }
-                            }
-                        }
-                ));
     }
 
     private void updateUnitRoundingEstimate(Session session, int unitRounding) {

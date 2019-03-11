@@ -40,6 +40,15 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
     private final Integer[] costArray;
     private final Integer[] plusMinusArray;
     private final String[] attributeArray;
+
+    public Integer[] getPlusMinusArray() {
+        return plusMinusArray;
+    }
+
+    public String[] getUserIdArray() {
+        return userIdArray;
+    }
+
     private final String[] userIdArray;
     private final Boolean[] allowedArray;
     private final Integer sessionId;
@@ -93,7 +102,11 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
 
             @Override
             public void afterTextChanged(Editable s) {
-                updateSessionUserPlusMinus(userIdArray[position], plusMinusEditText.getText().toString());
+                if(!plusMinusEditText.getText().toString().isEmpty())
+                {
+                    plusMinusArray[position] = Integer.parseInt(plusMinusEditText.getText().toString());
+                }
+                //updateSessionUserPlusMinus(userIdArray[position], plusMinusEditText.getText().toString());
 
             }
         });
