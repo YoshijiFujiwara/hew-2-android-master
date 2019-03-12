@@ -103,6 +103,12 @@ public class ShopDetailActivity extends BaseActivity {
             tabsIntent.launchUrl(this, uri);
         });
 
+        address.setOnClickListener((l) -> {
+            Uri uri = Uri.parse("geo:<" + shop.lat + ">,<" + shop.lng + ">?q="+ shop.name);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+
         Button submit = findViewById(R.id.button_submit);
         submit.setOnClickListener((l) -> {
             if (session != null) {

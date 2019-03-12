@@ -128,7 +128,7 @@ public class EventFinishFragment extends SessionBaseFragment {
             CardView timeIcon = activity.findViewById(R.id.cardView6);
             timeIcon.setOnClickListener((l) -> {
                 bnv.setSelectedItemId(R.id.navi_botto_time);
-                if(activity != null) {
+                if (activity != null) {
                     FragmentManager fragmentManager = activity.getSupportFragmentManager();
                     if (fragmentManager != null) {
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -143,7 +143,7 @@ public class EventFinishFragment extends SessionBaseFragment {
             CardView inviteIcon = activity.findViewById(R.id.cardView3);
             inviteIcon.setOnClickListener((l) -> {
                 bnv.setSelectedItemId(R.id.navi_botto_member);
-                if(activity != null) {
+                if (activity != null) {
                     FragmentManager fragmentManager = activity.getSupportFragmentManager();
                     if (fragmentManager != null) {
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -219,6 +219,11 @@ public class EventFinishFragment extends SessionBaseFragment {
         genre.setText(activity.shop.genre.name);
         TextView address = activity.findViewById(R.id.textView_address);
         address.setText(activity.shop.address);
+        address.setOnClickListener((l) -> {
+            Uri uri = Uri.parse("geo:<" + activity.shop.lat + ">,<" + activity.shop.lng + ">?q="+ activity.shop.name);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
 
         NumberFormat nfCur = NumberFormat.getCurrencyInstance();
         TextView budget = activity.findViewById(R.id.textView_budget);

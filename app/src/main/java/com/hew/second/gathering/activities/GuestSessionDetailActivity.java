@@ -127,6 +127,12 @@ public class GuestSessionDetailActivity extends BaseActivity {
             tabsIntent.launchUrl(this, uri);
         });
 
+        address.setOnClickListener((l) -> {
+            Uri uri = Uri.parse("geo:<" + shop.lat + ">,<" + shop.lng + ">?q="+ shop.name);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+
         Button allow = findViewById(R.id.button_allow);
         if(status.equals("WAIT")){
             allow.setOnClickListener((l) -> {
