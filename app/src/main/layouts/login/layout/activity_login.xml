@@ -53,17 +53,18 @@
         />
 
     <TextView
+        android:id="@+id/sign_up_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:text="アカウントを持っていませんか？こちらから登録できます"
+        android:gravity="center"
+        android:text="アカウントを持っていませんか？\nこちらから登録できます"
         android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:id="@+id/sign_up_btn"
-        />
+        android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/forgot_pass_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -71,7 +72,6 @@
         android:text="パスワードを忘れた"
         android:textColor="#ffffff"
         android:textSize="16sp"
-        android:id="@+id/forgot_pass_btn"
-        />
+        android:visibility="invisible" />
 
 </LinearLayout>

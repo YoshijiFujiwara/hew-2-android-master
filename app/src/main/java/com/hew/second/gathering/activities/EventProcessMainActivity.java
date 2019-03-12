@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.LogUtil;
@@ -92,6 +94,28 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_event);
         navigationView.setNavigationItemSelectedListener(this);
 
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (newState == DrawerLayout.STATE_SETTLING) {
+                    if (!drawer.isDrawerOpen(R.id.drawer_layout)) {
+                        if(LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)).isEmpty()){
+                            updateProfile();
+                        }
+                    }
+                }
+            }
+        });
+        setProfile();
+        updateProfile();
+
+        View header = navigationView.getHeaderView(0);
+        FloatingActionButton logo = header.findViewById(R.id.fab_qr);
+        logo.setOnClickListener((l)->{
+            Intent intent = new  Intent(getApplication(),ShowQrCodeActivity.class);
+            startActivity(intent);
+        });
+
         BottomNavigationView bnv = findViewById(R.id.eip_bottom_navigation);
         //ボトムバー選択時
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -100,30 +124,35 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                 int id = menuItem.getItemId();
                 if (id == R.id.navi_boto_main) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_budget) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, BudgetFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_reservation) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, ReservationPhoneFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_member) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, InviteFragment.newInstance());
                     fragmentTransaction.commit();
 
                 } else if (id == R.id.navi_botto_time) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.eip_container, StartTimeFragment.newInstance());
                     fragmentTransaction.commit();
@@ -132,23 +161,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             }
         });
 
-        ApiService service = Util.getService();
-        Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
-        cd.add(profile.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            profile(list.data);
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                Intent intent = new Intent(getApplication(), LoginActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                ));
 
         // 遷移周り
         Intent intent = getIntent();
@@ -215,7 +227,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             if (fragmentManager != null) {
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.addToBackStack(null);
+                                //fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.replace(R.id.eip_container, EventFinishFragment.newInstance());
                                 fragmentTransaction.commit();
                             }
@@ -294,10 +306,6 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
                 ApplyDefaultFragment fragment = (ApplyDefaultFragment) getSupportFragmentManager().findFragmentById(R.id.eip_container);
                 fragment.removeFocus();
             }
-            if (getSupportFragmentManager().findFragmentById(R.id.eip_container) instanceof BudgetFragment) {
-                BudgetFragment fragment = (BudgetFragment) getSupportFragmentManager().findFragmentById(R.id.eip_container);
-                fragment.removeFocus();
-            }
 
         } catch (Exception e) {
             Log.d("view", "フォーカスエラー：" + LogUtil.getLog() + e.toString());
@@ -335,7 +343,7 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
             startActivityForResult(intent, INTENT_PROFILE);
         } else if (id == R.id.action_logout) {
             // ログイン情報初期化
-            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+            //LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
             // ログイン画面へ
             Intent intent = new Intent(getApplication(), LoginActivity.class);
             startActivity(intent);
@@ -346,16 +354,36 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
     }
 
     private void setProfile() {
-        if (!LoginUser.getUsername().isEmpty()) {
+        if (!LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)).isEmpty()) {
             NavigationView navigationView = findViewById(R.id.nav_view_event);
             View header = navigationView.getHeaderView(0);
             TextView user_name = header.findViewById(R.id.user_name);
             TextView user_email = header.findViewById(R.id.user_email);
             TextView uniqueId = header.findViewById(R.id.user_unique_id);
-            user_name.setText(LoginUser.getUsername());
+            user_name.setText(LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)));
             user_email.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
-            uniqueId.setText("@" + LoginUser.getUniqueId());
+            uniqueId.setText("@" + LoginUser.getUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
         }
+    }
+
+    private void updateProfile(){
+        ApiService service = Util.getService();
+        Observable<ProfileDetail> profile = service.getProfile();
+        cd.add(profile.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            profile(list.data);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
     }
 
     private void profile(Profile data) {
@@ -370,8 +398,8 @@ public class EventProcessMainActivity extends BaseActivity implements Navigation
         uniqueId.setText("@" + data.unique_id);
 
         LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), data.email);
-        LoginUser.setUniqueId(data.unique_id);
-        LoginUser.setUsername(data.username);
+        LoginUser.setUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE),data.unique_id);
+        LoginUser.setUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE),data.username);
     }
 
     private void fetchShop() {

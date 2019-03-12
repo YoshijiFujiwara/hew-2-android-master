@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observables.ConnectableObservable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Authenticator;
 import okhttp3.Request;
@@ -20,6 +21,10 @@ import okhttp3.Response;
 import okhttp3.Route;
 
 public class TokenRefreshAuthenticator implements Authenticator {
+
+    private Observable<JWT> login = LoginUser.getService()
+            .getToken(LoginUser.getEmail(Util.getSharedPref()), LoginUser.getPassword(Util.getSharedPref()))
+            .publish().refCount();
 
     @Override
     public Request authenticate(Route route, Response response) throws IOException {
@@ -29,19 +34,16 @@ public class TokenRefreshAuthenticator implements Authenticator {
             return null; // Give up, we've already failed to authenticate.
         }
 
-        if(response.code() == 401 && responseCount(response) <3)
-        {
-            // 認証失敗の場合に3回再認証
-            Observable<JWT> token = Util.getService().getToken(LoginUser.getEmail(null), LoginUser.getPassword(null));
-            LoginUser.setToken(token.blockingFirst().access_token);
+        if (response.code() == 401 && responseCount(response) < 3) {
+            JWT jwt = login.blockingSingle();
+            LoginUser.setToken(jwt.access_token);
+            Log.d("api", LoginUser.getToken());
             return response.request()
                     .newBuilder()
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
                     .header("Authorization", LoginUser.getToken())
-                    .method(response.request().method(), response.request().body())
                     .build();
         }
+
         return null;
 
     }

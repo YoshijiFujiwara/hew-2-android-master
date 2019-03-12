@@ -2,14 +2,17 @@ package com.hew.second.gathering.fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.InputType;
 import android.util.Log;
@@ -82,8 +85,8 @@ public class EventFinishFragment extends SessionBaseFragment {
             Button button = activity.findViewById(R.id.session_finish_btn);
             button.setOnClickListener((l) -> {
                 new MaterialDialog.Builder(activity)
-                        .title("イベント")
-                        .content(activity.session.name + "を終了しますか？")
+                        .title(activity.session.name)
+                        .content("イベントを終了しますか？")
                         .positiveText("OK")
                         .onPositive((dialog, which) -> {
                             finishSession();
@@ -114,7 +117,7 @@ public class EventFinishFragment extends SessionBaseFragment {
                     FragmentManager fragmentManager = activity.getSupportFragmentManager();
                     if (fragmentManager != null) {
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        //fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.replace(R.id.eip_container, EditShopFragment.newInstance());
                         fragmentTransaction.commit();
                     }
@@ -229,6 +232,15 @@ public class EventFinishFragment extends SessionBaseFragment {
         TextView url = activity.findViewById(R.id.textView_url);
         url.setText(activity.shop.urls.pc);
         url.setTextColor(getResources().getColor(R.color.colorPrimary));
+        url.setOnClickListener((l) -> {
+            final CustomTabsIntent tabsIntent = new CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .setToolbarColor(ContextCompat.getColor(activity.getApplication(), R.color.colorPrimary))
+                    .setStartAnimations(activity.getApplication(), R.anim.slide_in_right, R.anim.slide_out_left)
+                    .setExitAnimations(activity.getApplication(), android.R.anim.slide_in_left, android.R.anim.slide_out_right).build();
+            Uri uri = Uri.parse(url.getText().toString());
+            tabsIntent.launchUrl(activity, uri);
+        });
     }
 
     private void fetchShop() {
@@ -267,7 +279,7 @@ public class EventFinishFragment extends SessionBaseFragment {
     private void finishSession() {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
-        Completable session = Util.getService().deleteSession(LoginUser.getToken(), activity.session.id);
+        Completable session = Util.getService().deleteSession(activity.session.id);
         cd.add(session
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -302,7 +314,7 @@ public class EventFinishFragment extends SessionBaseFragment {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
-        Observable<SessionDetail> sessionDetail = service.updateSession(LoginUser.getToken(), activity.session.id, body);
+        Observable<SessionDetail> sessionDetail = service.updateSession(activity.session.id, body);
         cd.add(sessionDetail.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

@@ -1,9 +1,11 @@
 package com.hew.second.gathering.activities;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hew.second.gathering.LogUtil;
@@ -43,6 +46,7 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Handler mHandler;
+    public boolean requestUpdateFriend = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +55,10 @@ public class MainActivity extends BaseActivity
 
         mHandler = new Handler();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -62,23 +66,27 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ApiService service = Util.getService();
-        Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
-        cd.add(profile.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(
-                        list -> {
-                            profile(list.data);
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                Intent intent = new Intent(getApplication(), LoginActivity.class);
-                                startActivity(intent);
-                            }
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (newState == DrawerLayout.STATE_SETTLING) {
+                    if (!drawer.isDrawerOpen(R.id.drawer_layout)) {
+                        if(LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)).isEmpty()){
+                            updateProfile();
                         }
-                ));
+                    }
+                }
+            }
+        });
+        setProfile();
+        updateProfile();
+
+        View header = navigationView.getHeaderView(0);
+        FloatingActionButton logo = header.findViewById(R.id.fab_qr);
+        logo.setOnClickListener((l)->{
+            Intent intent = new  Intent(getApplication(),ShowQrCodeActivity.class);
+            startActivity(intent);
+        });
 
         if (savedInstanceState == null) {
             Intent intent = getIntent();
@@ -94,7 +102,7 @@ public class MainActivity extends BaseActivity
                 } else if (fragment.equals("SESSION")) {
                     fragmentTransaction.replace(R.id.container, SessionFragment.newInstance());
                 } else if (fragment.equals("FRIEND")) {
-                    fragmentTransaction.replace(R.id.container, FriendFragment.newInstance());
+                    fragmentTransaction.replace(R.id.container, MemberFragment.newInstance());
                 } else if (fragment.equals("GROUP")) {
                     fragmentTransaction.replace(R.id.container, GroupFragment.newInstance());
                 } else if (fragment.equals("ATTRIBUTE")) {
@@ -119,16 +127,35 @@ public class MainActivity extends BaseActivity
     }
 
     private void setProfile() {
-        if (!LoginUser.getUsername().isEmpty()) {
+        if (!LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)).isEmpty()) {
             NavigationView navigationView = findViewById(R.id.nav_view);
             View header = navigationView.getHeaderView(0);
             TextView user_name = header.findViewById(R.id.user_name);
             TextView user_email = header.findViewById(R.id.user_email);
             TextView uniqueId = header.findViewById(R.id.user_unique_id);
-            user_name.setText(LoginUser.getUsername());
+            user_name.setText(LoginUser.getUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)));
             user_email.setText(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
-            uniqueId.setText("@" + LoginUser.getUniqueId());
+            uniqueId.setText("@" + LoginUser.getUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)));
         }
+    }
+    private void updateProfile(){
+        ApiService service = Util.getService();
+        Observable<ProfileDetail> profile = service.getProfile();
+        cd.add(profile.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        list -> {
+                            profile(list.data);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                ));
     }
 
     private void profile(Profile data) {
@@ -143,8 +170,8 @@ public class MainActivity extends BaseActivity
         uniqueId.setText("@" + data.unique_id);
 
         LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), data.email);
-        LoginUser.setUniqueId(data.unique_id);
-        LoginUser.setUsername(data.username);
+        LoginUser.setUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE),data.unique_id);
+        LoginUser.setUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE),data.username);
     }
 
     @Override
@@ -154,16 +181,8 @@ public class MainActivity extends BaseActivity
                 MemberFragment fragment = (MemberFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
-            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof GroupFragment) {
-                GroupFragment fragment = (GroupFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-                fragment.removeFocus();
-            }
             if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof EditShopFragment) {
                 EditShopFragment fragment = (EditShopFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-                fragment.removeFocus();
-            }
-            if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof DefaultSettingFragment) {
-                DefaultSettingFragment fragment = (DefaultSettingFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                 fragment.removeFocus();
             }
 
@@ -203,7 +222,7 @@ public class MainActivity extends BaseActivity
             startActivityForResult(intent, INTENT_PROFILE);
         } else if (id == R.id.action_logout) {
             // ログイン情報初期化
-            LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
+            //LoginUser.deleteUserInfo(getSharedPreferences(Util.PREF_FILE_NAME, Context.MODE_PRIVATE));
             // ログイン画面へ
             Intent intent = new Intent(getApplication(), LoginActivity.class);
             startActivity(intent);

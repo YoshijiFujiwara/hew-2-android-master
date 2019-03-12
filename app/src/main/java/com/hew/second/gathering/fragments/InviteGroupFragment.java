@@ -95,7 +95,7 @@ public class InviteGroupFragment extends SessionBaseFragment {
                 return;
             }
             new MaterialDialog.Builder(activity)
-                    .title("イベントへ追加")
+                    .title(activity.session.name)
                     .content(ar.get(adapter.getCheckedPos()).name + "をイベントに招待しますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {
@@ -125,7 +125,7 @@ public class InviteGroupFragment extends SessionBaseFragment {
 
     private void fetchList() {
         ApiService service = Util.getService();
-        Observable<GroupList> token = service.getAddableToSessionGroupList(LoginUser.getToken(),activity.session.id);
+        Observable<GroupList> token = service.getAddableToSessionGroupList(activity.session.id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -165,7 +165,7 @@ public class InviteGroupFragment extends SessionBaseFragment {
         activity.requestUpdateInvited = true;
         int pos = gridView.getCheckedItemPosition();
         ApiService service = Util.getService();
-        Observable<SessionUserList> user = service.createSessionGroup(LoginUser.getToken(), activity.session.id, ar.get(pos).id);
+        Observable<SessionUserList> user = service.createSessionGroup(activity.session.id, ar.get(pos).id);
         cd.add(user
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

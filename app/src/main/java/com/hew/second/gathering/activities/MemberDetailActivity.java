@@ -8,6 +8,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -32,6 +34,7 @@ import com.hew.second.gathering.views.adapters.MemberAdapter;
 
 import org.parceler.Parcels;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,16 +60,34 @@ public class MemberDetailActivity extends BaseActivity {
 
         friend = Parcels.unwrap(getIntent().getParcelableExtra("FRIEND_DETAIL"));
 
+        NumberFormat nfCur = NumberFormat.getCurrencyInstance();
         TextView name = findViewById(R.id.name);
         name.setText(friend.username);
         TextView uniqueId = findViewById(R.id.unique_id);
         uniqueId.setText(friend.unique_id);
         TextView plusMinus = findViewById(R.id.plus_minus);
         if (friend.attribute != null) {
-            plusMinus.setText(friend.attribute.plus_minus == null ? "0" : friend.attribute.plus_minus.toString());
+            plusMinus.setText(nfCur.format(friend.attribute.plus_minus == null ? 0 : friend.attribute.plus_minus));
         } else {
-            plusMinus.setText("設定されていません。");
+            plusMinus.setText("設定なし");
         }
+
+        spinner = findViewById(R.id.attribute);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position > 0){
+                    plusMinus.setText(nfCur.format(attrList.get(position - 1) == null ? 0 : attrList.get(position - 1).plus_minus));
+                } else {
+                    plusMinus.setText("設定なし");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         Button save = findViewById(R.id.save);
         save.setOnClickListener((l) -> {
@@ -96,7 +117,7 @@ public class MemberDetailActivity extends BaseActivity {
     private void getAttributeList() {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
-        Observable<AttributeList> attributeList = Util.getService().getAttributeList(LoginUser.getToken());
+        Observable<AttributeList> attributeList = Util.getService().getAttributeList();
         cd.add(attributeList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -155,7 +176,7 @@ public class MemberDetailActivity extends BaseActivity {
         }
         HashMap<String, String> body = new HashMap<>();
         body.put("attribute_id", attrId == null ? null : attrId.toString());
-        Observable<FriendDetail> attributeList = Util.getService().updateFriendAttribute(LoginUser.getToken(), friend.id, body);
+        Observable<FriendDetail> attributeList = Util.getService().updateFriendAttribute(friend.id, body);
         cd.add(attributeList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

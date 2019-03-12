@@ -22,6 +22,7 @@ import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.AddMemberActivity;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Friend;
 import com.hew.second.gathering.api.FriendList;
@@ -81,28 +82,31 @@ public class PendingFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.member_list_pending);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_pending));
         // 申請受諾
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            if (view.getId() == R.id.member_delete) {
-                new MaterialDialog.Builder(activity)
-                        .title("友達申請")
-                        .content(ar.get(position).username + "さんからの友達申請を断りますか？")
-                        .positiveText("OK")
-                        .onPositive((dialog, which) -> {
-                            rejectFriend(ar.get(position).id);
-                        })
-                        .negativeText("キャンセル")
-                        .show();
-            } else {
-                new MaterialDialog.Builder(activity)
-                        .title("友達申請")
-                        .content(ar.get(position).username + "さんと友達になりますか？")
-                        .positiveText("OK")
-                        .onPositive((dialog, which) -> {
-                            permitFriend(ar.get(position).id);
-                        })
-                        .negativeText("キャンセル")
-                        .show();
+            if(adapter != null){
+                if (view.getId() == R.id.member_delete) {
+                    new MaterialDialog.Builder(activity)
+                            .title("友達申請")
+                            .content(adapter.getList().get(position).username + "さんからの友達申請を断りますか？")
+                            .positiveText("OK")
+                            .onPositive((dialog, which) -> {
+                                rejectFriend(adapter.getList().get(position).id);
+                            })
+                            .negativeText("キャンセル")
+                            .show();
+                } else {
+                    new MaterialDialog.Builder(activity)
+                            .title("友達申請")
+                            .content(adapter.getList().get(position).username + "さんと友達になりますか？")
+                            .positiveText("OK")
+                            .onPositive((dialog, which) -> {
+                                permitFriend(adapter.getList().get(position).id);
+                            })
+                            .negativeText("キャンセル")
+                            .show();
+                }
             }
         });
         // 申請拒否
@@ -170,7 +174,7 @@ public class PendingFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<FriendList> friendList;
-        friendList = service.getPendedFriendList(LoginUser.getToken());
+        friendList = service.getPendedFriendList();
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -186,6 +190,10 @@ public class PendingFragment extends BaseFragment {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
                             mSwipeRefreshLayout.setRefreshing(false);
                             if (activity != null && !cd.isDisposed()) {
+                                if (throwable instanceof NullPointerException){
+                                    ar = new ArrayList<>();
+                                    updateList(ar);
+                                }
                                 if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                     // ログインアクティビティへ遷移
                                     Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
@@ -213,7 +221,7 @@ public class PendingFragment extends BaseFragment {
         ApiService service = Util.getService();
         HashMap<String, Integer> body = new HashMap<>();
         body.put("user_id", id);
-        Completable friendList = service.permitFriendRequest(LoginUser.getToken(), body);
+        Completable friendList = service.permitFriendRequest(body);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -221,6 +229,7 @@ public class PendingFragment extends BaseFragment {
                         () -> {
                             if (activity != null) {
                                 dialog.dismiss();
+                                ((MainActivity)activity).requestUpdateFriend = true;
                                 final Snackbar sbYes = Snackbar.make(view, "友達になりました！", Snackbar.LENGTH_SHORT);
                                 sbYes.getView().setBackgroundColor(Color.BLACK);
                                 sbYes.setActionTextColor(Color.WHITE);
@@ -249,7 +258,7 @@ public class PendingFragment extends BaseFragment {
         ApiService service = Util.getService();
         HashMap<String, Integer> body = new HashMap<>();
         body.put("user_id", id);
-        Completable friendList = service.rejectFriendRequest(LoginUser.getToken(), body);
+        Completable friendList = service.rejectFriendRequest(body);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

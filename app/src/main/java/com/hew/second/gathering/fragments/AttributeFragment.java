@@ -93,6 +93,7 @@ public class AttributeFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.attribute_list);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_attribute));
         listView.setOnItemClickListener((parent, view, position, id) -> {
             if(view.getId() == R.id.attribute_delete) {
                 new MaterialDialog.Builder(activity)
@@ -130,7 +131,7 @@ public class AttributeFragment extends BaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<AttributeList> friendList = service.getAttributeList(LoginUser.getToken());
+        Observable<AttributeList> friendList = service.getAttributeList();
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -165,6 +166,9 @@ public class AttributeFragment extends BaseFragment {
         listView = activity.findViewById(R.id.attribute_list);
         if(listView != null) {
             ArrayList<Attribute> list = new ArrayList<>(data);
+            if (!list.isEmpty()) {
+                list.add(null);
+            }
             ar = new ArrayList<>(data);
             adapter = new AttributeAdapter(list);
             if(listView != null){
@@ -178,7 +182,7 @@ public class AttributeFragment extends BaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable at = service.deleteAttribute(LoginUser.getToken(), id);
+        Completable at = service.deleteAttribute(id);
         cd.add(at.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

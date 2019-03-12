@@ -51,14 +51,18 @@ public class MemberFragment extends BaseFragment {
         ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
-        activity.setTitle("友達一覧");
 
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
     }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        activity.setTitle("友達一覧");
 
+    }
     public void removeFocus() {
         SearchView searchView = activity.findViewById(R.id.searchView);
         searchView.clearFocus();

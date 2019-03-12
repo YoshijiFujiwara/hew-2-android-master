@@ -16,7 +16,7 @@
     <string name="title_ing">進行中</string>
     <string name="title_home">ホーム</string>
     <string name="title_group">グループ</string>
-    <string name="title_default">デフォルト設定</string>
+    <string name="title_default">テンプレート設定</string>
     <string name="title_activity_default_setting">DefaultSetting</string>
     <string name="title">タイトル</string>
     <string name="title_bottom_main">メイン</string>
@@ -31,7 +31,7 @@
     <string name="event_name">イベント名</string>
 
     <string name="next">Next</string>
-    <string name="default_name">デフォルト名</string>
+    <string name="default_name">テンプレート名</string>
     <string name="username">ユーザーネーム</string>
 
     <!-- Strings related to login -->
@@ -49,8 +49,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_edit_group">EditGroupActivity</string>
-    <string name="title_activity_edit_defaultSetting">EditDefaultSettingActivity</string>
+    <string name="title_activity_edit_group">グループ編集</string>
+    <string name="title_activity_edit_defaultSetting">テンプレート編集</string>
     <string name="cross">×</string>
     <string name="title_activity_gurunavi_maps">Map</string>
     <string name="invite_end">招待を打ち切る</string>
@@ -67,4 +67,8 @@
         <item>1000</item>
         <item>10000</item>
     </string-array>
+
+    <string name="shortcut_short_label_guest">招待イベント一覧</string>
+    <string name="shortcut_long_label_guest">招待されているイベントの一覧</string>
+    <string name="shortcut_disabled_message_guest">無効</string>
 </resources>

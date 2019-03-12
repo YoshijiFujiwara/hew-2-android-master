@@ -77,14 +77,15 @@ public class ApplyingFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         listView = activity.findViewById(R.id.member_list_applying);
+        listView.setEmptyView(activity.findViewById(R.id.emptyView_applying));
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            if (view.getId() == R.id.member_delete) {
+            if (view.getId() == R.id.member_delete && adapter != null) {
                 new MaterialDialog.Builder(activity)
                         .title("友達申請")
-                        .content(ar.get(position).username + "さんへの友達申請をやめますか？")
+                        .content(adapter.getList().get(position).username + "さんへの友達申請をやめますか？")
                         .positiveText("OK")
                         .onPositive((dialog, which) -> {
-                            deleteFriendRequest(ar.get(position).id);
+                            deleteFriendRequest(adapter.getList().get(position).id);
                         })
                         .negativeText("キャンセル")
                         .show();
@@ -156,7 +157,7 @@ public class ApplyingFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         Observable<FriendList> friendList;
-        friendList = service.getApplyingFriendList(LoginUser.getToken());
+        friendList = service.getApplyingFriendList();
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -196,7 +197,7 @@ public class ApplyingFragment extends BaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable friendList = service.cancelFriendInvitation(LoginUser.getToken(), id);
+        Completable friendList = service.cancelFriendInvitation(id);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

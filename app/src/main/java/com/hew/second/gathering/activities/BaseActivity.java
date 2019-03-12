@@ -32,6 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
+        Util.setSharedPref(this);
         Intent i = getIntent();
         String message = i.getStringExtra(SNACK_MESSAGE);
         if(message != null) {

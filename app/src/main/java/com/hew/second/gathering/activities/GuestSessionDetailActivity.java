@@ -171,7 +171,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("join_status", "allow");
-        Observable<SessionDetail> session = service.updateGuestSession(LoginUser.getToken(),sessionId, body);
+        Observable<SessionDetail> session = service.updateGuestSession(sessionId, body);
         cd.add(session.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -198,7 +198,7 @@ public class GuestSessionDetailActivity extends BaseActivity {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("join_status", "deny");
-        Observable<SessionDetail> session = service.updateGuestSession(LoginUser.getToken(),sessionId, body);
+        Observable<SessionDetail> session = service.updateGuestSession(sessionId, body);
         cd.add(session.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())

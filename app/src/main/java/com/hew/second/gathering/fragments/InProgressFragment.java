@@ -5,20 +5,27 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hew.second.gathering.LogUtil;
 import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.activities.EventProcessMainActivity;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.api.ApiService;
 import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.SessionDetail;
 import com.hew.second.gathering.api.SessionList;
+import com.hew.second.gathering.api.SessionUser;
+import com.hew.second.gathering.api.SessionUserList;
 import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.hotpepper.GourmetResult;
 import com.hew.second.gathering.hotpepper.HpApiService;
@@ -29,16 +36,22 @@ import com.hew.second.gathering.views.adapters.SessionAdapter;
 
 import org.parceler.Parcels;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
+import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 import static io.reactivex.Observable.concat;
 
 //セッション一覧進行中のセッション
@@ -95,6 +108,81 @@ public class InProgressFragment extends BaseFragment {
             startActivity(intent);
         });
 
+        // 時刻表示フォーマット
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat dateOnly = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat output = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+        SimpleDateFormat outputShort = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+
+        listView.setOnItemLongClickListener((parent, view, position, id) -> {
+            final ArrayList<String> list = new ArrayList<>();
+            list.add("同じ設定のイベントを新規作成");
+            list.add("イベントを終了");
+
+            StringBuilder strTime = new StringBuilder();
+            String strStartTime = ar.get(position).start_time;
+            String strEndTime = ar.get(position).end_time;
+
+            if (strStartTime != null) {
+                try {
+                    Date start = sdf.parse(strStartTime);
+                    strTime.append(output.format(start));
+                    strTime.append("〜");
+                    if (strEndTime != null) {
+                        Date end = sdf.parse(strEndTime);
+                        if (dateOnly.format(start).equals(dateOnly.format(end))) {
+                            strTime.append(outputShort.format(end));
+                        } else {
+                            strTime.append(output.format(end));
+                        }
+                    } else {
+                        strTime.append("未定");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                strTime.append("未定");
+            }
+
+            new MaterialDialog.Builder(activity)
+                    .title(ar.get(position).name)
+                    .content(shopList.get(position).name + "\n" + strTime.toString())
+                    .items(list)
+                    .itemsColor(getResources().getColor(R.color.colorPrimary))
+                    .itemsCallback(new MaterialDialog.ListCallback() {
+                        @Override
+                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            if (text.equals("同じ設定のイベントを新規作成")) {
+                                new MaterialDialog.Builder(activity)
+                                        .title("イベント作成")
+                                        .content("タイトル")
+                                        .inputType(InputType.TYPE_CLASS_TEXT)
+                                        .inputRangeRes(1, 30, R.color.colorAccentDark)
+                                        .input("新規イベント名", ar.get(position).name, (MaterialDialog d, CharSequence input) -> {
+                                            createCopySession(input.toString(), ar.get(position), shopList.get(position));
+                                        })
+                                        .negativeText("キャンセル")
+                                        .show();
+                            } else if (text.equals("イベントを終了")) {
+                                new MaterialDialog.Builder(activity)
+                                        .title("イベント")
+                                        .content(ar.get(position).name + "を終了しますか？")
+                                        .positiveText("OK")
+                                        .onPositive((d, w) -> {
+                                            finishSession(ar.get(position).id);
+                                        })
+                                        .negativeText("キャンセル")
+                                        .show();
+                            }
+                        }
+                    })
+                    .negativeText("閉じる")
+                    .show();
+            return true;
+
+        });
     }
 
     @Override
@@ -112,7 +200,7 @@ public class InProgressFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
         HpApiService hpService = HpHttp.getService();
-        Observable<SessionList> token = service.getSessionOnGoingList(LoginUser.getToken());
+        Observable<SessionList> token = service.getSessionOnGoingList();
         List<Shop> shops = new ArrayList<>();
         cd.add(token.subscribeOn(Schedulers.io())
                 .flatMap((list) -> {
@@ -122,7 +210,7 @@ public class InProgressFragment extends BaseFragment {
                     for (Session s : list.data) {
                         headers.add("進行中のイベント");
                     }
-                    return service.getSessionNotStartList(LoginUser.getToken());
+                    return service.getSessionNotStartList();
                 })
                 .flatMap((list) -> {
                     // 始まっていないセッション
@@ -213,5 +301,92 @@ public class InProgressFragment extends BaseFragment {
         bundle.putString("FRAGMENT", "DEFAULT");
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    private void createCopySession(String title, Session originalSession, Shop shop) {
+
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
+
+        ApiService service = Util.getService();
+        HashMap<String, String> body = new HashMap<>();
+        body.put("name", title);
+        body.put("shop_id", shop.id);
+        body.put("budget",String.valueOf(originalSession.budget));
+        Observable<SessionDetail> session = service.createSession(body);
+        final Session[] s = new Session[1];
+        cd.add(session.subscribeOn(Schedulers.io())
+                .flatMap((newSession) -> {
+                    s[0] = newSession.data;
+                    ArrayList<Observable<SessionUserList>> inviteList = new ArrayList<>();
+                    for (SessionUser user : originalSession.users) {
+                        HashMap<String, String> param = new HashMap<>();
+                        param.put("user_id", String.valueOf(user.id));
+                        inviteList.add(service.createSessionUser(newSession.data.id, param));
+                    }
+
+                    return Observable.concat(inviteList);
+
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        (list) -> {
+                            //遷移
+
+                        },
+                        (throwable) -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (!cd.isDisposed() && activity != null) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                            dialog.dismiss();
+                        },
+                        () -> {
+                            if (activity != null) {
+                                dialog.dismiss();
+                                Intent intent = new Intent(activity.getApplication(), EventProcessMainActivity.class);
+                                intent.putExtra(SNACK_MESSAGE, "イベントを作成しました。");
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shop));
+                                bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(s[0]));
+                                intent.putExtras(bundle);
+                                activity.setResult(activity.RESULT_OK, intent);
+                                startActivity(intent);
+                            }
+                        }
+                ));
+    }
+
+    private void finishSession(int id) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
+        Completable session = Util.getService().deleteSession(id);
+        cd.add(session
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(
+                        () -> {
+                            if (activity != null) {
+                                dialog.dismiss();
+                                fetchList();
+                            }
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (!cd.isDisposed() && activity != null) {
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                                dialog.dismiss();
+                            }
+                        }
+                ));
     }
 }

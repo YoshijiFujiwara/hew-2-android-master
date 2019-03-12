@@ -1,6 +1,9 @@
 package com.hew.second.gathering.views.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ public class ShopListAdapter extends BaseAdapter {
     private List<Shop> list;
 
     static class ViewHolder {
+        ConstraintLayout layout;
         TextView name;
         TextView genre;
         TextView distance;
@@ -41,6 +45,7 @@ public class ShopListAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.shop_cell, parent, false);
             holder = new ShopListAdapter.ViewHolder();
+            holder.layout = convertView.findViewById(R.id.shop_layout);
             holder.name = convertView.findViewById(R.id.shop_cell_name);
             holder.genre = convertView.findViewById(R.id.shop_cell_genre);
             holder.distance = convertView.findViewById(R.id.shop_cell_distance);
@@ -49,6 +54,14 @@ public class ShopListAdapter extends BaseAdapter {
         } else {
             holder = (ShopListAdapter.ViewHolder) convertView.getTag();
         }
+
+        // 先頭三軒（おすすめ）は色を変える
+        if(position < 3){
+            holder.layout.setBackgroundColor(Color.argb(255,255,230,230));
+        } else {
+            holder.layout.setBackgroundColor(Color.argb(255,255,255,255));
+        }
+
         holder.name.setText(list.get(position).name);
         holder.genre.setText(list.get(position).genre.name);
         String d = Math.round(SearchArgs.getDistance(SearchArgs.lat, SearchArgs.lng, Float.valueOf(list.get(position).lat), Float.valueOf(list.get(position).lng))[0]) + "m";

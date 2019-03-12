@@ -32,6 +32,8 @@ import com.hew.second.gathering.api.Group;
 import com.hew.second.gathering.api.JWT;
 import com.hew.second.gathering.api.Util;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,11 +67,6 @@ public class GroupFragment extends BaseFragment {
         return view;
     }
 
-    public void removeFocus() {
-        SearchView searchView = activity.findViewById(R.id.searchView);
-        searchView.clearFocus();
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -99,26 +96,7 @@ public class GroupFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(() -> fetchList());
 
         GridView gridView = activity.findViewById(R.id.gridView_group);
-
-        SearchView searchView = activity.findViewById(R.id.searchView);
-        searchView.setOnClickListener((v) -> {
-            searchView.setIconified(false);
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                // 送信
-                // focusout
-                searchView.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                // テキスト変更
-                return false;
-            }
-        });
+        gridView.setEmptyView(activity.findViewById(R.id.emptyView_group));
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             switch (view.getId()) {
@@ -136,7 +114,9 @@ public class GroupFragment extends BaseFragment {
                 default:
                     // メンバ編集画面へグループIDを渡す
                     Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
-                    intent.putExtra("GROUP_ID", ar.get(position).id);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("GROUP_DETAIL", Parcels.wrap(ar.get(position)));
+                    intent.putExtras(bundle);
                     startActivityForResult(intent, INTENT_EDIT_GROUP);
             }
         });
@@ -149,24 +129,30 @@ public class GroupFragment extends BaseFragment {
     }
 
     private void createGroup(String name) {
+        dialog = new SpotsDialog.Builder().setContext(activity).build();
+        dialog.show();
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
-        Observable<GroupDetail> token = service.createGroup(LoginUser.getToken(),body);
+        Observable<GroupDetail> token = service.createGroup(body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
                             if (activity != null) {
+                                dialog.dismiss();
                                 Intent intent = new Intent(activity.getApplication(), EditGroupActivity.class);
-                                intent.putExtra("GROUP_ID", list.data.id);
-                                intent.putExtra("NEW_GROUP", true);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("GROUP_DETAIL", Parcels.wrap(list.data));
+                                bundle.putBoolean("NEW_GROUP", true);
+                                intent.putExtras(bundle);
                                 startActivityForResult(intent, INTENT_EDIT_GROUP);
                             }
                         },  // 成功時
                         throwable -> {
                             Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            dialog.dismiss();
                             if (activity != null && !cd.isDisposed() && throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
                                 Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
                                 startActivity(intent);
@@ -178,7 +164,7 @@ public class GroupFragment extends BaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<GroupList> token = service.getGroupList(LoginUser.getToken());
+        Observable<GroupList> token = service.getGroupList();
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -217,7 +203,7 @@ public class GroupFragment extends BaseFragment {
         dialog = new SpotsDialog.Builder().setContext(activity).build();
         dialog.show();
         ApiService service = Util.getService();
-        Completable token = service.deleteGroup(LoginUser.getToken(), id);
+        Completable token = service.deleteGroup(id);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -238,7 +224,7 @@ public class GroupFragment extends BaseFragment {
                             if (activity != null && !cd.isDisposed()) {
                                 if (throwable instanceof HttpException && ((HttpException) throwable).code() == 409) {
                                     //JSONObject jObjError = new JSONObject(((HttpException)throwable).response().errorBody().string());
-                                    final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているデフォルト設定があるので、削除できません。", Snackbar.LENGTH_LONG);
+                                    final Snackbar snackbar = Snackbar.make(getView(), "このグループを使用しているテンプレートがあるので、削除できません。", Snackbar.LENGTH_LONG);
                                     snackbar.getView().setBackgroundColor(Color.BLACK);
                                     snackbar.setActionTextColor(Color.WHITE);
                                     snackbar.show();

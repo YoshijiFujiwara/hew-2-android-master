@@ -70,6 +70,9 @@ public class SessionMemberAdapter extends BaseAdapter {
             holder.deleteButton.setText("×");
             holder.deleteButton.setTextColor(Color.RED);
         }
+        holder.deleteButton.setOnClickListener((view) -> {
+            ((ListView) parent).performItemClick(view, position, R.id.member_delete);
+        });
 
         return convertView;
     }

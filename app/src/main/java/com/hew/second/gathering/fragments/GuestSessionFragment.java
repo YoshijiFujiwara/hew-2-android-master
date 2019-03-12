@@ -104,7 +104,7 @@ public class GuestSessionFragment extends BaseFragment {
     private void fetchList() {
         ApiService service = Util.getService();
         HpApiService hpService = HpHttp.getService();
-        Observable<SessionList> sessionList = service.getGuestSessionWaitList(LoginUser.getToken());
+        Observable<SessionList> sessionList = service.getGuestSessionWaitList();
         cd.add(sessionList.subscribeOn(Schedulers.io())
                 .flatMap((list) -> {
                     ar = new ArrayList<>(list.data);

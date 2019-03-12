@@ -106,7 +106,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                 return;
             }
             new MaterialDialog.Builder(activity)
-                    .title("イベントへ追加")
+                    .title(activity.session.name)
                     .content(adapter.getCheckedCount() + "名をイベントに招待しますか？")
                     .positiveText("OK")
                     .onPositive((dialog, which) -> {
@@ -137,9 +137,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return false;
             }
 
@@ -158,9 +156,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
                     }
                 }
                 // adapterの更新処理
-                adapter.clear();
-                adapter.addAll(filteredItems);
-                adapter.notifyDataSetChanged();
+                updateList(filteredItems);
                 return true;
             }
         });
@@ -186,7 +182,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
     private void fetchList() {
         mSwipeRefreshLayout.setRefreshing(true);
         ApiService service = Util.getService();
-        Observable<FriendList> friendList = service.getAddableToSessionFriendList(LoginUser.getToken(), activity.session.id);
+        Observable<FriendList> friendList = service.getAddableToSessionFriendList(activity.session.id);
         cd.add(friendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -241,7 +237,7 @@ public class InviteOneByOneFragment extends SessionBaseFragment {
             if(sba.get(i)){
                 HashMap<String, String> body = new HashMap<>();
                 body.put("user_id", String.valueOf(work.get(i).id));
-                addList.add(service.createSessionUser(LoginUser.getToken(), activity.session.id, body));
+                addList.add(service.createSessionUser(activity.session.id, body));
             }
         }
         cd.add(Observable

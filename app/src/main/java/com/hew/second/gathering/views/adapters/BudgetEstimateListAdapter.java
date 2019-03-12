@@ -1,6 +1,7 @@
 package com.hew.second.gathering.views.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,6 +43,15 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
     private final Integer[] costArray;
     private final Integer[] plusMinusArray;
     private final String[] attributeArray;
+
+    public Integer[] getPlusMinusArray() {
+        return plusMinusArray;
+    }
+
+    public String[] getUserIdArray() {
+        return userIdArray;
+    }
+
     private final String[] userIdArray;
     private final Boolean[] allowedArray;
     private final Integer sessionId;
@@ -82,6 +94,18 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
 //            }
 //        });
 
+        plusMinusEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         plusMinusEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -93,7 +117,11 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
 
             @Override
             public void afterTextChanged(Editable s) {
-                updateSessionUserPlusMinus(userIdArray[position], plusMinusEditText.getText().toString());
+                if(!plusMinusEditText.getText().toString().isEmpty())
+                {
+                    plusMinusArray[position] = Integer.parseInt(plusMinusEditText.getText().toString());
+                }
+                //updateSessionUserPlusMinus(userIdArray[position], plusMinusEditText.getText().toString());
 
             }
         });
@@ -131,7 +159,7 @@ public class BudgetEstimateListAdapter extends ArrayAdapter {
         ApiService service = Util.getService();
         HashMap<String, String> body = new HashMap<>();
         body.put("plus_minus", plusMinus);
-        Observable<SessionUserDetail> token = service.updateSessionUser(LoginUser.getToken(), sessionId, Integer.parseInt(userId), body);
+        Observable<SessionUserDetail> token = service.updateSessionUser(sessionId, Integer.parseInt(userId), body);
         cd.add(token.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .unsubscribeOn(Schedulers.io())

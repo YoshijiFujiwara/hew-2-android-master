@@ -44,11 +44,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.hew.second.gathering.LogUtil;
+import com.hew.second.gathering.LoginUser;
 import com.hew.second.gathering.R;
 import com.hew.second.gathering.SearchArgs;
 import com.hew.second.gathering.activities.LoginActivity;
+import com.hew.second.gathering.activities.MainActivity;
 import com.hew.second.gathering.activities.ShopDetailActivity;
 import com.hew.second.gathering.api.DefaultSetting;
+import com.hew.second.gathering.api.Session;
+import com.hew.second.gathering.api.ShopIdList;
+import com.hew.second.gathering.api.Util;
 import com.hew.second.gathering.hotpepper.GourmetResult;
 import com.hew.second.gathering.hotpepper.HpHttp;
 import com.hew.second.gathering.hotpepper.Shop;
@@ -59,6 +64,9 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -92,6 +100,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
     private ArrayList<Shop> shopList;
     private ListView listView;
     private ShopListAdapter adapter;
+    private boolean loadingShop = false;
 
     private Marker here = null;
     private ArrayList<Marker> shopListMarker = new ArrayList<>();
@@ -164,7 +173,11 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(activity, ShopDetailActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(shopList.get(position)));
+            if (adapter != null) {
+                bundle.putParcelable("SHOP_DETAIL", Parcels.wrap(adapter.getList().get(position)));
+            } else {
+                return;
+            }
             if (activity.session != null) {
                 bundle.putParcelable("SESSION_DETAIL", Parcels.wrap(activity.session));
             }
@@ -176,17 +189,37 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
         });
 
 
-        Button button = activity.findViewById(R.id.search_refresh);
-        button.setOnClickListener((l) -> {
+        Button searchBtn = activity.findViewById(R.id.search_refresh);
+        searchBtn.setOnClickListener((l) -> {
             if (sup.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
                 sup.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }
+            if (!loadingShop) {
+                loadingShop = true;
+                for (Marker m : shopListMarker) {
+                    m.remove();
+                }
+                shopListMarker.clear();
+                fetchShopList();
+            }
+        });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (SearchArgs.reload && activity != null && isVisibleToUser) {
+            SearchArgs.reload = false;
+            if (sup.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
+                sup.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+            }
+            loadingShop = true;
             for (Marker m : shopListMarker) {
                 m.remove();
             }
             shopListMarker.clear();
             fetchShopList();
-        });
+        }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     @Override
@@ -394,8 +427,6 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
 
     private void fetchShopList() {
         HashMap<String, String> options = new HashMap<>();
-        HashMap<String, Float> pos = new HashMap<>();
-        //options.put("keyword", SearchArgs.keyword);
         options.put("keyword", SearchArgs.keyword);
         options.put("lat", Float.valueOf(SearchArgs.lat).toString());
         options.put("lng", Float.valueOf(SearchArgs.lng).toString());
@@ -403,16 +434,41 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
             options.put("genre", SearchArgs.genre);
         }
         options.put("range", SearchArgs.range.toString());
-        Observable<GourmetResult> ShopList = HpHttp.getService().getShopList(options);
-        cd.add(ShopList.subscribeOn(Schedulers.io())
+
+        options.put("free_drink", SearchArgs.nomi ? "1" : "0");
+        options.put("free_food", SearchArgs.tabe ? "1" : "0");
+        options.put("course", SearchArgs.course ? "1" : "0");
+        options.put("private_room", SearchArgs.room ? "1" : "0");
+        options.put("parking", SearchArgs.parking ? "1" : "0");
+        options.put("lunch", SearchArgs.lunch ? "1" : "0");
+
+        HashMap<String, HashMap<String, String>> param = new HashMap<>();
+        param.put("body", options);
+
+        Observable<GourmetResult> recommendList = Util.getService()
+                .getRecommendShopIdList(param, 3);
+        cd.add(recommendList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(
                         list -> {
-                            if (list.results.shop != null && activity != null) {
+                            shopList = new ArrayList<>(list.results.shop);
+                        },  // 成功時
+                        throwable -> {
+                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
+                            if (activity != null && !cd.isDisposed()) {
+                                loadingShop = false;
+                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
+                                    // ログインアクティビティへ遷移
+                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        },
+                        () -> {
+                            if (activity != null) {
                                 listView = activity.findViewById(R.id.listView_shop_list);
-                                shopList = new ArrayList<>(list.results.shop);
-                                ArrayList<Shop> data = new ArrayList<>(list.results.shop);
+                                ArrayList<Shop> data = new ArrayList<>(shopList);
                                 adapter = new ShopListAdapter(data);
                                 if (listView != null) {
                                     listView.setAdapter(adapter);
@@ -429,16 +485,7 @@ public class MapFragment extends SessionBaseFragment implements OnMapReadyCallba
                                     shopListMarker.add(googleMap.addMarker(mo));
                                 }
                                 onGetCenter(mapView);
-                            }
-                        },  // 成功時
-                        throwable -> {
-                            Log.d("api", "API取得エラー：" + LogUtil.getLog() + throwable.toString());
-                            if (activity != null && !cd.isDisposed()) {
-                                if (throwable instanceof HttpException && (((HttpException) throwable).code() == 401 || ((HttpException) throwable).code() == 500)) {
-                                    // ログインアクティビティへ遷移
-                                    Intent intent = new Intent(activity.getApplication(), LoginActivity.class);
-                                    startActivity(intent);
-                                }
+                                loadingShop = false;
                             }
                         }
                 ));

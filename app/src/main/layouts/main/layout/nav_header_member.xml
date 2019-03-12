@@ -14,7 +14,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageView_logo"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="16dp"
@@ -33,6 +33,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:singleLine="true"
         android:text="@string/nav_header_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="16dp"
@@ -40,15 +41,15 @@
         app:layout_constraintBottom_toTopOf="@+id/user_email"
         app:layout_constraintEnd_toStartOf="@+id/user_unique_id"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView_logo" />
 
     <TextView
         android:id="@+id/user_unique_id"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:singleLine="false"
         android:text="@string/nav_header_title"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/user_email"
@@ -63,10 +64,24 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="8dp"
+        android:singleLine="true"
         android:text="@string/nav_header_subtitle"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_unique_id" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_qr"
+        android:layout_width="69dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:tint="@color/bg_comments"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/user_unique_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/qr" />
 
 </android.support.constraint.ConstraintLayout>

@@ -86,7 +86,7 @@ public class EditProfileActivity extends BaseActivity {
         dialog.show();
 
         ApiService service = Util.getService();
-        Observable<ProfileDetail> profile = service.getProfile(LoginUser.getToken());
+        Observable<ProfileDetail> profile = service.getProfile();
         cd.add(profile.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -159,6 +159,10 @@ public class EditProfileActivity extends BaseActivity {
             usernameFlag = false;
         }
         usernameSearchFlag.setChecked(usernameFlag);
+
+        LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), data.email);
+        LoginUser.setUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE),data.unique_id);
+        LoginUser.setUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE),data.username);
     }
 
     public void saveProfile() {
@@ -202,7 +206,7 @@ public class EditProfileActivity extends BaseActivity {
         dialog = new SpotsDialog.Builder().setContext(this).build();
         dialog.show();
 
-        Observable<ProfileDetail> token = service.updateProfileUser(LoginUser.getToken(), body);
+        Observable<ProfileDetail> token = service.updateProfileUser(body);
         cd.add(token.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -211,8 +215,8 @@ public class EditProfileActivity extends BaseActivity {
                             dialog.dismiss();
 
                             LoginUser.setEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE), list.data.email);
-                            LoginUser.setUniqueId(list.data.unique_id);
-                            LoginUser.setUsername(list.data.username);
+                            LoginUser.setUniqueId(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE),list.data.unique_id);
+                            LoginUser.setUsername(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE),list.data.username);
 
                             Intent intent = new Intent();
 //                                Intent intent = new Intent(activity.getApplication(), MainActivity.class);

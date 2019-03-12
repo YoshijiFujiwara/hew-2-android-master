@@ -142,7 +142,7 @@ public class DefaultMapActivity extends BaseActivity implements OnMapReadyCallba
             Intent intent = new Intent();
             intent.putExtra("lat", String.valueOf(location.getLatitude()));
             intent.putExtra("lng", String.valueOf(location.getLongitude()));
-            intent.putExtra(SNACK_MESSAGE, "デフォルト位置を設定しました。");
+            intent.putExtra(SNACK_MESSAGE, "店検索の中心地を設定しました。");
             setResult(RESULT_OK, intent);
             finish();
 
