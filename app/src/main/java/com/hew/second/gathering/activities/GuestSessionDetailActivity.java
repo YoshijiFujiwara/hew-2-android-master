@@ -97,6 +97,10 @@ public class GuestSessionDetailActivity extends BaseActivity {
         }
         countMember.setText(Integer.toString(ok + 1) + " / " + (session.users.size() + 1) + "人");
 
+        TextView kanji = findViewById(R.id.textView_kanji);
+        kanji.setText(session.manager.username);
+        TextView kanjiId = findViewById(R.id.textView_kanji_id);
+        kanjiId.setText("@" + session.manager.unique_id);
         TextView genre = findViewById(R.id.textView_genre);
         genre.setText(shop.genre.name);
         TextView address = findViewById(R.id.textView_address);

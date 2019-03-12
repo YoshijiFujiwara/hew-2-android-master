@@ -49,14 +49,6 @@ public class StartActivity extends BaseActivity {
         now_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // 新規イベント作成へ
-                plan_button.setEnabled(false);
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        plan_button.setEnabled(true);
-                    }
-                }, 1000);
                 now_button.setEnabled(false);
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
@@ -79,12 +71,6 @@ public class StartActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
                         plan_button.setEnabled(true);
-                    }
-                }, 1000);
-                now_button.setEnabled(false);
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        now_button.setEnabled(true);
                     }
                 }, 1000);
                 //  今から飲むモードへ
