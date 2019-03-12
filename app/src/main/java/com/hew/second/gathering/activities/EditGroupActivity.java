@@ -112,6 +112,7 @@ public class EditGroupActivity extends BaseActivity {
             switch (view.getId()) {
                 case R.id.delete_group_member:
                     new MaterialDialog.Builder(this)
+
                             .title(groupName.getText())
                             .content(adapter.getList().get(position).username + "をグループから削除しますか？")
                             .positiveText("OK")
@@ -231,7 +232,7 @@ public class EditGroupActivity extends BaseActivity {
                         () -> {
                             dialog.dismiss();
                             fetchList();
-                            final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "メンバーを削除しました。", Snackbar.LENGTH_SHORT);
+                            final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "友達を削除しました。", Snackbar.LENGTH_SHORT);
                             snackbar.getView().setBackgroundColor(Color.BLACK);
                             snackbar.setActionTextColor(Color.WHITE);
                             snackbar.show();

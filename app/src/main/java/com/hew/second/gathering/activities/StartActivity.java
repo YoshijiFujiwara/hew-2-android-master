@@ -49,6 +49,8 @@ public class StartActivity extends BaseActivity {
         now_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // 新規イベント作成へ
                 plan_button.setEnabled(false);
                 new Handler().postDelayed(new Runnable() {
                     public void run() {

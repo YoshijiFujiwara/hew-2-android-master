@@ -53,7 +53,7 @@ import static com.hew.second.gathering.R.layout;
 import static com.hew.second.gathering.activities.BaseActivity.SNACK_MESSAGE;
 import static io.reactivex.Observable.concat;
 
-//セッション一覧支払い待ち
+//イベント一覧支払い待ち
 public class WaitingPaymentFragment extends BaseFragment {
     private static final String MESSAGE = "message";
     private SwipeRefreshLayout mSwipeRefreshLayout;
