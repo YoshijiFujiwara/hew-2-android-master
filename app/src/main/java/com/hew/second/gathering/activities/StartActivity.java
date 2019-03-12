@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,7 +36,7 @@ public class StartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        if(LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME,MODE_PRIVATE)).isEmpty()){
+        if (LoginUser.getEmail(getSharedPreferences(Util.PREF_FILE_NAME, MODE_PRIVATE)).isEmpty()) {
             Intent intent = new Intent(getApplication(), LoginActivity.class);
             startActivity(intent);
         }
@@ -43,8 +44,8 @@ public class StartActivity extends BaseActivity {
         // androidデバイストークン送信
         sendTokenToServer();
 
-        ImageButton now_button = (ImageButton) findViewById(R.id.now_button);
-        ImageButton plan_button = (ImageButton) findViewById(R.id.plan_button);
+        Button now_button = findViewById(R.id.now_button);
+        Button plan_button = findViewById(R.id.plan_button);
         now_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +91,7 @@ public class StartActivity extends BaseActivity {
             }
         });
     }
+
     private void sendTokenToServer() {
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
