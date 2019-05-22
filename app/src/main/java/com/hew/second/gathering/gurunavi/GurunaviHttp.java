@@ -3,6 +3,7 @@ package com.hew.second.gathering.gurunavi;
 import java.io.IOException;
 
 import okhttp3.Cache;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -10,6 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.hew.second.gathering.Env.GURUNAVI_API_KEY;
 import static com.hew.second.gathering.api.Util.cacheDir;
 import static com.hew.second.gathering.api.Util.hasNetwork;
 
@@ -28,9 +30,11 @@ public class GurunaviHttp {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {
                     Request original = chain.request();
+                    HttpUrl url = original.url().newBuilder().addQueryParameter("keyid", GURUNAVI_API_KEY.toString()).build();
 
                     //header設定
                     Request.Builder requestBuilder = original.newBuilder()
+                            .url(url)
                             .method(original.method(), original.body());
 
                     if (hasNetwork()) {

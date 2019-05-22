@@ -34,6 +34,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.hew.second.gathering.Env.API_URL;
+
 public class Util {
 
     public static final String PREF_FILE_NAME = "com.hew.second.gathering.preferences";
@@ -94,7 +96,7 @@ public class Util {
             retrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl("https://laravelv2-dot-eventer-1543384121468.appspot.com/")
+                    .baseUrl(API_URL.toString())
                     .client(Util.getHttpClientWithHeader())
                     .build();
         }

@@ -3,21 +3,17 @@ package com.hew.second.gathering;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
-import com.hew.second.gathering.activities.MainActivity;
-import com.hew.second.gathering.api.ApiService;
-import com.hew.second.gathering.api.TokenRefreshAuthenticator;
-import com.hew.second.gathering.api.Util;
 
-import java.io.File;
 import java.io.IOException;
 
-import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.hew.second.gathering.Env.API_URL;
 
 public class LoginUser {
 
@@ -169,7 +165,7 @@ public class LoginUser {
             retrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl("https://laravelv2-dot-eventer-1543384121468.appspot.com/")
+                    .baseUrl(API_URL.toString())
                     .client(LoginUser.getHttpClientWithHeader())
                     .build();
         }
