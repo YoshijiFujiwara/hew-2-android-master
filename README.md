@@ -181,21 +181,6 @@ hoisulu
 testuser50@example.com  
 hoisulu  
 ```  
-### APIURL
-
-<https://laravel-dot-eventer-1543384121468.appspot.com/>
-
-#### 新しい方 URL差し替えてください
-
-<https://laravelv2-dot-eventer-1543384121468.appspot.com/>  
-
-### phpmyadmin
-
-<https://eventer-1543384121468.appspot.com>
-
-### APIリファレンス
-
-<https://laravelv2-dot-eventer-1543384121468.appspot.com/docs/index.html>
 
 ### 管理者画面
 
